@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Commune;
+use App\Models\commune;
 use App\Models\User;
-use App\Models\TypeRole;
+use App\Models\typeRole;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
