@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Commune;
-use App\Models\Province;
+use App\Models\commune;
+use App\Models\province;
 use Illuminate\Database\Seeder;
 
 class CommuneSeeder extends Seeder
