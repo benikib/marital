@@ -14,8 +14,7 @@ class ProvinceSeeder extends Seeder
     {
         // Liste des principales provinces du Maroc
         $provinces = [
-           
-    ['nom' => 'Kinshasa'],
+           ['nom' => 'Kinshasa'],
     ['nom' => 'Kongo-Central'],
     ['nom' => 'Kwango'],
     ['nom' => 'Kwilu'],
@@ -41,6 +40,7 @@ class ProvinceSeeder extends Seeder
     ['nom' => 'Sud-Ubangi'],
     ['nom' => 'Équateur'],
     ['nom' => 'Lualaba'],
+    
         ];
 
         foreach ($provinces as $province) {
