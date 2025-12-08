@@ -15,7 +15,7 @@ class DashboardController extends Controller
         // Statistiques générales
         $totalMariages = Mariage::count();
         $totalUsers = User::count();
-        $totalProvinces = Province::count();
+        $totalProvinces = province::count();
 
         // Mariages par statut
         $mariagesParStatut = Mariage::select('status.nom', DB::raw('count(*) as total'))

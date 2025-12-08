@@ -66,7 +66,7 @@ class Mariage extends Model
     }
   public function commune()
     {
-        return $this->belongsTo(Commune::class, 'commune_id');
+        return $this->belongsTo(commune::class, 'commune_id');
     }
 
 }

@@ -7,7 +7,7 @@ use App\Models\RegimeMatrimoniale;
 use App\Models\User;
 use App\Models\TypeRole;
 use App\Models\Contrat;
-use App\Models\Commune;
+use App\Models\commune;
 use App\Models\Province;
 use App\Models\Statu;
 use Carbon\Carbon;
@@ -26,7 +26,7 @@ class OverviewController extends Controller
 
         // Statistiques des utilisateurs
         $totalUsers = User::count();
-        $usersParRole = TypeRole::withCount('users')->get();
+        $usersParRole = typeRole::withCount('users')->get();
         $derniersUsers = User::with('typeRole')->latest()->take(5)->get();
 
         // Statistiques des contrats
@@ -40,8 +40,8 @@ class OverviewController extends Controller
         $regimesActifs = RegimeMatrimoniale::where('dotation_cutinier', 10)->count();
 
         // Statistiques géographiques
-        $totalProvinces = Province::count();
-        $totalCommunes = Commune::count();
+        $totalProvinces = province::count();
+        $totalCommunes = commune::count();
 
         // Statistiques des mariages par province (basé sur l'adresse des époux)
         $mariagesParProvince = 5;
@@ -49,8 +49,8 @@ class OverviewController extends Controller
         // Statistiques des mariages par commune (basé sur l'adresse des époux)
         $mariagesParCommune = 5;
 
-        // Statistiques des statuts
-        $totalStatus = Statu::count();
+   // Statistiques des statuts
+        $totalStatus = statu::count();
         $mariagesParStatus = DB::table('mariages')
             ->select('status_id', DB::raw('count(*) as total'))
             ->groupBy('status_id')

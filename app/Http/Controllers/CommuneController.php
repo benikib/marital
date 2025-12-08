@@ -12,7 +12,7 @@ class CommuneController extends Controller
      */
     public function index()
     {
-        $communes = Commune::paginate(10);
+        $communes = commune::paginate(10);
         $provinces = \App\Models\province::all();
 
 
@@ -37,7 +37,7 @@ class CommuneController extends Controller
                 'nom' => 'required|string|max:255|unique:communes,nom',
                 'province_id' => 'required|exists:provinces,id',
             ]);
-            Commune::create($request->all());
+            commune::create($request->all());
             return redirect()->back()->with('success', 'Commune créée avec succès.');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de la commune.');

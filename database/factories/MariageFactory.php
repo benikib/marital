@@ -8,7 +8,7 @@ use App\Models\Status;
 use App\Models\RegimeMatrimoniale;
 use App\Models\AyantDroitCoutinier;
 use App\Models\User;
-use App\Models\Commune;
+use App\Models\commune;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +24,7 @@ class MariageFactory extends Factory
     public function definition(): array
     {
         $user = User::factory()->create();
-        $commune = Commune::inRandomOrder()->first();
+        $commune = commune::inRandomOrder()->first();
 
         return [
             'lieu_mariage' => fake()->city(),
