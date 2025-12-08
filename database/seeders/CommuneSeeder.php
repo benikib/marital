@@ -15,126 +15,32 @@ class CommuneSeeder extends Seeder
     {
         // Liste des communes principales par province avec des noms uniques
         $communes = [
-            'Casablanca' => [
-                'Ain Sebaa Casa',
-                'Ain Chock Casa',
-                'Ben M\'Sick Casa',
-                'Sidi Bernoussi Casa',
-                'Sidi Moumen Casa',
-                'Hay Mohammadi Casa',
-                'Moulay Rachid Casa',
-                'Derb Sultan Casa',
-                'Maârif Casa',
-                'Anfa Casa'
+            'Kinshasa' => [
+                  'Gombe',
+    'Barumbu',
+    'Kinshasa',
+    'Kintambo',
+    'Lingwala',
+    'Mont Ngafula',
+    'N’Djili',
+    'Ngaba',
+    'Ngaliema',
+    'Kalamu',
+    'Kasa-Vubu',
+    'Kimbanseke',
+    'Kisenso',
+    'Lemba',
+    'Limete',
+    'Makala',
+    'Masina',
+    'Matete',
+    'Mont Amba',
+    'Ndjili',
+    'Nsele',
+    'Selembao',
+    'Tshangu',
             ],
-            'Rabat' => [
-                'Hassan Rabat',
-                'Agdal Rabat',
-                'Yacoub El Mansour Rabat',
-                'Souissi Rabat',
-                'Hay Riad Rabat',
-                'Akkari Rabat',
-                'Youssoufia Rabat',
-                'Touarga Rabat',
-                'Océan Rabat',
-                'Diour Jamaâ Rabat'
-            ],
-            'Marrakech' => [
-                'Gueliz Marrakech',
-                'Hivernage Marrakech',
-                'Sidi Youssef Ben Ali Marrakech',
-                'Ménara Marrakech',
-                'Agdal Marrakech',
-                'Daoudiate Marrakech',
-                'Massira Marrakech',
-                'Sidi Ghanem Marrakech',
-                'Al Massar Marrakech',
-                'Assif Marrakech'
-            ],
-            'Fès' => [
-                'Fès El Bali',
-                'Fès El Jdid',
-                'Ain Chkef Fès',
-                'Saiss Fès',
-                'Jnan El Ward Fès',
-                'Zouagha Fès',
-                'Oulad Tayeb Fès',
-                'Oulad Ziyane Fès',
-                'Ain Bida Fès',
-                'Sidi Harazem Fès'
-            ],
-            'Tanger' => [
-                'Beni Makada Tanger',
-                'Charf Tanger',
-                'Bni Makada Tanger',
-                'Mghogha Tanger',
-                'Boukhalef Tanger',
-                'Gzenaya Tanger',
-                'M\'Sallah Tanger',
-                'Dradeb Tanger',
-                'Mountain Tanger',
-                'Tangier City'
-            ],
-            'Agadir' => [
-                'Inzegane Agadir',
-                'Ait Melloul Agadir',
-                'Dcheira Agadir',
-                'Tikiouine Agadir',
-                'Tassila Agadir',
-                'Anza Agadir',
-                'Bensergao Agadir',
-                'Lqliaa Agadir',
-                'Taddart Agadir',
-                'Taghazout Agadir'
-            ],
-            'Meknès' => [
-                'Hamria Meknès',
-                'Boufakrane Meknès',
-                'Ouislane Meknès',
-                'Toulal Meknès',
-                'Al Ismaïlia Meknès',
-                'Bni Oual Meknès',
-                'Moulay Driss Zerhoun Meknès',
-                'Moulay Idriss Meknès',
-                'Ain Jemaa Meknès',
-                'Ain Karma Meknès'
-            ],
-            'Oujda' => [
-                'Al Qods Oujda',
-                'Al Massira Oujda',
-                'Al Hamra Oujda',
-                'Bni Drar Oujda',
-                'Naima Oujda',
-                'Bni Khaled Oujda',
-                'Berkane Oujda',
-                'Ahfir Oujda',
-                'Bouarfa Oujda',
-                'Figuig Oujda'
-            ],
-            'Kénitra' => [
-                'Mehdia Kénitra',
-                'Souk El Arbaa Kénitra',
-                'Sidi Slimane Kénitra',
-                'Sidi Kacem Kénitra',
-                'Sidi Yahya Kénitra',
-                'Moulay Bousselham Kénitra',
-                'Lalla Mimouna Kénitra',
-                'Souk Tlet Kénitra',
-                'Oulad Slama Kénitra',
-                'Oulad M\'Barek Kénitra'
-            ],
-            'Tétouan' => [
-                'Martil Tétouan',
-                'Fnideq Tétouan',
-                'M\'diq Tétouan',
-                'Oued Laou Tétouan',
-                'Al Hoceima Tétouan',
-                'Bni Hadifa Tétouan',
-                'Bni Bouchibet Tétouan',
-                'Bni Gmil Tétouan',
-                'Bni Idder Tétouan',
-                'Bni Said Tétouan'
-            ]
+            
         ];
 
         foreach ($communes as $provinceName => $communeNames) {

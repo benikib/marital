@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
             ContratSeeder::class,
             RegimeMatrimonialeSeeder::class,
             StatusSeeder::class,
-            EpouxSeeder::class,
-            EpouseSeeder::class,
-            AyantDroitCoutinierSeeder::class,
-            MariageSeeder::class,
+            // EpouxSeeder::class,
+            // EpouseSeeder::class,
+            // AyantDroitCoutinierSeeder::class,
+            // MariageSeeder::class,
         ]);
     }
 }

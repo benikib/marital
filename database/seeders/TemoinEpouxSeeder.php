@@ -11,13 +11,13 @@ class TemoinEpouxSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
-        // Pour chaque époux, créer 2 témoins
-        Epoux::all()->each(function ($epoux) {
-            TemoinEpoux::factory()->count(2)->create([
-                'epouxe_id' => $epoux->id
-            ]);
-        });
-    }
+    // public function run(): void
+    // {
+    //     // Pour chaque époux, créer 2 témoins
+    //     Epoux::all()->each(function ($epoux) {
+    //         TemoinEpoux::factory()->count(2)->create([
+    //             'epouxe_id' => $epoux->id
+    //         ]);
+    //     });
+    // }
 }
