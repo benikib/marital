@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mariage;
 use App\Models\User;
-use App\Models\Province;
+use App\Models\province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
