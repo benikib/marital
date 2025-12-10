@@ -13,7 +13,7 @@ class province extends Model
     protected $table = 'provinces';
     public function communes()
     {
-        return $this->hasMany(Commune::class, 'province_id');
+        return $this->hasMany(commune::class, 'province_id');
     }
 
 }

@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Epouse;
-use App\Models\Province;
+use App\Models\province;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

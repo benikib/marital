@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\typeRole;
 use App\Models\Contrat;
 use App\Models\commune;
-use App\Models\Province;
+use App\Models\province;
 use App\Models\Statu;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

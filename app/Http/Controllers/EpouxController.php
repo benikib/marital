@@ -15,7 +15,7 @@ class EpouxController extends Controller
      */
     public function index()
     {
-        $provinces = \App\Models\Province::all();
+        $provinces = \App\Models\province::all();
         $communes = \App\Models\commune::all();
         $epoux = Epoux::all();
         $mariages = Mariage::all();
@@ -30,7 +30,7 @@ class EpouxController extends Controller
      */
     public function create()
     {
-        $provinces = \App\Models\Province::all();
+        $provinces = \App\Models\province::all();
         $communes = \App\Models\commune::all();
         $epoux = Epoux::all();
         $status = Status::all();

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Province;
+use App\Models\province;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
