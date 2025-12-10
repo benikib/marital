@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mariage;
 use App\Models\RegimeMatrimoniale;
 use App\Models\User;
-use App\Models\TypeRole;
+use App\Models\typeRole;
 use App\Models\Contrat;
 use App\Models\commune;
 use App\Models\Province;
