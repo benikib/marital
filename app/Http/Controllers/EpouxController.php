@@ -34,7 +34,7 @@ class EpouxController extends Controller
         $communes = \App\Models\commune::all();
         $epoux = Epoux::all();
         $status = Status::all();
-        $contrats = Contrat::all();
+        $contrats = contrat::all();
         return view('formulaires.create', compact('epoux', 'communes', 'provinces', 'status', 'contrats'));
 
     }

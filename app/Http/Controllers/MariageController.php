@@ -65,7 +65,7 @@ class MariageController extends Controller
         $regimes = RegimeMatrimoniale::with('contrat')->get();
         $ayantsDroit = AyantDroitCoutinier::all();
         $provinces = Epoux::select('province')->distinct()->pluck('province');
-        $contrats = Contrat::all();
+        $contrats = contrat::all();
         return view('formulaires.create', compact('epoux', 'epouses', 'status', 'regimes', 'ayantsDroit', 'provinces', 'contrats'));
     }
 
@@ -84,10 +84,10 @@ class MariageController extends Controller
 //             $parent_pere_epoux = ParentEpoux::create($request->pere_epoux  + ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]
 // );
 //             $parent_mere_epoux = ParentEpoux::create($request->mere_epoux + ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]);
-//             $parent_pere_epouse = ParentEpouse::create($request->pere_epouse+ ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]);
-//              $parent_mere_epouse = ParentEpouse::create($request->mere_epouse+ ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]);
+//             $parent_pere_epouse = parentEpouse::create($request->pere_epouse+ ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]);
+//              $parent_mere_epouse = parentEpouse::create($request->mere_epouse+ ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]);
 //             $temoin_epoux = TemoinEpoux::create($request->temoin_epoux  + ['epoux_id' => $epoux->id]);
-//             $temoin_epouse = TemoinEpouse::create($request->temoin_epouse  + ['epouse_id' => $epouse->id]);
+//             $temoin_epouse = temoinEpouse::create($request->temoin_epouse  + ['epouse_id' => $epouse->id]);
 //         $mariage= Mariage::create()([
 //             'epoux_id' => $epoux->id,
 //             'epouse_id' => $epouse->id,
@@ -142,12 +142,12 @@ class MariageController extends Controller
 //             'epouse_id' => $epouse->id
 //         ]);
 
-//         $parent_pere_epouse = ParentEpouse::create($request->pere_epouse + [
+//         $parent_pere_epouse = parentEpouse::create($request->pere_epouse + [
 //             'epoux_id' => $epoux->id,
 //             'epouse_id' => $epouse->id
 //         ]);
 
-//         $parent_mere_epouse = ParentEpouse::create($request->mere_epouse + [
+//         $parent_mere_epouse = parentEpouse::create($request->mere_epouse + [
 //             'epoux_id' => $epoux->id,
 //             'epouse_id' => $epouse->id
 //         ]);
@@ -156,7 +156,7 @@ class MariageController extends Controller
 //             'epoux_id' => $epoux->id
 //         ]);
 
-//         $temoin_epouse = TemoinEpouse::create($request->temoin_epouse + [
+//         $temoin_epouse = temoinEpouse::create($request->temoin_epouse + [
 //             'epouse_id' => $epouse->id
 //         ]);
 
@@ -301,14 +301,14 @@ public function store(Request $request)
 
         ]);
 
-        $parent_pere_epouse = ParentEpouse::create($request->pere_epouse + [
+        $parent_pere_epouse = parentEpouse::create($request->pere_epouse + [
             'epouxe_id' => $epoux->id,
             'epouse_id' => $epouse->id,
 
 
         ]);
 
-        $parent_mere_epouse = ParentEpouse::create($request->mere_epouse + [
+        $parent_mere_epouse = parentEpouse::create($request->mere_epouse + [
             'epouxe_id' => $epoux->id,
             'epouse_id' => $epouse->id,
 
@@ -318,7 +318,7 @@ public function store(Request $request)
             'epouxe_id' => $epoux->id
         ]);
 
-        $temoin_epouse = TemoinEpouse::create($request->temoin_epouse + [
+        $temoin_epouse = temoinEpouse::create($request->temoin_epouse + [
             'epouse_id' => $epouse->id
         ]);
 

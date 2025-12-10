@@ -30,8 +30,8 @@ class OverviewController extends Controller
         $derniersUsers = User::with('typeRole')->latest()->take(5)->get();
 
         // Statistiques des contrats
-        $totalContrats = Contrat::count();
-        $contratsParType = Contrat::selectRaw('type_contrat, count(*) as total')
+        $totalContrats = contrat::count();
+        $contratsParType = contrat::selectRaw('type_contrat, count(*) as total')
             ->groupBy('type_contrat')
             ->get();
 

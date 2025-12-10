@@ -41,7 +41,7 @@ class MariageController extends Controller
     {
         $commune = auth()->user()->commune;
         $status = Status::all();
-        $contrats = Contrat::all();
+        $contrats = contrat::all();
         return view('agents.mariages.create', compact('commune', 'status','contrats'));
     }
 
@@ -112,14 +112,14 @@ class MariageController extends Controller
 
         ]);
 
-        $parent_pere_epouse = ParentEpouse::create($request->pere_epouse + [
+        $parent_pere_epouse = parentEpouse::create($request->pere_epouse + [
             'epouxe_id' => $epoux->id,
             'epouse_id' => $epouse->id,
 
 
         ]);
 
-        $parent_mere_epouse = ParentEpouse::create($request->mere_epouse + [
+        $parent_mere_epouse = parentEpouse::create($request->mere_epouse + [
             'epouxe_id' => $epoux->id,
             'epouse_id' => $epouse->id,
 
@@ -129,7 +129,7 @@ class MariageController extends Controller
             'epouxe_id' => $epoux->id
         ]);
 
-        $temoin_epouse = TemoinEpouse::create($request->temoin_epouse + [
+        $temoin_epouse = temoinEpouse::create($request->temoin_epouse + [
             'epouse_id' => $epouse->id
         ]);
 

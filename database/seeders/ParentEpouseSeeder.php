@@ -16,13 +16,13 @@ class ParentEpouseSeeder extends Seeder
     //     // Pour chaque épouse, créer ses parents (père et mère)
     //     Epouse::all()->each(function ($epouse) {
     //         // Créer le père
-    //         ParentEpouse::factory()->create([
+    //         parentEpouse::factory()->create([
     //             'epouse_id' => $epouse->id,
     //             'type' => 'pere'
     //         ]);
 
     //         // Créer la mère
-    //         ParentEpouse::factory()->create([
+    //         parentEpouse::factory()->create([
     //             'epouse_id' => $epouse->id,
     //             'type' => 'mere'
     //         ]);

@@ -15,7 +15,7 @@ class TemoinEpouseSeeder extends Seeder
     // {
     //     // Pour chaque épouse, créer 2 témoins
     //     Epouse::all()->each(function ($epouse) {
-    //         TemoinEpouse::factory()->count(2)->create([
+    //         temoinEpouse::factory()->count(2)->create([
     //             'epouse_id' => $epouse->id
     //         ]);
     //     });

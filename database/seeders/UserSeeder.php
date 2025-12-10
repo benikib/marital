@@ -15,9 +15,9 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Récupérer les rôles une seule fois
-        $adminRole = TypeRole::where('nom', 'admin')->first();
-        // $moderateurRole = TypeRole::where('nom', 'modérateur')->first();
-        // $utilisateurRole = TypeRole::where('nom', 'utilisateur')->first();
+        $adminRole = typeRole::where('nom', 'admin')->first();
+        // $moderateurRole = typeRole::where('nom', 'modérateur')->first();
+        // $utilisateurRole = typeRole::where('nom', 'utilisateur')->first();
 
         // Récupérer les communes spécifiques pour les utilisateurs de test
         $communeCasablanca = Commune::where('nom', 'Kinshasa')->first();

@@ -16,10 +16,10 @@ class Epouse extends Model
     }
     public function parentsEpouse()
     {
-        return $this->hasMany(ParentEpouse::class ,'epouse_id');
+        return $this->hasMany(parentEpouse::class ,'epouse_id');
     }
       public function temoins()
     {
-        return $this->hasMany(TemoinEpouse::class ,'epouse_id');
+        return $this->hasMany(temoinEpouse::class ,'epouse_id');
     }
 }

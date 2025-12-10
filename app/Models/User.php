@@ -49,7 +49,7 @@ class User extends Authenticatable
     }
      public function typeRole()
     {
-        return $this->belongsTo(TypeRole::class, 'type_role_id');
+        return $this->belongsTo(typeRole::class, 'type_role_id');
     }
     public function commune(){
         return $this->belongsTo(Commune::class, 'commune_id');

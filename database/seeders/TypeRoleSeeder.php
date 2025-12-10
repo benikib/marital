@@ -22,7 +22,7 @@ class TypeRoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            TypeRole::create($role);
+            typeRole::create($role);
         }
     }
 }
