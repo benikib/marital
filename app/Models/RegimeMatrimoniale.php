@@ -24,6 +24,6 @@ class RegimeMatrimoniale extends Model
 
     public function mariages()
     {
-        return $this->hasMany(Mariage::class, 'regimes_matrimonauxe_id');
+        return $this->hasMany(mariage::class, 'regimes_matrimonauxe_id');
     }
 }

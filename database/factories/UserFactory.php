@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'type_role_id' => typeRole::where('nom', 'utilisateur')->first()->id,
-            'commune_id' => Commune::inRandomOrder()->first()->id,
+            'commune_id' => commune::inRandomOrder()->first()->id,
         ];
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mariage;
+use App\Models\mariage;
 use App\Models\User;
 use App\Models\province;
 use Illuminate\Http\Request;
@@ -13,18 +13,18 @@ class DashboardController extends Controller
     public function index()
     {
         // Statistiques générales
-        $totalMariages = Mariage::count();
+        $totalMariages = mariage::count();
         $totalUsers = User::count();
         $totalProvinces = province::count();
 
         // Mariages par statut
-        $mariagesParStatut = Mariage::select('status.nom', DB::raw('count(*) as total'))
+        $mariagesParStatut = mariage::select('status.nom', DB::raw('count(*) as total'))
             ->join('status', 'mariages.status_id', '=', 'status.id')
             ->groupBy('status.nom')
             ->get();
 
         // Mariages par province
-        $mariagesParProvince = Mariage::select('epouxes.province', DB::raw('count(*) as total'))
+        $mariagesParProvince = mariage::select('epouxes.province', DB::raw('count(*) as total'))
             ->join('epouxes', 'mariages.epoux_id', '=', 'epouxes.id')
             ->groupBy('epouxes.province')
             ->orderBy('total', 'desc')
@@ -32,7 +32,7 @@ class DashboardController extends Controller
             ->get();
 
         // Mariages des 6 derniers mois
-        $mariagesParMois = Mariage::select(
+        $mariagesParMois = mariage::select(
             DB::raw('DATE_FORMAT(date_mariage, "%Y-%m") as mois'),
             DB::raw('count(*) as total')
         )
@@ -42,7 +42,7 @@ class DashboardController extends Controller
             ->get();
 
         // Derniers mariages enregistrés
-        $derniersMariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $derniersMariages = mariage::with(['epoux', 'epouse', 'status'])
             ->latest()
             ->take(5)
             ->get();

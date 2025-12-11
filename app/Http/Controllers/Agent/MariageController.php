@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Agent;
 use App\Http\Controllers\Controller;
 use App\Models\Epoux;
 use App\Models\Epouse;
-use App\Models\ParentEpouse;
-use App\Models\ParentEpoux;
+use App\Models\parentEpouse;
+use App\Models\parentEpoux;
 use App\Models\Status;
 use App\Models\RegimeMatrimoniale;
 use App\Models\AyantDroitCoutinier;
-use App\Models\Contrat;
-use App\Models\Mariage;
+use App\Models\contrat;
+use App\Models\mariage;
 use App\Models\temoinEpouse;
 use App\Models\temoinEpoux;
 
@@ -29,7 +29,7 @@ class MariageController extends Controller
 
         $user = auth()->user();
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->where('commune_id', $user->commune_id)
             ->latest()
             ->paginate(10);
@@ -134,7 +134,7 @@ class MariageController extends Controller
         ]);
 
         // Correction de la syntaxe ici (suppression des parenthèses en trop)
-        $mariage = Mariage::create([
+        $mariage = mariage::create([
             'epoux_id' => $epoux->id,
             'epouse_id' => $epouse->id,
             'status_id' => $request->mariage['status_id'],

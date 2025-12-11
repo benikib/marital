@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mariage;
+use App\Models\mariage;
 use App\Models\Epoux;
 use App\Models\Epouse;
 use App\Models\ParentEpouse;
@@ -25,7 +25,7 @@ class MariageController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Mariage::with(['epoux', 'epouse', 'status', 'regimeMatrimonial', 'ayantDroitCoutinier']);
+        $query = mariage::with(['epoux', 'epouse', 'status', 'regimeMatrimonial', 'ayantDroitCoutinier']);
 
         // Filtres
         if ($request->has('province')) {
@@ -88,7 +88,7 @@ class MariageController extends Controller
 //              $parent_mere_epouse = parentEpouse::create($request->mere_epouse+ ['epoux_id' => $epoux->id,'epouse_id' => $epouse->id]);
 //             $temoin_epoux = TemoinEpoux::create($request->temoin_epoux  + ['epoux_id' => $epoux->id]);
 //             $temoin_epouse = temoinEpouse::create($request->temoin_epouse  + ['epouse_id' => $epouse->id]);
-//         $mariage= Mariage::create()([
+//         $mariage= mariage::create()([
 //             'epoux_id' => $epoux->id,
 //             'epouse_id' => $epouse->id,
 //             'status_id' => $request->mariage['status_id'],
@@ -105,7 +105,7 @@ class MariageController extends Controller
 
 
 
-//        // $mariage = Mariage::create($validated + ['user_id' => auth()->id()]);
+//        // $mariage = mariage::create($validated + ['user_id' => auth()->id()]);
 
 //         return redirect()->route('mariages.show', $mariage)
 //             ->with('success', 'Mariage enregistré avec succès.');
@@ -161,7 +161,7 @@ class MariageController extends Controller
 //         ]);
 
 //         // Correction de la syntaxe ici (suppression des parenthèses en trop)
-//         $mariage = Mariage::create([
+//         $mariage = mariage::create([
 //             'epoux_id' => $epoux->id,
 //             'epouse_id' => $epouse->id,
 //             'status_id' => $request->mariage['status_id'],
@@ -252,7 +252,7 @@ public function store(Request $request)
 
         // Vérifier si un mariage existe déjà entre ces deux personnes
         if ($epouxExist && $epouseExist) {
-            $mariageExist = Mariage::where('epoux_id', $epouxExist->id)
+            $mariageExist = mariage::where('epoux_id', $epouxExist->id)
                 ->where('epouse_id', $epouseExist->id)
                 ->exists();
 
@@ -323,7 +323,7 @@ public function store(Request $request)
         ]);
 
         // Correction de la syntaxe ici (suppression des parenthèses en trop)
-        $mariage = Mariage::create([
+        $mariage = mariage::create([
             'epoux_id' => $epoux->id,
             'epouse_id' => $epouse->id,
             'status_id' => $request->mariage['status_id'],

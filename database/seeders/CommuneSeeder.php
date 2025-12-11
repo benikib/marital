@@ -44,13 +44,13 @@ class CommuneSeeder extends Seeder
         ];
 
         foreach ($communes as $provinceName => $communeNames) {
-            $province = Province::where('nom', $provinceName)->first();
+            $province = province::where('nom', $provinceName)->first();
 
             if ($province) {
                 foreach ($communeNames as $communeName) {
                     // Vérifier si la commune existe déjà avant de la créer
-                    if (!Commune::where('nom', $communeName)->exists()) {
-                        Commune::create([
+                    if (!commune::where('nom', $communeName)->exists()) {
+                        commune::create([
                             'nom' => $communeName,
                             'province_id' => $province->id
                         ]);

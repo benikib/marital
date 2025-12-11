@@ -52,7 +52,7 @@ class User extends Authenticatable
         return $this->belongsTo(typeRole::class, 'type_role_id');
     }
     public function commune(){
-        return $this->belongsTo(Commune::class, 'commune_id');
+        return $this->belongsTo(commune::class, 'commune_id');
     }
 
 }

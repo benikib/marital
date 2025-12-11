@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mariage;
+use App\Models\mariage;
 use App\Models\RegimeMatrimoniale;
 use App\Models\User;
 use App\Models\typeRole;
-use App\Models\Contrat;
+use App\Models\contrat;
 use App\Models\commune;
 use App\Models\province;
-use App\Models\Statu;
+use App\Models\statu;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +19,8 @@ class OverviewController extends Controller
     public function index()
     {
         // Statistiques générales des mariages
-        $totalMariages = Mariage::count();
-        $mariagesCeMois = Mariage::whereMonth('date_mariage', Carbon::now()->month)
+        $totalMariages = mariage::count();
+        $mariagesCeMois = mariage::whereMonth('date_mariage', Carbon::now()->month)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->count();
 
@@ -50,7 +50,7 @@ class OverviewController extends Controller
         $mariagesParCommune = 5;
 
    // Statistiques des statuts
-        $totalStatus = statu::count();
+        $totalStatus = Statu::count();
         $mariagesParStatus = DB::table('mariages')
             ->select('status_id', DB::raw('count(*) as total'))
             ->groupBy('status_id')
@@ -72,7 +72,7 @@ class OverviewController extends Controller
             $mois = $date->month;
             $annee = $date->year;
 
-            $total = Mariage::whereMonth('date_mariage', $mois)
+            $total = mariage::whereMonth('date_mariage', $mois)
                 ->whereYear('date_mariage', $annee)
                 ->count();
 
@@ -88,7 +88,7 @@ class OverviewController extends Controller
         }
 
         // Rapport annuel de l'année en cours
-        $totalAnnuel = Mariage::whereYear('date_mariage', Carbon::now()->year)->count();
+        $totalAnnuel = mariage::whereYear('date_mariage', Carbon::now()->year)->count();
         if ($totalAnnuel > 0) {
             $rapportsRecents->push((object) [
                 'type' => 'Annuel',

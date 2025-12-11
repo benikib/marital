@@ -17,7 +17,7 @@ class RapportController extends Controller
         $mois = request('mois', Carbon::now()->month);
         $annee = request('annee', Carbon::now()->year);
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->where('commune_id', $commune->id)
             ->whereMonth('date_mariage', $mois)
             ->whereYear('date_mariage', $annee)
@@ -37,7 +37,7 @@ class RapportController extends Controller
         $commune = auth()->user()->commune;
         $annee = request('annee', Carbon::now()->year);
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->where('commune_id', $commune->id)
             ->whereYear('date_mariage', $annee)
             ->get();
@@ -63,7 +63,7 @@ class RapportController extends Controller
         $mois = request('mois', Carbon::now()->month);
         $annee = request('annee', Carbon::now()->year);
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->where('commune_id', $commune->id)
             ->whereMonth('date_mariage', $mois)
             ->whereYear('date_mariage', $annee)
@@ -84,7 +84,7 @@ class RapportController extends Controller
         $commune = auth()->user()->commune;
         $annee = request('annee', Carbon::now()->year);
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->where('commune_id', $commune->id)
             ->whereYear('date_mariage', $annee)
             ->get();

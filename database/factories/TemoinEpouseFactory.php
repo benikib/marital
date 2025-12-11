@@ -18,7 +18,7 @@ class TemoinEpouseFactory extends Factory
      */
     public function definition(): array
     {
-        $province = Province::inRandomOrder()->first();
+        $province = province::inRandomOrder()->first();
         $etatCivil = fake()->randomElement(['Célibataire', 'Marié(e)', 'Divorcé(e)', 'Veuf(ve)']);
 
         return [

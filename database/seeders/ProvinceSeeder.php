@@ -44,7 +44,7 @@ class ProvinceSeeder extends Seeder
         ];
 
         foreach ($provinces as $province) {
-            Province::create($province);
+            province::create($province);
         }
     }
 }

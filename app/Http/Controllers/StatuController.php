@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Status;
+use App\Models\status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

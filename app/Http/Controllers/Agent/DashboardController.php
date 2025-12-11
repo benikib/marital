@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mariage;
+use App\Models\mariage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,22 +21,22 @@ class DashboardController extends Controller
             ->count();
 
         // Statistiques pour l'année en cours
-        $mariagesAnnee = Mariage::where('commune_id', $commune->id)
+        $mariagesAnnee = mariage::where('commune_id', $commune->id)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->count();
 
         // Total des mariages
-        $totalMariages = Mariage::where('commune_id', $commune->id)->count();
+        $totalMariages = mariage::where('commune_id', $commune->id)->count();
 
         // Derniers mariages enregistrés
-        $derniersMariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $derniersMariages = mariage::with(['epoux', 'epouse', 'status'])
             ->where('commune_id', $commune->id)
             ->latest()
             ->take(5)
             ->get();
 
         // Statistiques mensuelles pour le graphique
-        $statsMensuelles = Mariage::where('commune_id', $commune->id)
+        $statsMensuelles = mariage::where('commune_id', $commune->id)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->select(
                 DB::raw('MONTH(date_mariage) as mois'),
@@ -66,21 +66,21 @@ class DashboardController extends Controller
         $commune = auth()->user()->commune;
 
         // Statistiques par statut
-        $statsParStatut = Mariage::where('commune_id', $commune->id)
+        $statsParStatut = mariage::where('commune_id', $commune->id)
             ->select('status_id', DB::raw('count(*) as total'))
             ->groupBy('status_id')
             ->with('status')
             ->get();
 
         // Statistiques par année
-        $statsParAnnee = Mariage::where('commune_id', $commune->id)
+        $statsParAnnee = mariage::where('commune_id', $commune->id)
             ->select(DB::raw('YEAR(date_mariage) as annee'), DB::raw('count(*) as total'))
             ->groupBy('annee')
             ->orderBy('annee', 'desc')
             ->get();
 
         // Statistiques par mois de l'année en cours
-        $statsParMois = Mariage::where('commune_id', $commune->id)
+        $statsParMois = mariage::where('commune_id', $commune->id)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->select(DB::raw('MONTH(date_mariage) as mois'), DB::raw('count(*) as total'))
             ->groupBy('mois')

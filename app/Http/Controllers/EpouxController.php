@@ -18,8 +18,8 @@ class EpouxController extends Controller
         $provinces = \App\Models\province::all();
         $communes = \App\Models\commune::all();
         $epoux = Epoux::all();
-        $mariages = Mariage::all();
-        // $mariage = Mariage::find(1);
+        $mariages = mariage::all();
+        // $mariage = mariage::find(1);
         // dd($mariage->epoux);
 
         return view('formulaires.index', compact('epoux', 'communes', 'provinces', 'mariages'));

@@ -20,9 +20,9 @@ class UserSeeder extends Seeder
         // $utilisateurRole = typeRole::where('nom', 'utilisateur')->first();
 
         // Récupérer les communes spécifiques pour les utilisateurs de test
-        $communeCasablanca = Commune::where('nom', 'Kinshasa')->first();
-        // $communeRabat = Commune::where('nom', 'Hassan Rabat')->first();
-        // $communeParDefaut = Commune::inRandomOrder()->first();
+        $communeCasablanca = commune::where('nom', 'Kinshasa')->first();
+        // $communeRabat = commune::where('nom', 'Hassan Rabat')->first();
+        // $communeParDefaut = commune::inRandomOrder()->first();
 
         // Création d'un administrateur
         User::factory()->create([

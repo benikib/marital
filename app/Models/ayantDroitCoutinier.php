@@ -42,6 +42,6 @@ class AyantDroitCoutinier extends Model
 
     public function mariages()
     {
-        return $this->hasMany(Mariage::class);
+        return $this->hasMany(mariage::class);
     }
 }

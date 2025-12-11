@@ -17,6 +17,6 @@ class Status extends Model
 
     public function mariages()
     {
-        return $this->hasMany(Mariage::class, 'statu_id');
+        return $this->hasMany(mariage::class, 'statu_id');
     }
 }

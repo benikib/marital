@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mariage;
+use App\Models\mariage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -14,7 +14,7 @@ class RapportController extends Controller
         $moisActuel = Carbon::now()->month;
         $anneeActuelle = Carbon::now()->year;
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->whereMonth('date_mariage', $moisActuel)
             ->whereYear('date_mariage', $anneeActuelle)
             ->get();
@@ -42,7 +42,7 @@ class RapportController extends Controller
     {
         $anneeActuelle = Carbon::now()->year;
 
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->whereYear('date_mariage', $anneeActuelle)
             ->get();
 
@@ -72,7 +72,7 @@ class RapportController extends Controller
 
     public function printMensuel($mois, $annee)
     {
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->whereMonth('date_mariage', $mois)
             ->whereYear('date_mariage', $annee)
             ->get();
@@ -100,7 +100,7 @@ class RapportController extends Controller
 
     public function printAnnuel($annee)
     {
-        $mariages = Mariage::with(['epoux', 'epouse', 'status'])
+        $mariages = mariage::with(['epoux', 'epouse', 'status'])
             ->whereYear('date_mariage', $annee)
             ->get();
 

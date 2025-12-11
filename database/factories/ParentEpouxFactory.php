@@ -18,7 +18,7 @@ class ParentEpouxFactory extends Factory
      */
     public function definition(): array
     {
-        $province = Province::inRandomOrder()->first();
+        $province = province::inRandomOrder()->first();
         $type = fake()->randomElement(['pere', 'mere']);
 
         return [

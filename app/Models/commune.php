@@ -13,7 +13,7 @@ class commune extends Model
     protected $table = 'communes';
     public function province()
     {
-        return $this->belongsTo(Province::class, 'province_id');
+        return $this->belongsTo(province::class, 'province_id');
     }
     public function users()
     {
@@ -21,7 +21,7 @@ class commune extends Model
     }
     public function mariages()
     {
-        return $this->hasMany(Mariage::class, 'commune_id');
+        return $this->hasMany(mariage::class, 'commune_id');
     }
 
 }

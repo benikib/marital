@@ -26,7 +26,7 @@ class CommuneFactory extends Factory
 
         return [
             'nom' => $nom,
-            'province_id' => Province::inRandomOrder()->first()->id,
+            'province_id' => province::inRandomOrder()->first()->id,
         ];
     }
 }

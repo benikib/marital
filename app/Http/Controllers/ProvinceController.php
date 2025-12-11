@@ -12,7 +12,7 @@ class ProvinceController extends Controller
      */
     public function index()
     {
-        $provinces = Province::paginate(10);
+        $provinces = province::paginate(10);
         return view('admins.provinces.index', compact('provinces'));
     }
 
@@ -33,7 +33,7 @@ class ProvinceController extends Controller
             $request->validate([
                 'nom' => 'required|string|max:255|unique:provinces,nom',
             ]);
-            Province::create($request->all());
+            province::create($request->all());
             return redirect()->back()->with('success', 'Province créée avec succès.');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de la province.');
