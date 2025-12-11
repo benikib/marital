@@ -10,7 +10,7 @@ use App\Models\parentEpoux;
 use App\Models\Status;
 use App\Models\RegimeMatrimoniale;
 use App\Models\AyantDroitCoutinier;
-use App\Models\contrat;
+use App\Models\Contrat;
 use App\Models\mariage;
 use App\Models\temoinEpouse;
 use App\Models\temoinEpoux;

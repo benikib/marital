@@ -13,7 +13,7 @@ class ContratController extends Controller
      */
     public function index()
     {
-        $contrats = Contrat::latest()->paginate(10);
+        $contrats = contrat::latest()->paginate(10);
         return view('admins.contrats.index', compact('contrats'));
     }
 
