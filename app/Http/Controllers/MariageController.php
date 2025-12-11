@@ -65,7 +65,7 @@ class MariageController extends Controller
         $regimes = RegimeMatrimoniale::with('contrat')->get();
         $ayantsDroit = AyantDroitCoutinier::all();
         $provinces = Epoux::select('province')->distinct()->pluck('province');
-        $contrats = contrat::all();
+        $contrats = Contrat::all();
         return view('formulaires.create', compact('epoux', 'epouses', 'status', 'regimes', 'ayantsDroit', 'provinces', 'contrats'));
     }
 

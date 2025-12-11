@@ -19,7 +19,7 @@ class RegimeMatrimoniale extends Model
 
     public function contrat()
     {
-        return $this->belongsTo(contrat::class, 'contrat_id');
+        return $this->belongsTo(Contrat::class, 'contrat_id');
     }
 
     public function mariages()

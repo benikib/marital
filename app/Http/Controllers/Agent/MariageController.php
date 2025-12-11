@@ -41,7 +41,7 @@ class MariageController extends Controller
     {
         $commune = auth()->user()->commune;
         $status = Status::all();
-        $contrats = contrat::all();
+        $contrats = Contrat::all();
         return view('agents.mariages.create', compact('commune', 'status','contrats'));
     }
 

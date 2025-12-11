@@ -10,6 +10,6 @@ class ContratSeeder extends Seeder
     public function run(): void
     {
         // Créer les 4 types de contrats de base
-        contrat::factory()->count(4)->create();
+        Contrat::factory()->count(4)->create();
     }
 }
