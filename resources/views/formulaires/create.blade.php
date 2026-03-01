@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.agents.app')
 
 @section('content')
     <div class="container-fluid py-4">
@@ -14,6 +14,14 @@
                     <div class="card-body">
                         <form action="{{ route('mariages.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+
+                            <!-- Progression du formulaire -->
+                            <div class="mb-3">
+                                <div class="progress" style="height:14px;">
+                                    <div id="mariageProgress" class="progress-bar" role="progressbar" style="width:0%" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                </div>
+                                <div class="small text-muted mt-1">Étape <span id="currentStep">1</span> / <span id="totalSteps">6</span></div>
+                            </div>
 
                             <!-- Onglets -->
                             <ul class="nav nav-tabs" id="mariageTabs" role="tablist">
@@ -235,7 +243,7 @@
                                                         <label for="epoux_photo">Photo de l'époux</label>
                                                         <input type="file"
                                                             class="form-control @error('epoux.url_photo') is-invalid @enderror"
-                                                            id="url_photo" name="epoux[url_photo]">
+                                                            id="epoux_photo" name="epoux[url_photo]">
                                                         @error('epoux.url_photo')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
@@ -439,7 +447,7 @@
                                                         <label for="epouse_url_photo">Photo de l'épouse</label>
                                                         <input type="file"
                                                             class="form-control @error('epouse.url_photo') is-invalid @enderror"
-                                                            id="epouse_url_photo" name="epouse[url_photo]">
+                                                            id="epouse_photo" name="epouse[url_photo]">
                                                         @error('epouse.url_photo')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
@@ -1482,7 +1490,26 @@
                                 <div class="tab-pane fade" id="ayantdroit" role="tabpanel">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h6 class="mb-3">Ayant Droit Coutinier</h6>
+                                            <h6 class="mb-3">Ayant Droit Coutumier</h6>
+
+                                            <!-- Option pour charger les données du père de l'épouse -->
+                                            <div class="row mb-4 p-3 bg-light rounded">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="load_pere_epouse">Charger les données du père de l'épouse <span class="text-muted">(optionnel)</span></label>
+                                                        <div class="input-group">
+                                                            <select class="form-control" id="load_pere_epouse">
+                                                                <option value="">-- Sélectionnez le père de la mariée --</option>
+                                                                <option value="auto">Père (données du formulaire)</option>
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-primary" id="btn_load_pere">
+                                                                <i class="fas fa-download me-1"></i>Charger
+                                                            </button>
+                                                        </div>
+                                                        <small class="form-text text-muted">Cliquez sur "Charger" pour remplir automatiquement les champs avec les données du père</small>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
@@ -1666,29 +1693,16 @@
                                             </div>
 
                                             <div class="row mt-3">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="regime_lieu_coutumier">Lieu du mariage coutumier
-                                                            <span class="text-danger">*</span></label>
-                                                        <input type="text"
-                                                            class="form-control @error('regime.lieu_mariage_cutinier') is-invalid @enderror"
-                                                            id="regime_lieu_coutumier"
-                                                            name="regime[lieu_mariage_cutinier]"
-                                                            value="{{ old('regime.lieu_mariage_cutinier') }}" required>
-                                                        @error('regime.lieu_mariage_cutinier')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
+                                                <!-- Lieu du mariage coutumier supprimé (déplacé/retiré) -->
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="regime_dotation">Dotation coutumière <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="number"
-                                                            class="form-control @error('regime.dotation_cutinier') is-invalid @enderror"
-                                                            id="regime_dotation" name="regime[dotation_cutinier]"
-                                                            value="{{ old('regime.dotation_cutinier') }}" required>
-                                                        @error('regime.dotation_cutinier')
+                                                            class="form-control @error('regime.dotation_coutumier') is-invalid @enderror"
+                                                            id="regime_dotation" name="regime[dotation_coutumier]"
+                                                            value="{{ old('regime.dotation_coutumier') }}" required>
+                                                        @error('regime.dotation_coutumier')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
@@ -1717,6 +1731,18 @@
                                         </div>
                                     </div>
 
+                                    <!-- Photo du couple (prévisualisation) -->
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="couple_photo">Photo du couple <span class="text-danger">*</span></label>
+                                                <input type="file" id="couple_photo" name="couple_photo" accept="image/*" class="form-control" />
+                                                <div id="couple_photo_preview" style="display:none; margin-top:10px;"></div>
+                                                <small class="form-text text-muted">Trois photos requises : époux, épouse et couple.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <!-- Bouton de soumission final -->
                                     <div class="row mt-4">
                                         <div class="col-12 d-flex justify-content-between">
@@ -1739,138 +1765,404 @@
     </div>
 
     <script>
-        // Gestion de la navigation entre les onglets
+        // Multi-step form enhancements: progress, autosave (localStorage), preview, required-photo check
         document.addEventListener('DOMContentLoaded', function() {
-            // Bouton Suivant
+            const form = document.querySelector('form[action="{{ route('mariages.store') }}"]');
+            const navLinks = Array.from(document.querySelectorAll('#mariageTabs .nav-link'));
+            const totalSteps = navLinks.length;
+            const progressBar = document.getElementById('mariageProgress');
+            const currentStepEl = document.getElementById('currentStep');
+            const totalStepsEl = document.getElementById('totalSteps');
+            totalStepsEl.textContent = totalSteps;
+
+            function updateProgress() {
+                const activeIndex = navLinks.findIndex(n => n.classList.contains('active'));
+                const index = activeIndex >= 0 ? activeIndex : 0;
+                const pct = Math.round(((index + 1) / totalSteps) * 100);
+                progressBar.style.width = pct + '%';
+                progressBar.textContent = pct + '%';
+                currentStepEl.textContent = index + 1;
+            }
+
+            // Make nav tabs clickable (allow editing previous steps)
+            navLinks.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', updateProgress);
+            });
+
+            updateProgress();
+
+            // Validation helper for each step (used by next buttons)
+            function validatePane(pane) {
+                const inputs = pane.querySelectorAll('input[required], select[required], textarea[required]');
+                let isValid = true;
+                inputs.forEach(input => {
+                    if (!input.value) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('invalid-feedback')) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'invalid-feedback';
+                            errorDiv.textContent = 'Ce champ est obligatoire';
+                            input.parentNode.insertBefore(errorDiv, input.nextSibling);
+                        }
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+                return isValid;
+            }
+
+            // Next / Prev buttons behavior (keep existing but add progress + autosave)
             document.querySelectorAll('.next-tab').forEach(button => {
                 button.addEventListener('click', function() {
                     const currentTabPane = this.closest('.tab-pane');
-                    const inputs = currentTabPane.querySelectorAll(
-                        'input[required], select[required], textarea[required]');
-                    let isValid = true;
-
-                    // Validation des champs requis
-                    inputs.forEach(input => {
-                        if (!input.value) {
-                            input.classList.add('is-invalid');
-                            isValid = false;
-
-                            // Ajouter un message d'erreur si non présent
-                            if (!input.nextElementSibling || !input.nextElementSibling
-                                .classList.contains('invalid-feedback')) {
-                                const errorDiv = document.createElement('div');
-                                errorDiv.className = 'invalid-feedback';
-                                errorDiv.textContent = 'Ce champ est obligatoire';
-                                input.parentNode.insertBefore(errorDiv, input.nextSibling);
-                            }
-                        } else {
-                            input.classList.remove('is-invalid');
-                        }
-                    });
-
-                    if (!isValid) {
-                        // Faire défiler jusqu'au premier champ invalide
+                    if (!validatePane(currentTabPane)) {
                         const firstInvalid = currentTabPane.querySelector('.is-invalid');
-                        if (firstInvalid) {
-                            firstInvalid.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'center'
-                            });
-                        }
+                        if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         return;
                     }
-
-                    // Si validation OK, passer à l'onglet suivant
                     const nextTabId = this.getAttribute('data-next-tab');
                     const nextTab = document.querySelector(`#${nextTabId}`);
-                    const tabInstance = new bootstrap.Tab(nextTab);
-                    tabInstance.show();
-
-                    // Sauvegarder l'onglet actif
+                    new bootstrap.Tab(nextTab).show();
                     localStorage.setItem('lastActiveTab', nextTabId);
-
-                    // Faire défiler vers le haut de l'onglet
-                    nextTab.scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    saveDraft();
                 });
             });
 
-            // Bouton Précédent
             document.querySelectorAll('.prev-tab').forEach(button => {
                 button.addEventListener('click', function() {
                     const prevTabId = this.getAttribute('data-prev-tab');
                     const prevTab = document.querySelector(`#${prevTabId}`);
-                    const tabInstance = new bootstrap.Tab(prevTab);
-                    tabInstance.show();
-
-                    // Sauvegarder l'onglet actif
+                    new bootstrap.Tab(prevTab).show();
                     localStorage.setItem('lastActiveTab', prevTabId);
-
-                    // Faire défiler vers le haut de l'onglet
-                    prevTab.scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    saveDraft();
                 });
             });
 
-            // Restaurer l'onglet actif au rechargement
+            // Restore last active tab
             const lastActiveTab = localStorage.getItem('lastActiveTab');
             if (lastActiveTab) {
                 const tab = document.querySelector(`#${lastActiveTab}`);
-                if (tab) {
-                    const tabInstance = new bootstrap.Tab(tab);
-                    tabInstance.show();
-                }
+                if (tab) new bootstrap.Tab(tab).show();
             }
 
-            // Gestion des messages d'erreur existants
-            document.querySelectorAll('.is-invalid').forEach(input => {
-                if (!input.nextElementSibling || !input.nextElementSibling.classList.contains(
-                        'invalid-feedback')) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'invalid-feedback';
-                    errorDiv.textContent = input.validationMessage || 'Ce champ est obligatoire';
-                    input.parentNode.insertBefore(errorDiv, input.nextSibling);
-                }
-            });
-
-            // Prévisualisation des images
-            function previewImage(input, previewId) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+            // Image preview helper (also stores preview images into preview element)
+            function previewImageFile(file, previewId) {
+                return new Promise(resolve => {
+                    const reader = new FileReader();
                     reader.onload = function(e) {
-                        const previewElement = document.getElementById(previewId);
-                        if (!previewElement) {
-                            // Créer l'élément de prévisualisation s'il n'existe pas
-                            const previewDiv = document.createElement('div');
-                            previewDiv.id = previewId;
-                            previewDiv.style.display = 'block';
-                            previewDiv.style.marginTop = '10px';
-
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.style.maxWidth = '200px';
-                            img.style.maxHeight = '200px';
-
-                            previewDiv.appendChild(img);
-                            input.parentNode.appendChild(previewDiv);
-                        } else {
-                            previewElement.querySelector('img').src = e.target.result;
-                            previewElement.style.display = 'block';
+                        const previewElement = document.getElementById(previewId) || (function(){
+                            const div = document.createElement('div'); div.id = previewId; div.style.display = 'block'; div.style.marginTop = '10px'; return div;
+                        })();
+                        previewElement.innerHTML = '';
+                        const img = document.createElement('img'); img.src = e.target.result; img.style.maxWidth = '200px'; img.style.maxHeight = '200px';
+                        previewElement.appendChild(img);
+                        previewElement.style.display = 'block';
+                        if (!document.getElementById(previewId)) {
+                            // try to append near input
+                            const input = document.querySelector(`#${previewId.replace('_preview','')}`);
+                            if (input && input.parentNode) input.parentNode.appendChild(previewElement);
                         }
+                        resolve(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Attach preview handlers for known photo inputs
+            ['epoux_photo','epouse_photo','couple_photo'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', function() {
+                        if (this.files && this.files[0]) previewImageFile(this.files[0], id + '_preview');
+                        saveDraft();
+                    });
+                }
+            });
+
+            // Serialize form to a plain object for localStorage (stores text values and image dataURLs when available)
+            async function serializeForm() {
+                const data = {};
+                const elements = form.querySelectorAll('input, select, textarea');
+                for (const el of elements) {
+                    const name = el.name;
+                    if (!name) continue;
+                    if (el.type === 'file') {
+                        if (el.files && el.files[0]) {
+                            // read file
+                            const dataUrl = await new Promise(res => {
+                                const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(el.files[0]);
+                            });
+                            data[name] = dataUrl;
+                        } else {
+                            // try use preview src if available
+                            const preview = document.getElementById(el.id + '_preview');
+                            if (preview && preview.querySelector('img')) data[name] = preview.querySelector('img').src;
+                        }
+                    } else if (el.type === 'checkbox') {
+                        data[name] = el.checked;
+                    } else {
+                        data[name] = el.value;
                     }
-                    reader.readAsDataURL(input.files[0]);
+                }
+                return data;
+            }
+
+            async function saveDraft() {
+                try {
+                    const data = await serializeForm();
+                    localStorage.setItem('mariageDraft', JSON.stringify(data));
+                    // Try to save to server-side draft (if user authenticated)
+                    saveDraftToServer(data).catch(err => {
+                        // ignore server errors (user might be guest)
+                        // console.debug('Server autosave failed', err);
+                    });
+                } catch (e) {
+                    console.error('Erreur sauvegarde auto:', e);
                 }
             }
 
-            document.getElementById('epoux_photo')?.addEventListener('change', function() {
-                previewImage(this, 'epoux_photo_preview');
+            // Save draft to server. Returns draft id.
+            async function saveDraftToServer(data) {
+                try {
+                    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                    if (!csrf) return null;
+                    const existingId = localStorage.getItem('mariageDraftServerId');
+                    const body = { data };
+                    if (existingId) body.id = existingId;
+
+                    const res = await fetch('/mariage-drafts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(body),
+                    });
+
+                    if (!res.ok) {
+                        // If unauthorized or forbidden, stop trying
+                        return null;
+                    }
+
+                    const json = await res.json();
+                    if (json.id) localStorage.setItem('mariageDraftServerId', json.id);
+                    return json.id || null;
+                } catch (e) {
+                    // swallow errors
+                    return null;
+                }
+            }
+
+            async function restoreDraft() {
+                const raw = localStorage.getItem('mariageDraft');
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                for (const key in data) {
+                    const value = data[key];
+                    // try find element by name
+                    const el = form.querySelector(`[name="${key}"]`);
+                    if (!el) continue;
+                    if (el.type === 'file') {
+                        // set preview only (we can't programmatically set File inputs)
+                        const previewId = el.id + '_preview';
+                        if (value) {
+                            const previewEl = document.getElementById(previewId) || (function(){ const d=document.createElement('div'); d.id=previewId; return d; })();
+                            previewEl.innerHTML = '';
+                            const img = document.createElement('img'); img.src = value; img.style.maxWidth='200px'; img.style.maxHeight='200px'; previewEl.appendChild(img);
+                            previewEl.style.display='block';
+                            if (!document.getElementById(previewId)) el.parentNode.appendChild(previewEl);
+                        }
+                    } else if (el.type === 'checkbox') {
+                        el.checked = !!value;
+                    } else {
+                        el.value = value;
+                    }
+                }
+            }
+
+            // Offer restore if draft exists
+            if (localStorage.getItem('mariageDraft')) {
+                if (confirm('Un brouillon existe. Voulez-vous restaurer les données sauvegardées automatiquement ?')) {
+                    restoreDraft().then(() => { updateProgress(); });
+                }
+            }
+
+            // Periodic autosave
+            setInterval(saveDraft, 30000);
+
+            // Inject a preview button next to submit if not present
+            (function injectPreviewButton(){
+                const submit = form.querySelector('button[type="submit"]');
+                if (!submit) return;
+                if (!document.getElementById('previewBtn')){
+                    const btn = document.createElement('button'); btn.type='button'; btn.id='previewBtn'; btn.className='btn btn-outline-primary me-2'; btn.textContent='Prévisualiser';
+                    submit.parentNode.insertBefore(btn, submit);
+                    btn.addEventListener('click', async function(){
+                        // build preview summary
+                        const data = await serializeForm();
+                        let html = '<div style="max-height:60vh; overflow:auto;">';
+                        for (const k in data){
+                            if (!data[k]) continue;
+                            if (k.includes('photo') && data[k].startsWith('data:')) {
+                                html += `<div class="mb-2"><strong>${k}:</strong><br/><img src="${data[k]}" style="max-width:250px; max-height:200px;"/></div>`;
+                            } else {
+                                html += `<div class="mb-1"><strong>${k}:</strong> ${String(data[k]).substring(0,200)}</div>`;
+                            }
+                        }
+                        html += '</div>';
+                        // show modal
+                        const modalId = 'previewModal';
+                        let modal = document.getElementById(modalId);
+                        if (!modal){
+                            modal = document.createElement('div'); modal.id = modalId; modal.className='modal fade'; modal.tabIndex=-1; modal.innerHTML = `\n<div class="modal-dialog modal-lg">\n  <div class="modal-content">\n    <div class="modal-header">\n      <h5 class="modal-title">Prévisualisation du dossier</h5>\n      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>\n    </div>\n    <div class="modal-body">${html}</div>\n    <div class="modal-footer">\n      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>\n      <button type="button" id="confirmSubmit" class="btn btn-success">Confirmer et soumettre</button>\n    </div>\n  </div>\n</div>`;
+                            document.body.appendChild(modal);
+                            document.getElementById('confirmSubmit').addEventListener('click', function(){
+                                // before submit, ensure required photos exist
+                                if (!checkPhotosBeforeSubmit()) { alert('Les trois photos (époux, épouse, couple) sont requises.'); return; }
+                                // clear draft and submit
+                                localStorage.removeItem('mariageDraft');
+                                form.submit();
+                            });
+                        } else {
+                            // update body
+                            modal.querySelector('.modal-body').innerHTML = html;
+                        }
+                        const bsModal = new bootstrap.Modal(modal); bsModal.show();
+                    });
+                }
+            })();
+
+            // Validate presence of three photos before submit
+            function checkPhotosBeforeSubmit(){
+                const epoux = document.getElementById('epoux_photo');
+                const epouse = document.getElementById('epouse_photo');
+                const couple = document.getElementById('couple_photo');
+                const hasEpoux = (epoux && (epoux.files && epoux.files.length > 0)) || (document.getElementById('epoux_photo_preview')?.querySelector('img'));
+                const hasEpouse = (epouse && (epouse.files && epouse.files.length > 0)) || (document.getElementById('epouse_photo_preview')?.querySelector('img'));
+                const hasCouple = (couple && (couple.files && couple.files.length > 0)) || (document.getElementById('couple_photo_preview')?.querySelector('img'));
+                return !!(hasEpoux && hasEpouse && hasCouple);
+            }
+
+            // Intercept final submit to enforce photo check and save draft
+            form.addEventListener('submit', function(e){
+                if (!checkPhotosBeforeSubmit()){
+                    e.preventDefault();
+                    alert('Veuillez fournir les trois photos requises : époux, épouse et couple.');
+                    return false;
+                }
+                // clear draft on successful submit
+                localStorage.removeItem('mariageDraft');
             });
 
-            document.getElementById('epouse_photo')?.addEventListener('change', function() {
-                previewImage(this, 'epouse_photo_preview');
-            });
         });
+        // Fonction pour charger les données du père de l'épouse dans Ayant Droit
+        function loadPereEpouseData() {
+            const nom = document.getElementById('pere_epouse_nom')?.value;
+            const prenom = document.getElementById('pere_epouse_prenom')?.value;
+            const postnom = document.getElementById('pere_epouse_postnom')?.value;
+            const profession = document.getElementById('pere_epouse_profession')?.value;
+            const adresse = document.getElementById('pere_epouse_adresse')?.value;
+            const dateNaissance = document.getElementById('pere_epouse_date_naissance')?.value;
+            const lieuNaissance = document.getElementById('pere_epouse_lieu_naissance')?.value;
+            const nationalite = document.getElementById('pere_epouse_nationalite')?.value;
+            const province = document.getElementById('pere_epouse_province')?.value;
+
+            if (!nom || !prenom) {
+                alert('Veuillez saisir au moins le nom et le prénom du père de l\'épouse.');
+                return;
+            }
+
+            document.getElementById('ayant_droit_nom').value = nom;
+            document.getElementById('ayant_droit_prenom').value = prenom;
+            document.getElementById('ayant_droit_postnom').value = postnom;
+            document.getElementById('ayant_droit_profession').value = profession;
+            document.getElementById('ayant_droit_adresse').value = adresse;
+            document.getElementById('ayant_droit_date_naissance').value = dateNaissance;
+            document.getElementById('ayant_droit_lieu_naissance').value = lieuNaissance;
+            document.getElementById('ayant_droit_nationalite').value = nationalite;
+            document.getElementById('ayant_droit_province').value = province;
+
+            alert('Données du père de l\'épouse chargées avec succès dans Ayant Droit.');
+            document.getElementById('load_pere_epouse').value = '';
+        }
+
+        document.getElementById('btn_load_pere')?.addEventListener('click', function() {
+            loadPereEpouseData();
+        });
+
+        // Convert certain text inputs into select dropdowns with default values
+        (function() {
+            const provinces = @json($provinces ?? []);
+            const defaultOptions = {
+                nationalite: ['Non renseigné', 'Congolaise',  'Burundaise', 'Autre'],
+                profession: ['Non renseigné', 'Agriculteur', 'Commerçant', 'Fonctionnaire', 'Étudiant', 'Autre'],
+                district: ['Non renseigné'],
+                secteur: ['Non renseigné'],
+                territoire: ['Non renseigné'],
+                lieu_naissance: ['Non renseigné']
+            };
+
+            function createSelect(name, id, classes, required, options, currentValue) {
+                const select = document.createElement('select');
+                if (id) select.id = id;
+                if (name) select.name = name;
+                select.className = classes || 'form-control';
+                if (required) select.required = true;
+
+                const placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = 'Sélectionnez...';
+                select.appendChild(placeholder);
+
+                options.forEach(opt => {
+                    const o = document.createElement('option');
+                    o.value = opt;
+                    o.textContent = opt;
+                    if (currentValue && currentValue === opt) o.selected = true;
+                    select.appendChild(o);
+                });
+
+                // If no current value, select a sensible default if provided (first option after placeholder)
+                if (!currentValue && options.length > 0) {
+                    const first = options[0];
+                    const optIndex = Array.from(select.options).findIndex(x => x.value === first);
+                    if (optIndex > -1) select.selectedIndex = optIndex + 1; // +1 because placeholder
+                }
+
+                return select;
+            }
+
+            function replaceInputWithSelect(id, opts) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (el.tagName.toLowerCase() === 'select') return; // already a select
+
+                const name = el.getAttribute('name') || '';
+                const classes = el.className || 'form-control';
+                const required = el.required;
+                const currentValue = el.value || '';
+
+                const select = createSelect(name, id, classes, required, opts, currentValue);
+                el.parentNode.replaceChild(select, el);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const prefixes = ['epoux','epouse','pere_epoux','mere_epoux','pere_epouse','mere_epouse','temoin_epoux','temoin_epouse','ayant_droit'];
+                const fields = ['district','province','nationalite','profession','lieu_naissance','secteur','territoire'];
+
+                prefixes.forEach(p => {
+                    fields.forEach(f => {
+                        const id = `${p}_${f}`;
+                        let opts = defaultOptions[f] || ['Non renseigné'];
+                        if (f === 'province' && Array.isArray(provinces) && provinces.length) {
+                            opts = provinces;
+                        }
+                        replaceInputWithSelect(id, opts);
+                    });
+                });
+            });
+        })();
     </script>
 @endsection

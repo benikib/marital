@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\AyantDroitCoutinier;
+use App\Models\AyantDroitCoutumier;
 use Illuminate\Database\Seeder;
 
-class AyantDroitCoutinierSeeder extends Seeder
+class AyantDroitCoutumierSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        AyantDroitCoutinier::factory(10)->create();
+        AyantDroitCoutumier::factory(10)->create();
     }
 }

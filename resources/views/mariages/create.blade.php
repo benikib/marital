@@ -13,23 +13,20 @@
                         </a>
                     </div>
                 </div>
-                <form action="{{ route('mariages.store') }}" method="POST">
-                    @csrf
-                    <div class="card-body">
-                        <x-mariages.form
-                            :epoux="$epoux"
-                            :epouses="$epouses"
-                            :status="$status"
-                            :regimes="$regimes"
-                            :ayantsDroit="$ayantsDroit"
-                        />
+                <!-- Cette vue n'est plus utilisée pour l'enregistrement ;
+                     le formulaire complet se trouve dans resources/views/formulaires/create.blade.php
+                     qui est rendu par le contrôleur MariageController::create().
+                     Si vous souhaitez modifier l'interface de création ou ajouter le
+                     chargement du père de l'épouse, éditez ce fichier plutôt. -->
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Le formulaire de création détaillé a été déplacé dans
+                        <code>formulaires/create.blade.php</code>.
+                        <br />Ouvrez ce fichier pour apporter vos modifications (par exemple
+                        l'ajout d'une liste déroulante pour charger les données du père de
+                        l'épouse). Cette page reste ici uniquement pour compatibilité.
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Enregistrer
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

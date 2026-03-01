@@ -73,7 +73,7 @@ Route::prefix('contrats')->group(function () {
 Route::prefix('mariages')->group(function () {
     Route::get('/', [MariageController::class, 'index'])->name('mariages.index');
     Route::get('/create', [MariageController::class, 'create'])->name('mariages.create');
-    Route::post('/', [MariageController::class, 'store'])->name('mariages.store');
+   
     Route::get('/{mariage}', [MariageController::class, 'show'])->name('mariages.show');
     Route::get('/{mariage}/edit', [MariageController::class, 'edit'])->name('mariages.edit');
     Route::put('/{mariage}', [MariageController::class, 'update'])->name('mariages.update');

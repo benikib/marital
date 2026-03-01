@@ -7,6 +7,7 @@ use App\Models\Epoux;
 use App\Models\Mariage;
 use App\Models\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EpouxController extends Controller
 {
@@ -44,7 +45,8 @@ class EpouxController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        Log::debug('EpouxController::store payload', ['payload' => $request->all()]);
+        return redirect()->back()->with('info', 'Requête reçue (mode debug).');
     }
 
     /**

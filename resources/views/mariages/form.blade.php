@@ -104,17 +104,17 @@
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="form-group">
-            <label for="ayant_droit_coutinier_id">Ayant droit coutumier <span class="text-danger">*</span></label>
-            <select name="ayant_droit_coutinier_id" id="ayant_droit_coutinier_id"
-                class="form-control @error('ayant_droit_coutinier_id') is-invalid @enderror" required>
+            <label for="ayant_droit_coutumier_id">Ayant droit coutumier <span class="text-danger">*</span></label>
+            <select name="ayant_droit_coutumier_id" id="ayant_droit_coutumier_id"
+                class="form-control @error('ayant_droit_coutumier_id') is-invalid @enderror" required>
                 <option value="">Sélectionnez l'ayant droit</option>
                 @foreach($ayantsDroit as $ayant)
-                    <option value="{{ $ayant->id }}" {{ (old('ayant_droit_coutinier_id', $mariage?->ayant_droit_coutinier_id) == $ayant->id) ? 'selected' : '' }}>
+                    <option value="{{ $ayant->id }}" {{ (old('ayant_droit_coutumier_id', $mariage?->ayant_droit_coutumier_id) == $ayant->id) ? 'selected' : '' }}>
                         {{ $ayant->nom }} {{ $ayant->prenom }} {{ $ayant->postnom }} - {{ $ayant->profession }}
                     </option>
                 @endforeach
             </select>
-            @error('ayant_droit_coutinier_id')
+            @error('ayant_droit_coutumier_id')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
@@ -125,7 +125,7 @@
     <script>
         $(document).ready(function () {
             // Initialisation des select2 pour une meilleure expérience utilisateur
-            $('#epoux_id, #epouse_id, #status_id, #regime_matrimonial_id, #ayant_droit_coutinier_id').select2({
+            $('#epoux_id, #epouse_id, #status_id, #regime_matrimonial_id, #ayant_droit_coutumier_id').select2({
                 theme: 'bootstrap4',
                 width: '100%'
             });

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EntiteAdministrative;
 use App\Models\typeRole;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -24,9 +26,10 @@ class UserController extends Controller
 
         $users = $query->paginate(10);
         $typeRoles = typeRole::all();
-        $communes = \App\Models\commune::all();
+        $entites = EntiteAdministrative::all();
+        
 
-        return view('admins.users.index', compact('users', 'typeRoles','communes'));
+        return view('admins.users.index', compact('users', 'typeRoles','entites'));
     }
 
     /**
@@ -48,7 +51,7 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:8',
                 'type_role_id' => 'required|exists:type_roles,id',
-                'commune_id' => 'required|exists:communes,id',
+                'entite_id' => 'required|exists:entite_administratives,id',
             ]);
 
             User::create([
@@ -56,12 +59,12 @@ class UserController extends Controller
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
                 'type_role_id' => $request->input('type_role_id'),
-                'commune_id' => $request->input('commune_id'),
+                'entite_id' => $request->input('entite_id'),
             ]);
 
             return redirect()->back()->with('success', 'Utilisateur créé avec succès.');
         } catch (\Throwable $th) {
-            dd($th);
+            Log::error('Error creating user: ' . $th->getMessage(), ['exception' => $th]);
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de l\'utilisateur.');
         }
     }
@@ -92,14 +95,14 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email,' . $id,
                 'type_role_id' => 'required|exists:type_roles,id',
-                'commune_id' => 'required|exists:communes,id',
+                'entite_id' => 'required|exists:entite_administratives,id',
             ]);
             $user = User::findOrFail($id);
             $user->update([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'type_role_id' => $request->input('type_role_id'),
-                'commune_id' => $request->input('commune_id'),
+                'entite_id' => $request->input('entite_id'),
             ]);
             return redirect()->back()->with('success', 'Utilisateur modifié avec succès.');
         } catch (\Throwable $th) {

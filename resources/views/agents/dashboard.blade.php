@@ -74,9 +74,9 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Commune</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Entité</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ auth()->user()->commune->nom }}
+                                        {{ auth()->user()->entite->nom ?? 'Non assignée' }}
                                     </h5>
                                 </div>
                             </div>

@@ -123,7 +123,7 @@
                                                     </div>
                                                     <div class="card-body text-center">
                                                         @if ($mariage->epoux->url_photo)
-                                                            <img src="{{ $mariage->epoux->url_photo }}"
+                                                            <img src="{{ asset('storage/' . $mariage->epoux->url_photo) }}"
                                                                 alt="Photo de {{ $mariage->epoux->prenom }} {{ $mariage->epoux->nom }}"
                                                                 class="img-fluid rounded" style="max-height: 200px;">
                                                         @else
@@ -208,7 +208,7 @@
                                                     </div>
                                                     <div class="card-body text-center">
                                                         @if ($mariage->epouse->url_photo)
-                                                            <img src="{{ $mariage->epouse->url_photo }}"
+                                                            <img src="{{ asset('storage/' . $mariage->epouse->url_photo) }}"
                                                                 alt="Photo de {{ $mariage->epouse->prenom }} {{ $mariage->epouse->nom }}"
                                                                 class="img-fluid rounded" style="max-height: 200px;">
                                                         @else

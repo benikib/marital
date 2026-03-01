@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ProvinceSeeder::class,
             CommuneSeeder::class,
             TypeRoleSeeder::class,
+            EntiteAdministrativeSeeder::class,
             UserSeeder::class,
             ContratSeeder::class,
             RegimeMatrimonialeSeeder::class,

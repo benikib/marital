@@ -53,9 +53,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="commune_id" class="form-control-label">Commune</label>
+                                        <label for="entite_id" class="form-control-label">Entité administrative</label>
                                         <input type="text" class="form-control"
-                                            value="{{ $user->commune->nom ?? 'Non assigné' }}" disabled>
+                                            value="{{ $user->entite->nom ?? 'Non assignée' }}" disabled>
                                     </div>
                                 </div>
                             </div>

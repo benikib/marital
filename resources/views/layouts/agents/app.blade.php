@@ -8,7 +8,7 @@
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -30,6 +30,13 @@
     @include('layouts.agents.aside')
 
     <main class="main-content position-relative border-radius-lg">
+        @if ($errors->has('error'))
+    <div class="alert alert-danger">
+        {{ $errors->first('error') }}
+    </div>
+@endif
+
+
         <!-- Navbar -->
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
             navbar-scroll="true">
@@ -111,6 +118,13 @@
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('draft_saved'))
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    Brouillon sauvegardé. Vous pouvez le retrouver dans <a href="{{ route('agent.drafts.index') }}">Brouillons</a>.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif

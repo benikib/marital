@@ -68,22 +68,22 @@
                                             <tr>
                                                 <th style="width: 200px">Nom complet</th>
                                                 <td>
-                                                    {{ $mariage->ayantDroitCoutinier->nom }}
-                                                    {{ $mariage->ayantDroitCoutinier->prenom }}
-                                                    {{ $mariage->ayantDroitCoutinier->postnom }}
+                                                    {{ $mariage->ayantDroitCoutumier->nom }}
+                                                    {{ $mariage->ayantDroitCoutumier->prenom }}
+                                                    {{ $mariage->ayantDroitCoutumier->postnom }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>Profession</th>
-                                                <td>{{ $mariage->ayantDroitCoutinier->profession }}</td>
+                                                <td>{{ $mariage->ayantDroitCoutumier->profession }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Adresse</th>
-                                                <td>{{ $mariage->ayantDroitCoutinier->adresse }}</td>
+                                                <td>{{ $mariage->ayantDroitCoutumier->adresse }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Nationalité</th>
-                                                <td>{{ $mariage->ayantDroitCoutinier->nationalite }}</td>
+                                                <td>{{ $mariage->ayantDroitCoutumier->nationalite }}</td>
                                             </tr>
                                         </table>
                                     </div>

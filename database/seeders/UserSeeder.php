@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
         // $utilisateurRole = typeRole::where('nom', 'utilisateur')->first();
 
         // Récupérer les communes spécifiques pour les utilisateurs de test
-        $communeCasablanca = commune::where('nom', 'Kinshasa')->first();
+        // $communeCasablanca = commune::where('nom', 'Kinshasa')->first();
         // $communeRabat = commune::where('nom', 'Hassan Rabat')->first();
         // $communeParDefaut = commune::inRandomOrder()->first();
 
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'type_role_id' => $adminRole->id,
-            'commune_id' => 1,
+            'entite_id' => 1,
         ]);
 
         // Création d'un modérateur

@@ -21,8 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-         'type_role_id',
-         'commune_id',
+            'type_role_id',
+            'entite_id',
     ];
 
     /**
@@ -51,8 +51,18 @@ class User extends Authenticatable
     {
         return $this->belongsTo(typeRole::class, 'type_role_id');
     }
-    public function commune(){
-        return $this->belongsTo(commune::class, 'commune_id');
+    // public function commune(){
+    //     return $this->belongsTo(commune::class, 'commune_id');
+    // }
+
+    public function entite()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'entite_id');
+    }
+
+    public function mariageDrafts()
+    {
+        return $this->hasMany(\App\Models\MariageDraft::class, 'user_id');
     }
 
 }

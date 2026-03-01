@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ayantDroitCoutinier;
+use App\Models\AyantDroitCoutumier;
 use Illuminate\Http\Request;
 
-class AyantDroitCoutinierController extends Controller
+class AyantDroitCoutumierController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class AyantDroitCoutinierController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ayantDroitCoutinier $ayantDroitCoutinier)
+    public function show(AyantDroitCoutumier $ayantDroitCoutumier)
     {
         //
     }
@@ -42,7 +42,7 @@ class AyantDroitCoutinierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ayantDroitCoutinier $ayantDroitCoutinier)
+    public function edit(AyantDroitCoutumier $ayantDroitCoutumier)
     {
         //
     }
@@ -50,7 +50,7 @@ class AyantDroitCoutinierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ayantDroitCoutinier $ayantDroitCoutinier)
+    public function update(Request $request, AyantDroitCoutumier $ayantDroitCoutumier)
     {
         //
     }
@@ -58,7 +58,7 @@ class AyantDroitCoutinierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ayantDroitCoutinier $ayantDroitCoutinier)
+    public function destroy(AyantDroitCoutumier $ayantDroitCoutumier)
     {
         //
     }

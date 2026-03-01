@@ -37,7 +37,7 @@ class OverviewController extends Controller
 
         // Statistiques des régimes matrimoniaux
         $totalRegimes = RegimeMatrimoniale::count();
-        $regimesActifs = RegimeMatrimoniale::where('dotation_cutinier', 10)->count();
+        $regimesActifs = RegimeMatrimoniale::where('dotation_coutumier', 10)->count();
 
         // Statistiques géographiques
         $totalProvinces = province::count();

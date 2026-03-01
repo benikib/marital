@@ -25,6 +25,12 @@ Route::middleware('auth')->group(function () {
 
     // Routes pour la gestion des mariages
     Route::resource('mariages', MariageController::class);
+
+    // Drafts API for autosave
+    Route::post('/mariage-drafts', [App\Http\Controllers\MariageDraftController::class, 'store'])->name('mariage-drafts.store');
+    Route::get('/mariage-drafts/{mariageDraft}', [App\Http\Controllers\MariageDraftController::class, 'show'])->name('mariage-drafts.show');
+    Route::delete('/mariage-drafts/{mariageDraft}', [App\Http\Controllers\MariageDraftController::class, 'destroy'])->name('mariage-drafts.destroy');
+    
 });
 
 // Routes pour les agents communaux
@@ -53,6 +59,17 @@ Route::middleware(['auth', 'role:Agent'])->prefix('agent')->name('agent.')->grou
     Route::get('/profile', [App\Http\Controllers\Agent\ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [App\Http\Controllers\Agent\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [App\Http\Controllers\Agent\ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Drafts listing for agents
+    Route::get('/drafts', [App\Http\Controllers\Agent\MariageDraftController::class, 'index'])->name('drafts.index');
+});
+
+// web.php
+Route::group(['prefix' => 'agent/mariagescommunes', 'as' => 'agent.mariagescommunes.'], function () {
+    Route::get('/create', [MariageController::class, 'create'])->name('create');
+    Route::get('/create/step/{step}', [MariageController::class, 'createStep'])->name('create.step');
+    Route::post('/create/step/{step}', [MariageController::class, 'saveStep'])->name('save.step');
+    Route::post('/', [MariageController::class, 'store'])->name('mariages.store');
 });
 
 require __DIR__ . '/auth.php';

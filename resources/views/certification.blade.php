@@ -215,7 +215,7 @@
                 RÉPUBLIQUE DÉMOCRATIQUE DU CONGO
             </div>
             <div style="font-size: 1rem;">
-                COMMUNE DE <span class="info-value">{{ $mariage->commune->nom }}</span>
+                ENTITÉ DE <span class="info-value">{{ $mariage->entite->nom ?? $mariage->commune->nom ?? '' }}</span>
             </div>
             <div class="certificate-title">CERTIFICAT DE MARIAGE</div>
         </div>
@@ -223,7 +223,7 @@
         <div class="certificate-content">
             <div class="info-block">
                 Nous, Officier de l'État Civil de la Commune de <span
-                    class="info-value">{{ $mariage->commune->nom }}</span>,
+                    class="info-value">{{ $mariage->entite->nom ?? $mariage->commune->nom ?? '' }}</span>,
                 certifions que le mariage a été dûment célébré entre :
             </div>
 
@@ -310,7 +310,7 @@
             </div>
 
             <div class="signature-section">
-                <div>Fait à <span class="info-value">{{ $mariage->commune->nom }}</span>, le <span
+                <div>Fait à <span class="info-value">{{ $mariage->entite->nom ?? $mariage->commune->nom ?? '' }}</span>, le <span
                         class="info-value">{{ date('d/m/Y') }}</span></div>
                 <div class="signature-line"></div>
                 <div style="font-weight: bold; font-style: italic;">L'Officier de l'État Civil</div>

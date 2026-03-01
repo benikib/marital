@@ -10,8 +10,8 @@ class RegimeMatrimonialeFactory extends Factory
     public function definition(): array
     {
         return [
-            'lieu_mariage_cutinier' => $this->faker->city(),
-            'dotation_cutinier' => $this->faker->numberBetween(100000, 1000000),
+            'lieu_mariage_coutumier' => $this->faker->city(),
+            'dotation_coutumier' => $this->faker->numberBetween(100000, 1000000),
             'contrat_id' => Contrat::factory(),
         ];
     }

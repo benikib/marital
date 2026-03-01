@@ -13,12 +13,11 @@ class RapportController extends Controller
 {
     public function mensuel()
     {
-        $commune = auth()->user()->commune;
+        $entite = auth()->user()->entite;
         $mois = request('mois', Carbon::now()->month);
         $annee = request('annee', Carbon::now()->year);
-
         $mariages = mariage::with(['epoux', 'epouse', 'status'])
-            ->where('commune_id', $commune->id)
+            ->when($entite, function ($q) use ($entite) { return $q->where('entite_id', $entite->id); })
             ->whereMonth('date_mariage', $mois)
             ->whereYear('date_mariage', $annee)
             ->get();
@@ -34,11 +33,10 @@ class RapportController extends Controller
 
     public function annuel()
     {
-        $commune = auth()->user()->commune;
+        $entite = auth()->user()->entite;
         $annee = request('annee', Carbon::now()->year);
-
         $mariages = mariage::with(['epoux', 'epouse', 'status'])
-            ->where('commune_id', $commune->id)
+            ->when($entite, function ($q) use ($entite) { return $q->where('entite_id', $entite->id); })
             ->whereYear('date_mariage', $annee)
             ->get();
 
@@ -59,12 +57,11 @@ class RapportController extends Controller
 
     public function exportMensuel()
     {
-        $commune = auth()->user()->commune;
+        $entite = auth()->user()->entite;
         $mois = request('mois', Carbon::now()->month);
         $annee = request('annee', Carbon::now()->year);
-
         $mariages = mariage::with(['epoux', 'epouse', 'status'])
-            ->where('commune_id', $commune->id)
+            ->when($entite, function ($q) use ($entite) { return $q->where('entite_id', $entite->id); })
             ->whereMonth('date_mariage', $mois)
             ->whereYear('date_mariage', $annee)
             ->get();
@@ -75,17 +72,16 @@ class RapportController extends Controller
                 return $group->count();
             });
 
-        $pdf = PDF::loadView('agents.rapports.export-mensuel', compact('mariages', 'total', 'parStatus', 'mois', 'annee', 'commune'));
-        return $pdf->download('rapport-mensuel-' . $commune->nom . '-' . $mois . '-' . $annee . '.pdf');
+        $pdf = PDF::loadView('agents.rapports.export-mensuel', compact('mariages', 'total', 'parStatus', 'mois', 'annee', 'entite'));
+        return $pdf->download('rapport-mensuel-' . ($entite?->nom ?? 'entite') . '-' . $mois . '-' . $annee . '.pdf');
     }
 
     public function exportAnnuel()
     {
-        $commune = auth()->user()->commune;
+        $entite = auth()->user()->entite;
         $annee = request('annee', Carbon::now()->year);
-
         $mariages = mariage::with(['epoux', 'epouse', 'status'])
-            ->where('commune_id', $commune->id)
+            ->when($entite, function ($q) use ($entite) { return $q->where('entite_id', $entite->id); })
             ->whereYear('date_mariage', $annee)
             ->get();
 
@@ -101,7 +97,7 @@ class RapportController extends Controller
                 return $group->count();
             });
 
-        $pdf = PDF::loadView('agents.rapports.export-annuel', compact('mariages', 'total', 'parMois', 'parStatus', 'annee', 'commune'));
-        return $pdf->download('rapport-annuel-' . $commune->nom . '-' . $annee . '.pdf');
+        $pdf = PDF::loadView('agents.rapports.export-annuel', compact('mariages', 'total', 'parMois', 'parStatus', 'annee', 'entite'));
+        return $pdf->download('rapport-annuel-' . ($entite?->nom ?? 'entite') . '-' . $annee . '.pdf');
     }
 }

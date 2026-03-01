@@ -13,15 +13,39 @@ class OverviewController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $communeId = $user->commune_id;
+        $entite = $user->entite;
+
+        if (! $entite) {
+            $totalMariages = 0;
+            $mariagesCeMois = 0;
+            $mariagesCetteAnnee = 0;
+            $mariagesEnAttente = 0;
+            $mariagesValides = 0;
+            $mariagesAnnules = 0;
+            $evolutionMariages = collect();
+            $derniersMariages = collect();
+
+            return view('agents.overviews', compact(
+                'totalMariages',
+                'mariagesCeMois',
+                'mariagesCetteAnnee',
+                'mariagesEnAttente',
+                'mariagesValides',
+                'mariagesAnnules',
+                'evolutionMariages',
+                'derniersMariages'
+            ));
+        }
+
+        $entiteId = $entite->id;
 
         // Statistiques générales
-        $totalMariages = mariage::where('commune_id', $communeId)->count();
-        $mariagesCeMois = mariage::where('commune_id', $communeId)
+        $totalMariages = mariage::where('entite_id', $entiteId)->count();
+        $mariagesCeMois = mariage::where('entite_id', $entiteId)
             ->whereMonth('date_mariage', Carbon::now()->month)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->count();
-        $mariagesCetteAnnee = mariage::where('commune_id', $communeId)
+        $mariagesCetteAnnee = mariage::where('entite_id', $entiteId)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->count();
         $mariagesEnAttente = 0;
@@ -30,7 +54,7 @@ class OverviewController extends Controller
         $mariagesValides = 0;
         $mariagesAnnules =0;
 
-     $evolutionMariages = mariage::where('commune_id', $communeId)
+    $evolutionMariages = mariage::where('entite_id', $entiteId)
     ->where('date_mariage', '>=', Carbon::now()->subMonths(6))
     ->select(
         DB::raw('DATE_FORMAT(date_mariage, "%M %Y") as mois'),
@@ -41,7 +65,7 @@ class OverviewController extends Controller
     ->orderBy('date_min') // Tri par la date minimale du groupe
     ->get();
         // Derniers mariages
-        $derniersMariages = mariage::where('commune_id', $communeId)
+        $derniersMariages = mariage::where('entite_id', $entiteId)
             ->orderBy('date_mariage', 'desc')
             ->take(5)
             ->get();

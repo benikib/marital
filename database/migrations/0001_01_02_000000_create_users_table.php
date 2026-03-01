@@ -20,10 +20,11 @@ return new class extends Migration {
                 ->nullable()
                 ->constrained('type_roles')
                 ->onDelete('cascade');
-            $table->foreignId('commune_id')
+            $table->foreignId('entite_id')
                 ->nullable()
-                ->constrained('communes')
-                ->nullOnDelete();
+                ->constrained('entite_administratives')
+                ->cascadeOnDelete();
+       
             $table->rememberToken();
             $table->timestamps();
         });

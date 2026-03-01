@@ -30,13 +30,13 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="commune" class="form-label">Filtrer par commune</label>
-                                        <select name="commune" id="commune" class="form-select" onchange="this.form.submit()">
-                                            <option value="">Toutes les communes</option>
-                                            @foreach ($communes as $commune)
-                                                <option value="{{ $commune->id }}"
-                                                    {{ request('commune') == $commune->id ? 'selected' : '' }}>
-                                                    {{ $commune->nom }} ({{ $commune->province->nom }})
+                                        <label for="entite" class="form-label">Filtrer par entite</label>
+                                        <select name="entite" id="entite" class="form-select" onchange="this.form.submit()">
+                                            <option value="">Toutes les entites</option>
+                                            @foreach ($entites as $entite)
+                                                <option value="{{ $entite->id }}"
+                                                    {{ request('entite') == $entite->id ? 'selected' : '' }}>
+                                                    {{ $entite->nom }} 
                                                 </option>
                                             @endforeach
                                         </select>
@@ -62,7 +62,7 @@
                                             Email</th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rôle
                                         </th>
-                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Commune
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">entite
                                         </th>
                                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date
                                             de création</th>
@@ -107,7 +107,7 @@
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex flex-column justify-content-center">
                                                         <h6 class="mb-0 text-sm">
-                                                            {{ $user->commune ? $user->commune->nom . ' (' . $user->commune->province->nom . ')' : 'Non assignée' }}
+                                                            {{ $user->entite ? $user->entite->nom  : 'Non assignée' }}
                                                         </h6>
                                                     </div>
                                                 </div>
@@ -131,7 +131,7 @@
                                                     data-id="{{ $user->id }}" data-name="{{ $user->name }}"
                                                     data-email="{{ $user->email }}"
                                                     data-role="{{ $user->type_role_id }}"
-                                                    data-commune="{{ $user->commune_id }}">
+                                                    data-entite="{{ $user->entite_id }}">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <a href="javascript:;" class="text-danger font-weight-bold text-xs"
@@ -189,12 +189,12 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="commune_id" class="form-label">Commune</label>
-                            <select class="form-select" id="commune_id" name="commune_id">
-                                <option value="">Sélectionner une commune</option>
-                                @foreach ($communes as $commune)
-                                    <option value="{{ $commune->id }}">
-                                        {{ $commune->nom }} ({{ $commune->province->nom }})
+                            <label for="entite_id" class="form-label">entite</label>
+                            <select class="form-select" id="entite_id" name="entite_id">
+                                <option value="">Sélectionner une entite</option>
+                                @foreach ($entites as $entite)
+                                    <option value="{{ $entite->id }}">
+                                        {{ $entite->nom }} ({{ $entite->parent_id }})
                                     </option>
                                 @endforeach
                             </select>
@@ -238,12 +238,12 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_commune_id" class="form-label">Commune</label>
-                            <select class="form-select" id="edit_commune_id" name="commune_id">
-                                <option value="">Sélectionner une commune</option>
-                                @foreach ($communes as $commune)
-                                    <option value="{{ $commune->id }}">
-                                        {{ $commune->nom }} ({{ $commune->province->nom }})
+                            <label for="edit_entite_id" class="form-label">entite</label>
+                            <select class="form-select" id="edit_entite_id" name="entite_id">
+                                <option value="">Sélectionner une entite</option>
+                                @foreach ($entites as $entite)
+                                    <option value="{{ $entite->id }}">
+                                        {{ $entite->nom }} ({{ $entite->parent_id }})
                                     </option>
                                 @endforeach
                             </select>
@@ -271,7 +271,7 @@
                     const userName = this.getAttribute('data-name');
                     const userEmail = this.getAttribute('data-email');
                     const userRole = this.getAttribute('data-role');
-                    const userCommune = this.getAttribute('data-commune');
+                    const userentite = this.getAttribute('data-entite');
 
                     const form = document.getElementById('editUserForm');
                     form.action = `/users/${userId}`;
@@ -279,7 +279,7 @@
                     document.getElementById('edit_name').value = userName;
                     document.getElementById('edit_email').value = userEmail;
                     document.getElementById('edit_type_role_id').value = userRole;
-                    document.getElementById('edit_commune_id').value = userCommune || '';
+                    document.getElementById('edit_entite_id').value = userentite || '';
                 });
             });
         });

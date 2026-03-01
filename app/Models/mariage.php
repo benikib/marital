@@ -15,11 +15,12 @@ class Mariage extends Model
         'date_mariage',
         'status_id',
         'regime_matrimonial_id',
-        'ayant_droit_coutinier_id',
+        'ayant_droit_coutumier_id',
         'epouse_id',
         'epoux_id',
         'user_id',
-        'commune_id'
+        'commune_id',
+        'entite_id'
     ];
 
     protected $casts = [
@@ -36,9 +37,9 @@ class Mariage extends Model
         return $this->belongsTo(RegimeMatrimoniale::class, 'regime_matrimonial_id');
     }
 
-    public function ayantDroitCoutinier()
+    public function ayantDroitCoutumier()
     {
-        return $this->belongsTo(AyantDroitCoutinier::class);
+        return $this->belongsTo(AyantDroitCoutumier::class);
     }
 
     public function epouse()
@@ -67,6 +68,11 @@ class Mariage extends Model
   public function commune()
     {
         return $this->belongsTo(commune::class, 'commune_id');
+    }
+
+    public function entite()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'entite_id');
     }
 
 }

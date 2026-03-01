@@ -12,31 +12,50 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $commune = auth()->user()->commune;
+        // Si l'utilisateur n'a pas d'entité liée, retourner des valeurs vides/zéro
+            $entite = auth()->user()->entite;
+            
+
+            // Si l'utilisateur n'a pas d'entité liée, retourner des valeurs vides/zéro
+            if (! $entite) {
+            $mariagesMois = 0;
+            $mariagesAnnee = 0;
+            $totalMariages = 0;
+            $derniersMariages = collect();
+            $statsMensuelles = collect();
+
+            return view('agents.dashboard', compact(
+                'mariagesMois',
+                'mariagesAnnee',
+                'totalMariages',
+                'derniersMariages',
+                'statsMensuelles'
+            ));
+        }
 
         // Statistiques pour le mois en cours
-        $mariagesMois = Mariage::where('commune_id', $commune->id)
+            $mariagesMois = mariage::where('entite_id', $entite->id)
             ->whereMonth('date_mariage', Carbon::now()->month)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->count();
 
         // Statistiques pour l'année en cours
-        $mariagesAnnee = mariage::where('commune_id', $commune->id)
+            $mariagesAnnee = mariage::where('entite_id', $entite->id)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->count();
 
         // Total des mariages
-        $totalMariages = mariage::where('commune_id', $commune->id)->count();
+            $totalMariages = mariage::where('entite_id', $entite->id)->count();
 
         // Derniers mariages enregistrés
-        $derniersMariages = mariage::with(['epoux', 'epouse', 'status'])
-            ->where('commune_id', $commune->id)
+            $derniersMariages = mariage::with(['epoux', 'epouse', 'status'])
+                ->where('entite_id', $entite->id)
             ->latest()
             ->take(5)
             ->get();
 
         // Statistiques mensuelles pour le graphique
-        $statsMensuelles = mariage::where('commune_id', $commune->id)
+            $statsMensuelles = mariage::where('entite_id', $entite->id)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->select(
                 DB::raw('MONTH(date_mariage) as mois'),
@@ -63,24 +82,36 @@ class DashboardController extends Controller
 
     public function overviews()
     {
-        $commune = auth()->user()->commune;
+        $entite = auth()->user()->entite;
+
+        if (! $entite) {
+            $statsParStatut = collect();
+            $statsParAnnee = collect();
+            $statsParMois = collect();
+
+            return view('agents.overviews', compact(
+                'statsParStatut',
+                'statsParAnnee',
+                'statsParMois'
+            ));
+        }
 
         // Statistiques par statut
-        $statsParStatut = mariage::where('commune_id', $commune->id)
+        $statsParStatut = mariage::where('entite_id', $entite->id)
             ->select('status_id', DB::raw('count(*) as total'))
             ->groupBy('status_id')
             ->with('status')
             ->get();
 
         // Statistiques par année
-        $statsParAnnee = mariage::where('commune_id', $commune->id)
+        $statsParAnnee = mariage::where('entite_id', $entite->id)
             ->select(DB::raw('YEAR(date_mariage) as annee'), DB::raw('count(*) as total'))
             ->groupBy('annee')
             ->orderBy('annee', 'desc')
             ->get();
 
         // Statistiques par mois de l'année en cours
-        $statsParMois = mariage::where('commune_id', $commune->id)
+        $statsParMois = mariage::where('entite_id', $entite->id)
             ->whereYear('date_mariage', Carbon::now()->year)
             ->select(DB::raw('MONTH(date_mariage) as mois'), DB::raw('count(*) as total'))
             ->groupBy('mois')

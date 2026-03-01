@@ -12,8 +12,8 @@ class RegimeMatrimoniale extends Model
     protected $table = 'regimes_matrimonauxes';
 
     protected $fillable = [
-        'lieu_mariage_cutinier',
-        'dotation_cutinier',
+        'lieu_mariage_coutumier',
+        'dotation_coutumier',
         'contrat_id'
     ];
 

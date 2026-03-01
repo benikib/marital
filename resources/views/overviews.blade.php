@@ -274,7 +274,7 @@
                 <div class="card">
                     <div class="card-header pb-0 p-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">Top 5 Communes</h6>
+                            <h6 class="mb-0">Top 5 Entités (communes)</h6>
                             <button type="button" class="btn btn-sm btn-outline-primary mb-0" data-bs-toggle="modal"
                                 data-bs-target="#communeModal">
                                 <i class="fas fa-cog me-1"></i> Gérer
@@ -287,7 +287,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">
-                                            Commune</th>
+                                            Entité</th>
                                         <th
                                             class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
                                             Total</th>

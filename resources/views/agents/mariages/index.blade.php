@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                        <h6>Liste des Mariages de {{ auth()->user()->commune->nom }}</h6>
+                        <h6>Liste des Mariages de {{ auth()->user()->entite->nom ?? 'Non assignée' }}</h6>
                         {{-- <a href="{{ route('agent.mariagescommunes.create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Nouveau Mariage
                         </a> --}}

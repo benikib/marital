@@ -6,9 +6,12 @@
                 <div class="card">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                         <h6>Nouveau Mariage</h6>
-                        {{-- <a href="{{ route('mariages.index') }}" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-left"></i> Retour
-                        </a> --}}
+                        <div>
+                            <a href="{{ route('agent.drafts.index') }}" class="btn btn-outline-primary btn-sm me-2">Brouillons</a>
+                            {{-- <a href="{{ route('mariages.index') }}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a> --}}
+                        </div>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('agent.mariagescommunes.store') }}" method="POST"
@@ -51,6 +54,11 @@
                                     <button class="nav-link" id="ayantdroit-tab" data-bs-toggle="tab"
                                         data-bs-target="#ayantdroit" type="button" role="tab">
                                         <i class="fas fa-user-friends me-2"></i>Ayant Droit
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="regime-tab" data-bs-toggle="tab" data-bs-target="#regime" type="button" role="tab">
+                                        <i class="fas fa-handshake me-2"></i>Régime matrimonial
                                     </button>
                                 </li>
                             </ul>
@@ -235,7 +243,7 @@
                                                         <label for="epoux_photo">Photo de l'époux</label>
                                                         <input type="file"
                                                             class="form-control @error('epoux.url_photo') is-invalid @enderror"
-                                                            id="url_photo" name="epoux[url_photo]">
+                                                            id="epoux_photo" name="epoux[url_photo]" required>
                                                         @error('epoux.url_photo')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
@@ -436,10 +444,10 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="epouse_url_photo">Photo de l'épouse</label>
+                                                        <label for="epouse_photo">Photo de l'épouse</label>
                                                         <input type="file"
                                                             class="form-control @error('epouse.url_photo') is-invalid @enderror"
-                                                            id="epouse_url_photo" name="epouse[url_photo]">
+                                                            id="epouse_photo" name="epouse[url_photo]" required>
                                                         @error('epouse.url_photo')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
@@ -1482,7 +1490,27 @@
                                 <div class="tab-pane fade" id="ayantdroit" role="tabpanel">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h6 class="mb-3">Ayant Droit Coutinier</h6>
+                                            <h6 class="mb-3">Ayant Droit Coutumier</h6>
+                                            
+                                            <!-- Option pour charger les données du père de l'épouse -->
+                                            <div class="row mb-4 p-3 bg-light rounded">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="load_pere_epouse">Charger les données du père de l'épouse <span class="text-muted">(optionnel)</span></label>
+                                                        <div class="input-group">
+                                                            <select class="form-control" id="load_pere_epouse">
+                                                                <option value="">-- Sélectionnez le père de la mariée --</option>
+                                                                <option value="auto">Père (données du formulaire)</option>
+                                                            </select>
+                                                            <button type="button" class="btn btn-outline-primary" id="btn_load_pere">
+                                                                <i class="fas fa-download me-1"></i>Charger
+                                                            </button>
+                                                        </div>
+                                                        <small class="form-text text-muted">Cliquez sur "Charger" pour remplir automatiquement les champs avec les données du père</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
@@ -1665,45 +1693,36 @@
                                                 </div>
                                             </div>
 
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Onglet Régime matrimonial -->
+                                <div class="tab-pane fade" id="regime" role="tabpanel">
+                                    <div class="card">
+                                        <div class="card-body">
                                             <div class="row mt-3">
+                                                <!-- Lieu du mariage coutumier supprimé (déplacé/retiré) -->
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="regime_lieu_coutumier">Lieu du mariage coutumier
-                                                            <span class="text-danger">*</span></label>
-                                                        <input type="text"
-                                                            class="form-control @error('regime.lieu_mariage_cutinier') is-invalid @enderror"
-                                                            id="regime_lieu_coutumier"
-                                                            name="regime[lieu_mariage_cutinier]"
-                                                            value="{{ old('regime.lieu_mariage_cutinier') }}" required>
-                                                        @error('regime.lieu_mariage_cutinier')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="regime_dotation">Dotation coutumière <span
-                                                                class="text-danger">*</span></label>
+                                                        <label for="regime_dotation">Dotation coutumière <span class="text-danger">*</span></label>
                                                         <input type="number"
-                                                            class="form-control @error('regime.dotation_cutinier') is-invalid @enderror"
-                                                            id="regime_dotation" name="regime[dotation_cutinier]"
-                                                            value="{{ old('regime.dotation_cutinier') }}" required>
-                                                        @error('regime.dotation_cutinier')
+                                                            class="form-control @error('regime.dotation_coutumier') is-invalid @enderror"
+                                                            id="regime_dotation" name="regime[dotation_coutumier]"
+                                                            value="{{ old('regime.dotation_coutumier') }}" required>
+                                                        @error('regime.dotation_coutumier')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="regime_contrat">Type de contrat <span
-                                                                class="text-danger">*</span></label>
-                                                        <select
-                                                            class="form-control @error('regime.contrat_id') is-invalid @enderror"
-                                                            id="regime_contrat" name="regime[contrat_id]" required>
+                                                        <label for="regime_contrat">Type de contrat <span class="text-danger">*</span></label>
+                                                        <select class="form-control @error('regime.contrat_id') is-invalid @enderror" id="regime_contrat" name="regime[contrat_id]" required>
                                                             <option value="">Sélectionnez...</option>
                                                             @foreach ($contrats as $contrat)
-                                                                <option value="{{ $contrat->id }}"
-                                                                    {{ old('regime.contrat_id') == $contrat->id ? 'selected' : '' }}>
+                                                                <option value="{{ $contrat->id }}" {{ old('regime.contrat_id') == $contrat->id ? 'selected' : '' }}>
                                                                     {{ $contrat->type_contrat }}
                                                                 </option>
                                                             @endforeach
@@ -1714,17 +1733,29 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="couple_photo">Photo du couple <span class="text-danger">*</span></label>
+                                                        <input type="file" class="form-control @error('mariage.couple_photo') is-invalid @enderror" id="couple_photo" name="mariage[couple_photo]" required>
+                                                        @error('mariage.couple_photo')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        <small class="form-text text-muted">Formats acceptés : JPG, PNG, GIF. Taille max : 5MB</small>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <!-- Bouton de soumission final -->
                                     <div class="row mt-4">
                                         <div class="col-12 d-flex justify-content-between">
-                                            <button type="button" class="btn btn-secondary prev-tab"
-                                                data-prev-tab="temoins-tab">
+                                            <button type="button" class="btn btn-secondary prev-tab" data-prev-tab="ayantdroit-tab">
                                                 <i class="fas fa-arrow-left me-2"></i>Précédent
                                             </button>
-                                            <button type="submit" class="btn btn-success">
+                                            <button type="submit" class="btn btn-success" id="submit_mariage_btn">
                                                 <i class="fas fa-save me-2"></i>Enregistrer le mariage
                                             </button>
                                         </div>
@@ -1871,6 +1902,196 @@
             document.getElementById('epouse_photo')?.addEventListener('change', function() {
                 previewImage(this, 'epouse_photo_preview');
             });
+            document.getElementById('couple_photo')?.addEventListener('change', function() {
+                previewImage(this, 'couple_photo_preview');
+            });
+        });
+    </script>
+
+    <script>
+        // Restore draft data into the form when opened via ?draft=ID
+        (function() {
+            const DRAFT = @json($draftData ?? null);
+            if (!DRAFT) return;
+
+            function getByPath(obj, path) {
+                if (!obj) return undefined;
+                const parts = path.split('.');
+                let cur = obj;
+                for (let p of parts) {
+                    if (cur === undefined || cur === null) return undefined;
+                    cur = cur[p];
+                }
+                return cur;
+            }
+
+            // Convert input names like "epoux[nom]" to path "epoux.nom"
+            function nameToPath(name) {
+                return name.replace(/\]/g, '').replace(/\[/g, '.');
+            }
+
+            const form = document.querySelector('form');
+            if (!form) return;
+
+            // Populate inputs, selects and textareas
+            form.querySelectorAll('input[name],select[name],textarea[name]').forEach(el => {
+                const name = el.getAttribute('name');
+                if (!name) return;
+                const path = nameToPath(name);
+                const value = getByPath(DRAFT, path);
+                if (value === undefined || value === null) return;
+
+                if (el.tagName.toLowerCase() === 'select') {
+                    el.value = value;
+                    el.dispatchEvent(new Event('change'));
+                    return;
+                }
+
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    if (Array.isArray(value)) {
+                        el.checked = value.includes(el.value);
+                    } else {
+                        el.checked = (String(value) === String(el.value));
+                    }
+                    el.dispatchEvent(new Event('change'));
+                    return;
+                }
+
+                if (el.type === 'file') {
+                    // Can't set file inputs programmatically; create a preview if draft has a URL
+                    const previewUrl = getByPath(DRAFT, path.replace(/url_photo$/i, 'url_photo')) || getByPath(DRAFT, path);
+                    if (previewUrl) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'mt-2';
+                        const img = document.createElement('img');
+                        img.src = previewUrl;
+                        img.style.maxWidth = '200px';
+                        img.style.display = 'block';
+                        wrapper.appendChild(img);
+                        el.parentNode.appendChild(wrapper);
+                    }
+                    return;
+                }
+
+                // default: set value
+                try {
+                    el.value = value;
+                    el.dispatchEvent(new Event('input'));
+                } catch (e) {
+                    console.warn('Failed to populate', name, e);
+                }
+            });
+
+            // If draft contains mariage.couple_photo show preview near couple photo input
+            const coupleUrl = getByPath(DRAFT, 'mariage.couple_photo');
+            if (coupleUrl) {
+                const coupleInput = form.querySelector('input[name="mariage[couple_photo]"]');
+                if (coupleInput) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'mt-2';
+                    const img = document.createElement('img');
+                    img.src = coupleUrl;
+                    img.style.maxWidth = '300px';
+                    img.style.display = 'block';
+                    wrapper.appendChild(img);
+                    coupleInput.parentNode.appendChild(wrapper);
+                }
+            }
+        })();
+    </script>
+    <script>
+        // Load draft when ?draft={id} is present in URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const draftId = params.get('draft');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!draftId) return;
+
+            fetch(`/mariage-drafts/${draftId}`, {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }
+            })
+            .then(r => r.json())
+            .then(draft => {
+                if (!draft || !draft.data) return;
+                restoreDraftToForm(draft.data, draft.files || {});
+                // show a small notification
+                const info = document.createElement('div');
+                info.className = 'alert alert-info';
+                info.textContent = 'Brouillon chargé depuis le serveur.';
+                document.querySelector('.container-fluid')?.prepend(info);
+            })
+            .catch(err => console.error('Error loading draft:', err));
+
+            function restoreDraftToForm(data, files) {
+                // data is expected as nested object: { epoux: { nom: '...' }, mariag e: {...} }
+                Object.keys(data).forEach(group => {
+                    const groupVal = data[group];
+                    if (groupVal && typeof groupVal === 'object') {
+                        Object.keys(groupVal).forEach(key => {
+                            const inputName = `${group}[${key}]`;
+                            // try by name
+                            const elsByName = document.querySelectorAll(`[name='${inputName}']`);
+                            if (elsByName.length) {
+                                elsByName.forEach(el => setElementValue(el, groupVal[key]));
+                                // If this value is an image URL, create preview
+                                if (isImageUrl(groupVal[key])) {
+                                    addPreviewForField(group, key, groupVal[key]);
+                                }
+                                return;
+                            }
+
+                            // fallback to id style like epoux_nom
+                            const elById = document.getElementById(`${group}_${key}`);
+                            if (elById) {
+                                setElementValue(elById, groupVal[key]);
+                                if (isImageUrl(groupVal[key])) addPreviewForField(group, key, groupVal[key]);
+                            }
+                        });
+                    } else {
+                        // top-level scalar
+                        const el = document.querySelector(`[name='${group}']`) || document.getElementById(group);
+                        if (el) setElementValue(el, data[group]);
+                    }
+                });
+            }
+
+            function setElementValue(el, value) {
+                if (!el) return;
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    el.checked = !!value;
+                } else if (el.tagName === 'SELECT') {
+                    el.value = value;
+                } else if (el.type === 'file') {
+                    // cannot set file inputs programmatically; leave preview
+                } else {
+                    el.value = value;
+                }
+            }
+
+            function isImageUrl(val) {
+                return typeof val === 'string' && (val.startsWith('http') || val.startsWith('/')) && (val.match(/\.(jpg|jpeg|png|gif)(\?|$)/i) || val.startsWith('data:image'));
+            }
+
+            function addPreviewForField(group, key, url) {
+                const id = `${group}_${key}_preview`;
+                let container = document.getElementById(id);
+                const inputByName = document.querySelector(`[name='${group}[${key}]']`);
+                const parent = inputByName ? inputByName.parentNode : document.body;
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = id;
+                    container.style.marginTop = '10px';
+                    const img = document.createElement('img');
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    img.src = url;
+                    container.appendChild(img);
+                    parent.appendChild(container);
+                } else {
+                    const img = container.querySelector('img');
+                    if (img) img.src = url;
+                }
+            }
         });
     </script>
     <script>
@@ -1953,6 +2174,44 @@
                 }, 10000);
             }
 
+            // Fonction pour charger les données du père de l'épouse dans Ayant Droit
+            function loadPereEpouseData() {
+                const nom = document.getElementById('pere_epouse_nom')?.value;
+                const prenom = document.getElementById('pere_epouse_prenom')?.value;
+                const postnom = document.getElementById('pere_epouse_postnom')?.value;
+                const profession = document.getElementById('pere_epouse_profession')?.value;
+                const adresse = document.getElementById('pere_epouse_adresse')?.value;
+                const dateNaissance = document.getElementById('pere_epouse_date_naissance')?.value;
+                const lieuNaissance = document.getElementById('pere_epouse_lieu_naissance')?.value;
+                const nationalite = document.getElementById('pere_epouse_nationalite')?.value;
+                const province = document.getElementById('pere_epouse_province')?.value;
+
+                // Vérifier que au moins le nom et prénom sont saisis
+                if (!nom || !prenom) {
+                    showAlert('Veuillez d\'abord remplir au moins le nom et le prénom du père de l\'épouse.', 'warning');
+                    return;
+                }
+
+                // Remplir les champs Ayant Droit
+                document.getElementById('ayant_droit_nom').value = nom;
+                document.getElementById('ayant_droit_prenom').value = prenom;
+                document.getElementById('ayant_droit_postnom').value = postnom;
+                document.getElementById('ayant_droit_profession').value = profession;
+                document.getElementById('ayant_droit_adresse').value = adresse;
+                document.getElementById('ayant_droit_date_naissance').value = dateNaissance;
+                document.getElementById('ayant_droit_lieu_naissance').value = lieuNaissance;
+                document.getElementById('ayant_droit_nationalite').value = nationalite;
+                document.getElementById('ayant_droit_province').value = province;
+
+                showAlert('Données du père de l\'épouse chargées avec succès dans Ayant Droit.', 'success');
+                document.getElementById('load_pere_epouse').value = '';
+            }
+
+            // Écouteur pour le bouton de chargement
+            document.getElementById('btn_load_pere')?.addEventListener('click', function() {
+                loadPereEpouseData();
+            });
+
             // Configuration des écouteurs d'événements
             function setupListeners(prefix, type) {
                 const fields = [`${prefix}_nom`, `${prefix}_prenom`, `${prefix}_date_naissance`];
@@ -1973,6 +2232,59 @@
             // Initialisation pour époux et épouse
             setupListeners('epoux', 'L\'époux');
             setupListeners('epouse', 'L\'épouse');
+
+            // Age validation helpers
+            function calculateAge(dateString) {
+                const today = new Date();
+                const birthDate = new Date(dateString);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+
+            const submitBtn = document.getElementById('submit_mariage_btn');
+
+            // Disable submit and show alert if underage on change
+            ['epoux_date_naissance', 'epouse_date_naissance'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', function() {
+                        const age = calculateAge(this.value);
+                        if (age < 18) {
+                            showAlert(`Âge ${age} : ${id.includes('epoux') ? 'L\'époux' : 'L\'épouse'} est mineur(e). Le dossier ne peut pas être validé.`, 'danger');
+                            if (submitBtn) submitBtn.disabled = true;
+                        } else {
+                            // enable if other age is OK
+                            const otherId = id.includes('epoux') ? 'epouse_date_naissance' : 'epoux_date_naissance';
+                            const other = document.getElementById(otherId);
+                            const otherAgeOk = !other || calculateAge(other.value) >= 18;
+                            if (submitBtn && otherAgeOk) submitBtn.disabled = false;
+                        }
+                    });
+                }
+            });
+
+            // On form submit, re-check ages and block submission if any < 18
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const epouxDate = document.getElementById('epoux_date_naissance')?.value;
+                    const epouseDate = document.getElementById('epouse_date_naissance')?.value;
+                    if (epouxDate && calculateAge(epouxDate) < 18) {
+                        showAlert("L'époux a moins de 18 ans. Le dossier ne peut pas être validé.", 'danger');
+                        e.preventDefault();
+                        return false;
+                    }
+                    if (epouseDate && calculateAge(epouseDate) < 18) {
+                        showAlert("L'épouse a moins de 18 ans. Le dossier ne peut pas être validé.", 'danger');
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
         });
     </script>
 @endsection

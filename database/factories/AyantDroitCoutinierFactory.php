@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AyantDroitCoutinier>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AyantDroitCoutumier>
  */
-class AyantDroitCoutinierFactory extends Factory
+class AyantDroitCoutumierFactory extends Factory
 {
     /**
      * Define the model's default state.
