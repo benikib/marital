@@ -10,6 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/certification/{mariage}', [MariageController::class, 'certification'])->name('certification');
+Route::get('/statut-mariage/{mariage}', [MariageController::class, 'status'])->name('mariages.status');
 // Dans routes/web.php
 Route::post('/check-person-exists', [MariageController::class, 'checkPersonExists'])->name('check.person.exists');
 
@@ -54,6 +55,10 @@ Route::middleware(['auth', 'role:Agent'])->prefix('agent')->name('agent.')->grou
     Route::get('/rapports/annuel', [App\Http\Controllers\Agent\RapportController::class, 'annuel'])->name('rapports.annuel');
     Route::get('/rapports/mensuel/export', [App\Http\Controllers\Agent\RapportController::class, 'exportMensuel'])->name('rapports.mensuel.export');
     Route::get('/rapports/annuel/export', [App\Http\Controllers\Agent\RapportController::class, 'exportAnnuel'])->name('rapports.annuel.export');
+
+    // Statistiques géographiques
+    Route::get('/rapports/statistiques', [App\Http\Controllers\Agent\RapportController::class, 'statistiques'])->name('rapports.statistiques');
+    Route::get('/rapports/statistiques/export', [App\Http\Controllers\Agent\RapportController::class, 'exportStatistiques'])->name('rapports.statistiques.export');
 
     // Profile
     Route::get('/profile', [App\Http\Controllers\Agent\ProfileController::class, 'edit'])->name('profile.edit');

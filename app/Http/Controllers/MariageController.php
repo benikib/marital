@@ -93,12 +93,19 @@ class MariageController extends Controller
     /**
      * Affiche le formulaire de création
      */
-    public function certification(Mariage $mariage){
+    public function certification(mariage $mariage){
 
     $mariage->load(['epoux', 'epouse', 'status', 'regimeMatrimonial.contrat', 'ayantDroitCoutumier','commune']);
 
 
         return view('certification', compact('mariage'));
+    }
+
+    public function status(mariage $mariage)
+    {
+        $mariage->load(['epoux', 'epouse', 'status', 'regimeMatrimonial.contrat', 'ayantDroitCoutumier','commune']);
+
+        return view('mariages.status', compact('mariage'));
     }
     public function create()
     {
