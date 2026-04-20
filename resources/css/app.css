@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+
+.nav-link {
+    @apply text-gray-300 hover:text-white transition duration-300 font-medium relative;
+}
+
+.nav-link::after {
+    content: "";
+    @apply absolute left-0 -bottom-1 w-0 h-0.5 bg-indigo-500 transition-all duration-300;
+}
+
+.nav-link:hover::after {
+    @apply w-full;
+}
+
+.avatar-btn {
+    @apply w-9 h-9 flex items-center justify-center rounded-full bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition;
+}
+
+.dropdown-box {
+    @apply bg-gray-800 border border-gray-700 rounded-lg shadow-xl overflow-hidden;
+}
+
+.dropdown-item {
+    @apply block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition;
+}
+
+.mobile-link {
+    @apply block text-gray-300 py-2 px-3 rounded hover:bg-gray-800;
+}
