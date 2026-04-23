@@ -57,8 +57,23 @@ Route::middleware('auth', 'role:agent,superAdmin')->group(function () {
 
     Route::resource('nationalites', NationaliteController::class)->except(['show']);
     Route::get('/nationalites/{nationalite}', [App\Http\Controllers\NationaliteController::class, 'show'])->name('nationalites.show');
+
+        Route::resource('bonneviemoeurs', App\Http\Controllers\BonneVieMoeursController::class)->except(['show']);
+       Route::get('/bonneviemoeurs/{bonneviemoeur}', [App\Http\Controllers\BonneVieMoeursController::class, 'show'])->name('bonneviemoeurs.show');
+        
+       Route::resource('naissances', App\Http\Controllers\NaissanceController::class)->except(['show']);
+        Route::get('/naissances/{naissance}', [App\Http\Controllers\NaissanceController::class, 'show'])->name('naissances.show');
     
 });
+
+Route::get('naissances/{naissance}/pdf', [App\Http\Controllers\NaissanceController::class, 'pdf'])->name('naissances.attestation.pdf');
+Route::get('naissances/{naissance}/attestation', [App\Http\Controllers\NaissanceController::class, 'attestation'])->name('naissances.attestation');
+Route::get('naissances/{naissance}/verify', [App\Http\Controllers\NaissanceController::class, 'verify'])->name('naissances.verify');
+
+Route::get('bonneviemoeurs/{bonneviemoeur}/pdf', [App\Http\Controllers\BonneVieMoeursController::class, 'pdf'])->name('bonneviemoeurs.attestation.pdf');
+Route::get('bonneviemoeurs/{bonneviemoeur}/attestation', [App\Http\Controllers\BonneVieMoeursController::class, 'attestation'])->name('bonneviemoeurs.attestation');
+Route::get('bonneviemoeurs/{bonneviemoeur}/verify', [App\Http\Controllers\BonneVieMoeursController::class, 'verify'])->name('bonneviemoeurs.verify');   
+
  Route::get('/nationalites/{nationalite}/attestation', [App\Http\Controllers\NationaliteController::class, 'attestation'])->name('nationalites.attestation');
     Route::get('/nationalites/{nationalite}/attestation/pdf', [App\Http\Controllers\NationaliteController::class, 'attestationPdf'])->name('nationalites.attestation.pdf');
     Route::get('/nationalites/{nationalite}/verify', [App\Http\Controllers\NationaliteController::class, 'verify'])->name('nationalites.verify');
