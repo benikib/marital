@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Créer une personne</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Créer une attestation de nationalité</h2>
     </x-slot>
 
     <div class="py-12">
@@ -8,12 +8,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                    
-                    <form action="{{ route('personnes.store') }}"  method="POST" enctype="multipart/form-data"  class="space-y-6">
+                    <form action="{{ route('nationalites.store') }}"  method="POST" enctype="multipart/form-data"  class="space-y-6">
                         @csrf
-                        @include('personnes._form')
-                        <div class="flex items-center gap-4">
+                        @include('nationalites._form')
+                        <div class="flex items-center gap-4 mt-4">
                             <x-primary-button>Enregistrer</x-primary-button>
-                            <a href="{{ route('personnes.index') }}" class="text-gray-600 hover:text-gray-900">Annuler</a>
+                            <a href="{{ route('nationalites.index') }}" class="text-gray-600 hover:text-gray-900">Annuler</a>
                         </div>
                     </form>
                 </div>

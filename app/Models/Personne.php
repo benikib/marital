@@ -21,6 +21,24 @@ class Personne extends Model
         'profession',
         'nationalite',
         'photo',
+        'pere',
+        'mere',
+        'cin',
+        'telephone',
+        'localite_id',
+        'secteur_id',
+        'territoire_id',
+        'district_id',
+        'province_id',
+        'user_id',
+        'entite_id',
+        'statut_vie',
+        'documents',
+        'postnom',
+        'etat_civil',
+        
+        
+
     ];
 
     protected $casts = [
@@ -56,4 +74,29 @@ class Personne extends Model
 {
     return $this->hasMany(Mariage::class, 'epouse_id');
 }
+
+public function localite()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'localite_id');
+    }
+
+    public function secteur()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'secteur_id');
+    }
+
+    public function territoire()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'territoire_id');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'district_id');
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'province_id');
+    }
 }

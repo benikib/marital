@@ -1,19 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Modifier un régime matrimonial</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Modifier une attestation de nationalité</h2>
     </x-slot>
 
     <div class="py-12">
         <div class="">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form action="{{ route('regimes.update', $regime) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('nationalites.update', $nationalite) }}" enctype="multipart/form-data" method="POST" class="space-y-6">
                         @csrf
                         @method('PUT')
-                        @include('regimes._form')
+                        @include('nationalites._form')
                         <div class="flex items-center gap-4">
                             <x-primary-button>Mettre à jour</x-primary-button>
-                            <a href="{{ route('regimes.index') }}" class="text-gray-600 hover:text-gray-900">Retour</a>
+                            <a href="{{ route('nationalites.index') }}" class="text-gray-600 hover:text-gray-900">Retour</a>
                         </div>
                     </form>
                 </div>

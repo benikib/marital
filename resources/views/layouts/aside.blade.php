@@ -108,8 +108,14 @@ class="fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 shadow-x
             <li>
                 <a href="{{ route('mariages.index') }}"
                 class="sidebar-item {{ request()->routeIs('mariages.*') ? 'active' : '' }}">
-                    <span>attestation </span>
-                    <span>Mariages</span>
+                    
+                    <span> certificat Mariages</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('nationalites.index') }}"
+                class="sidebar-item {{ request()->routeIs('nationalites.*') ? 'active' : '' }}">
+                    <span> Attest Nationalités</span>
                 </a>
             </li>
 

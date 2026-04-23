@@ -29,13 +29,32 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom');
-            $table->string('sexe', 1);
+            $table->string('postnom')->nullable();
+           $table->enum('sexe', ['M', 'F']);
             $table->date('date_naissance');
             $table->string('lieu_naissance');
             $table->string('adresse');
             $table->string('profession');
             $table->string('nationalite');
-            $table->string('photo');
+            $table->enum('etat_civil', [
+        'célibataire',
+        'marié',
+        'divorcé',
+        'veuf'
+    ])->default('célibataire');
+            $table->string('cin')->unique()->nullable();
+            $table->string('telephone')->nullable();
+            $table->foreignId('localite_id')->nullable()->constrained('entite_administratives')->nullOnDelete();
+            $table->foreignId('secteur_id')->nullable()->constrained('entite_administratives')->nullOnDelete();
+            $table->foreignId('territoire_id')->nullable()->constrained('entite_administratives')->nullOnDelete();
+            $table->foreignId('district_id')->nullable()->constrained('entite_administratives')->nullOnDelete();
+            $table->foreignId('province_id')->nullable()->constrained('entite_administratives')->nullOnDelete();
+            $table->string('pere')->nullable(); 
+            $table->string('mere')->nullable();
+            $table->string('photo')->nullable();            
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('entite_id')->constrained('entite_administratives');          
+            $table->enum('statut_vie', ['en vie', 'décédé'])->default('en vie');
             $table->timestamps();
         });
 

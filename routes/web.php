@@ -4,6 +4,13 @@ use App\Http\Controllers\ProfileController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 use App\Models\Mariage;
+use App\Http\Controllers\InhumationController;
+use App\Http\Controllers\NationaliteController;
+use App\Http\Controllers\PersonneController;
+use App\Models\Nationalite;
+use App\Models\Personne;
+use App\Models\User;
+use App\Models\EntiteAdministrative;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,8 +54,14 @@ Route::middleware('auth', 'role:agent,superAdmin')->group(function () {
     Route::get('mariages/{mariage}', [App\Http\Controllers\MariageController::class, 'show'])->name('mariages.show');
     Route::post('mariages/temoins', [App\Http\Controllers\MariageController::class, 'storeTemoin'])->name('mariages.temoins.store');
     Route::post('mariages/parents', [App\Http\Controllers\MariageController::class, 'storeParent'])->name('mariages.parents.store');
+
+    Route::resource('nationalites', NationaliteController::class)->except(['show']);
+    Route::get('/nationalites/{nationalite}', [App\Http\Controllers\NationaliteController::class, 'show'])->name('nationalites.show');
     
 });
+ Route::get('/nationalites/{nationalite}/attestation', [App\Http\Controllers\NationaliteController::class, 'attestation'])->name('nationalites.attestation');
+    Route::get('/nationalites/{nationalite}/attestation/pdf', [App\Http\Controllers\NationaliteController::class, 'attestationPdf'])->name('nationalites.attestation.pdf');
+    Route::get('/nationalites/{nationalite}/verify', [App\Http\Controllers\NationaliteController::class, 'verify'])->name('nationalites.verify');
 
 Route::get('/mariages/{mariage}/certificat', [App\Http\Controllers\MariageController::class, 'certificat'])
     ->name('mariages.certificat');
@@ -58,6 +71,21 @@ Route::get('/mariages/{mariage}/certificat/pdf', [App\Http\Controllers\MariageCo
 
 Route::get('/mariages/{mariage}/verify', [App\Http\Controllers\MariageController::class, 'verify'])
     ->name('mariages.verify'); 
+use App\Http\Controllers\NationaliteVerificationController;
 
+// Vérification par QR code (GET)
+Route::get('/nationalites/verify/{id}', [NationaliteVerificationController::class, 'verify'])
+    ->name('nationalites.verify');
+
+// Formulaire de vérification manuelle
+Route::get('/verification', [NationaliteVerificationController::class, 'verificationForm'])
+    ->name('verification.form');
+
+// Vérification par numéro (POST)
+Route::post('/verification', [NationaliteVerificationController::class, 'verifyByNumber'])
+    ->name('verification.check');
+
+// API de vérification (pour services externes)
+Route::get('/api/nationalites/verify/{id}', [NationaliteVerificationController::class, 'apiVerify']);
 
 require __DIR__.'/auth.php';

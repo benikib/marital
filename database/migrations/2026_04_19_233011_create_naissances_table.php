@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('naissances', function (Blueprint $table) {
             $table->id();
+            $table->string('soussignataire', 255);            
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('entite_id')->constrained('entite_administratives');
+            $table->foreignId('personne_id')->constrained('personnes')->onDelete('cascade');
+             $table->string('documents')->nullable();
             $table->timestamps();
         });
     }
