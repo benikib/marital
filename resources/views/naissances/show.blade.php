@@ -282,20 +282,7 @@
 
         <!-- SECTION INFORMATIONS COMPLÉMENTAIRES -->
         <div class="grid md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-white rounded-xl shadow p-4 border-l-4 border-sky-500">
-                <span class="text-xs text-gray-500 uppercase">Type de naissance</span>
-                <p class="font-bold text-gray-800">
-                    @if($naissance->type_naissance == 'simple')
-                        Simple
-                    @elseif($naissance->type_naissance == 'jumeaux')
-                        Jumeaux
-                    @elseif($naissance->type_naissance == 'triples')
-                        Triplés
-                    @else
-                        {{ $naissance->type_naissance ?? 'Simple' }}
-                    @endif
-                </p>
-            </div>
+          
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
                 <span class="text-xs text-gray-500 uppercase">Numéro de registre</span>
                 <p class="font-bold text-gray-800">{{ $naissance->numero_registre ?? 'Non attribué' }}</p>
