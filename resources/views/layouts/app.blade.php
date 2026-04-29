@@ -40,7 +40,7 @@
     <link href="{{ asset('assets/css/argon-dashboard-tailwind.css?v=1.0.1') }}" rel="stylesheet" />
 
     <!-- Vite Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   
 </head>
 
 <body class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500">
