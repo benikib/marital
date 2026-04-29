@@ -18,14 +18,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         
+        $this->call([
+        EntiteAdministrativeSeeder::class,
+        PersonnesSeeder::class,
+        // Autres seeders...
+    ]);
+        
         Role::factory()->create([
             'nom' => 'superAdmin',
             'description' => 'SuperAdmin has all permissions.',
         ]);
-        EntiteAdministrative::factory()->create([
-            'nom' => 'Kinshasa',
-            'type' => 'Province',
-        ]);
+    
 
         User::factory()->create([
             'name' => 'Test User',
