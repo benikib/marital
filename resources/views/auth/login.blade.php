@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <title>Connexion</title>
     <!-- Inclure Bootstrap via Vite -->
-    <link id="pagestyle" href="{{ asset('../assets/css/argon-dashboard.css?v=2.1.0') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/argon-dashboard-tailwind.min.css') }}" rel="stylesheet" />
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
 </head>
 
 <body class="bg-light d-flex justify-content-center align-items-center min-vh-100">

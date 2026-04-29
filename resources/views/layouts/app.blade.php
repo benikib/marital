@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
     <!-- Argon Dashboard CSS -->
-    <link href="{{ asset('assets/css/argon-dashboard-tailwind.css?v=1.0.1') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/argon-dashboard-tailwind.min.css') }}" rel="stylesheet" />
 
     <!-- Vite Scripts -->
    
@@ -402,7 +402,7 @@
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}" async></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-    <script src="{{ asset('assets/js/argon-dashboard-tailwind.js?v=1.0.1') }}" async></script>
+    <script src="{{ asset('assets/js/argon-dashboard-tailwind.min.js') }}" async></script>
     
     <script>
         document.querySelectorAll('.search-select').forEach(el => {
