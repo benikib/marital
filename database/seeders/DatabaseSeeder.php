@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        
+
         $this->call([
         EntiteAdministrativeSeeder::class,
-        PersonnesSeeder::class,
+      //  PersonnesSeeder::class,
         // Autres seeders...
     ]);
         
@@ -38,5 +38,13 @@ class DatabaseSeeder extends Seeder
             'entite_id' => EntiteAdministrative::where('nom', 'Kinshasa')->first()->id,
              
         ]);
+
+          $this->call([
+        
+        PersonnesSeeder::class,
+        // Autres seeders...
+    ]);
+
+
     }
 }
