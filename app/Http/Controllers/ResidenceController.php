@@ -123,4 +123,6 @@ class ResidenceController extends Controller
         $pdf = \pdf::loadView('residences.attestation', compact('residence'));
         return $pdf->download('attestation_residence_' . $residence->id . '.pdf');
     }
+
+    
 }

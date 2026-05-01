@@ -30,6 +30,7 @@ class NationaliteController extends Controller
     public function store(Request $request)
     {
         try {
+            
             $request->validate([
     
                 'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
@@ -82,7 +83,7 @@ class NationaliteController extends Controller
                     'personne_id' => 'required|exists:personnes,id',
                     'nationalite' => 'required|string|max:255',
                     'residence' => 'required|string|max:255',
-                    'motif' => 'nullable|string',
+
                     'nationalite_pere' => 'nullable|string|max:255',
                     'nationalite_mere' => 'nullable|string|max:255',
                 ]);
@@ -133,7 +134,7 @@ class NationaliteController extends Controller
             // Logique de vérification de l'attestation
             // Par exemple, vérifier si le numéro d'attestation est valide, etc.
 
-            return response()->json(['message' => 'Attestation vérifiée avec succès.']);
+            return view('nationalites.verify', compact('nationalite'));
         }
 
    

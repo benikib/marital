@@ -31,6 +31,7 @@
             value="{{ old('residence', $nationalite?->residence ?? '') }}" required />
         <x-input-error :messages="$errors->get('residence')" class="mt-2" />
     </div>
+    <input type="hidden" name="motif" value="Demande de nationalité">
 
     <div>
         <x-input-label for="nationalite_pere" value="Nationalité du père" />

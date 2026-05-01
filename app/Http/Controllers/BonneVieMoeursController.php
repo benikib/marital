@@ -112,12 +112,8 @@ class BonneVieMoeursController extends Controller
     }
     public function verify($id)
     {
-        $bonneviemoeur = BonneVieMoeurs::where('entite_id', auth()->user()->entite_id)->with('personne')->findOrFail($id);
+        $bonneviemoeur = BonneVieMoeurs::with('personne')->findOrFail($id);
         
-        // Logique de vérification (ex: vérifier la date de création, les documents, etc.)
-        $isValid = now()->lessThan($bonneviemoeur->created_at->addMonths(6)); // Exemple : valide pendant 6 mois
-        $isExpired = now()->greaterThan($bonneviemoeur->created_at->addMonths(6));
-        
-        return view('bonneviemoeurs.verify', compact('bonneviemoeur', 'isValid', 'isExpired'));
-}
+        return view('bonneviemoeurs.verify', compact('bonneviemoeur'));
+    }
 }
