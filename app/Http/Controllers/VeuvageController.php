@@ -115,5 +115,6 @@ class VeuvageController extends Controller
         $pdf = \PDF::loadView('veuvages.attestation', compact('veuvage'));
         return $pdf->download('attestation_veuvage_' . $veuvage->id . '.pdf');
     }
+    
 }
 

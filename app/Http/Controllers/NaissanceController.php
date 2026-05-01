@@ -103,22 +103,7 @@ class NaissanceController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-        public function verify($id)
-    {        $nationalite = Nationalite::with(['personne', 'entite'])->find($id
-        );
-        
-        if (!$nationalite) {
-            return back()->with('error', 'Attestation introuvable');
-        }
-        
-        $isValid = now()->lessThan($nationalite->created_at->addMonths(3));
-        $isExpired = now()->greaterThanOrEqualTo($nationalite->created_at->addMonths(3));
-        
-        $dateDelivrance = $nationalite->date_delivrance ?? $nationalite->created_at;
-        $dateExpiration = $dateDelivrance->copy()->addMonths(3);
-        $verificationHash = hash('sha256', $nationalite->id . $nationalite->created_at);
-
-    }
+      
 
     public function attestation($id)
     {
@@ -130,5 +115,13 @@ class NaissanceController extends Controller
 
       return view('naissances.attestation', compact('naissance'));
       } 
+
+        public function verify(Naissance $naissance)
+    {
+        
+        return view('naissances.verify', compact('naissance'));
+    }
+
+    
 
 }

@@ -1,191 +1,269 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification - Attestation de Nationalité RDC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-2xl w-full">
+<x-guest-layout>
+  
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- En-tête RDC -->
-        <div class="text-center mb-6">
-            <div class="flex w-full h-3 mb-3 rounded-full overflow-hidden">
-                <div class="bg-blue-600 flex-1"></div>
-                <div class="bg-yellow-400 flex-1"></div>
-                <div class="bg-blue-600 flex-1"></div>
-                <div class="bg-yellow-400 flex-1"></div>
-                <div class="bg-red-600 flex-1"></div>
+        <!-- STATUT ET NUMÉRO DE DOSSIER -->
+        <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">
+                        Dossier N° {{ str_pad($nationalite->id, 6, '0', STR_PAD_LEFT) }}
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        <span class="font-semibold">Créé le :</span> {{ $nationalite->created_at->format('d/m/Y à H:i') }}
+                    </div>
+                </div>
+                <div>
+                    @php
+                        $numeroOfficiel = $nationalite->numero_officiel ?? 'NAT-' . date('Y') . '-' . str_pad($nationalite->id, 4, '0', STR_PAD_LEFT);
+                    @endphp
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                        📋 {{ $numeroOfficiel }}
+                    </span>
+                </div>
             </div>
-            <h2 class="text-lg font-bold text-blue-900 uppercase tracking-wider">
-                RÉPUBLIQUE DÉMOCRATIQUE DU CONGO
-            </h2>
-            <p class="text-sm text-gray-600">Service de vérification des actes officiels</p>
         </div>
 
-        <!-- Carte principale -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-            
-            <!-- Statut -->
-            <div class="px-6 py-5 {{ $isValid ? 'bg-green-50 border-b border-green-200' : 'bg-red-50 border-b border-red-200' }}">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        @if($isValid)
-                            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-green-800">ATTESTATION VALIDE</h3>
-                                <p class="text-sm text-green-700">Ce document est authentique et valide</p>
-                            </div>
-                        @else
-                            <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
-                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-red-800">ATTESTATION EXPIRÉE</h3>
-                                <p class="text-sm text-red-700">Ce document n'est plus valide</p>
-                            </div>
-                        @endif
+      <!-- CARTE IDENTITÉ PRINCIPALE -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+        <h4 class="text-white font-bold text-lg flex items-center gap-2">
+            <span>👤</span> Identité du demandeur
+        </h4>
+    </div>
+    <div class="p-6">
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Informations personnelles -->
+            <div class="space-y-4">
+                <!-- Identité de base -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                        <span class="text-gray-500 font-medium">Nom complet :</span>
+                        <span class="font-semibold text-gray-800 text-lg">
+                            {{ $nationalite->personne->nom }} {{ $nationalite->personne->prenom }} 
+                            @if($nationalite->personne->postnom)
+                                <span class="text-gray-600 font-normal">{{ $nationalite->personne->postnom }}</span>
+                            @endif
+                        </span>
                     </div>
-                    <div class="text-right">
-                        <div class="text-2xl font-mono font-bold text-gray-700">
-                            #{{ str_pad($nationalite->id, 6, '0', STR_PAD_LEFT) }}
+                    <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                        <span class="text-gray-500 font-medium">Date de naissance :</span>
+                        <span class="text-gray-700">
+                            {{ $nationalite->personne->date_naissance ? \Carbon\Carbon::parse($nationalite->personne->date_naissance)->format('d/m/Y') : 'Non renseignée' }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                        <span class="text-gray-500 font-medium">Lieu de naissance :</span>
+                        <span class="text-gray-700">{{ $nationalite->personne->lieu_naissance ?? 'Non renseigné' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 font-medium">Sexe :</span>
+                        <span class="px-3 py-1 {{ $nationalite->personne->sexe == 'M' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700' }} rounded-full text-sm font-medium">
+                            {{ $nationalite->personne->sexe == 'M' ? 'Masculin' : 'Féminin' }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Origine géographique -->
+                @php
+                    $personne = $nationalite->personne;
+                    $entitePersonne = $personne->entite;
+                    $entiteParent = $entitePersonne->parent ?? null;
+                    $territoire = $entiteParent->parent ?? null;
+                    $district = $territoire->parent ?? null;
+                    $province = $district->parent ?? null;
+                @endphp
+
+                <div class="mt-4 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                        <span>📍</span> Origine géographique
+                    </h5>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-start gap-2">
+                            <span class="text-gray-500 min-w-24">Localité :</span>
+                            <span class="font-medium text-gray-800">{{ $entitePersonne->nom ?? 'Non renseignée' }}</span>
                         </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-gray-500 min-w-24">Secteur :</span>
+                            <span class="font-medium text-gray-800">{{ $entiteParent->nom ?? 'Non renseigné' }}</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-gray-500 min-w-24">Territoire :</span>
+                            <span class="font-medium text-gray-800">{{ $nationalite->personne->territoire->nom ?? 'Non renseigné' }}</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-gray-500 min-w-24">District :</span>
+                            <span class="font-medium text-gray-800">{{ $nationalite->personne->district->nom ?? 'Non renseigné' }}</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-gray-500 min-w-24">Province :</span>
+                            <span class="font-medium text-gray-800">{{ $nationalite->personne->province->nom ?? 'Non renseignée' }}</span>
+                        </div>
+                        <div class="flex items-start gap-2 pt-2 border-t border-gray-200">
+                            <span class="text-gray-500 min-w-24">Pays :</span>
+                            <span class="font-medium text-gray-800 flex items-center gap-1">
+                                <span>🇨🇩</span> République Démocratique du Congo
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Résidence actuelle -->
+                <div class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <span>🏠</span> Résidence actuelle
+                    </h5>
+                    <div class="text-sm">
+                        <span class="text-gray-500">Adresse :</span>
+                        <span class="font-medium text-gray-800 block mt-1">
+                            {{ $nationalite->personne->adresse ?? $nationalite->residence ?? 'Non renseignée' }}
+                        </span>
                     </div>
                 </div>
             </div>
-
-            <!-- Contenu -->
-            <div class="p-6 space-y-5">
-                
-                <!-- Type de document -->
-                <div class="text-center pb-3 border-b border-gray-200">
-                    <h4 class="text-xl font-bold text-blue-900 uppercase">Attestation de Nationalité</h4>
-                    <p class="text-sm text-gray-500 mt-1">
-                        N° {{ $nationalite->numero_officiel ?? 'NAT-' . date('Y') . '-' . $nationalite->id }}
-                    </p>
-                </div>
-
-                <!-- Informations du titulaire -->
-                <div class="bg-gray-50 rounded-xl p-4">
-                    <h5 class="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                        <span>👤</span> Titulaire de l'attestation
-                    </h5>
-                    <div class="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                            <span class="text-gray-500">Nom complet :</span>
-                            <p class="font-semibold text-gray-800">
-                                {{ $nationalite->personne->nom }} {{ $nationalite->personne->prenom }}
-                            </p>
-                        </div>
-                        <div>
-                            <span class="text-gray-500">Sexe :</span>
-                            <p class="font-semibold text-gray-800">
-                                {{ $nationalite->personne->sexe == 'M' ? 'Masculin' : 'Féminin' }}
-                            </p>
-                        </div>
-                        <div>
-                            <span class="text-gray-500">Date de naissance :</span>
-                            <p class="font-semibold text-gray-800">
-                                {{ $nationalite->personne->date_naissance ? \Carbon\Carbon::parse($nationalite->personne->date_naissance)->format('d/m/Y') : '—' }}
-                            </p>
-                        </div>
-                        <div>
-                            <span class="text-gray-500">Lieu de naissance :</span>
-                            <p class="font-semibold text-gray-800">
-                                {{ $nationalite->personne->lieu_naissance ?? '—' }}
-                            </p>
-                        </div>
+            
+            <!-- Photo -->
+            <div class="flex flex-col items-center justify-start">
+                @if($nationalite->personne->photo)
+                    <div class="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-2 border-gray-200">
+                        <img src="{{ asset('storage/' . $nationalite->personne->photo) }}" 
+                             alt="Photo d'identité"
+                             class="w-full h-full object-cover">
                     </div>
-                </div>
-
-                <!-- Détails du document -->
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div class="bg-blue-50 rounded-lg p-3">
-                        <span class="text-blue-700 text-xs uppercase tracking-wider">Délivré le</span>
-                        <p class="font-bold text-gray-800">
-                            {{ $dateDelivrance->format('d/m/Y') }}
-                        </p>
-                    </div>
-                    <div class="{{ $isValid ? 'bg-green-50' : 'bg-red-50' }} rounded-lg p-3">
-                        <span class="{{ $isValid ? 'text-green-700' : 'text-red-700' }} text-xs uppercase tracking-wider">Valable jusqu'au</span>
-                        <p class="font-bold {{ $isValid ? 'text-gray-800' : 'text-red-800' }}">
-                            {{ $dateExpiration->format('d/m/Y') }}
-                            @if($isExpired)
-                                <span class="ml-2 text-xs font-normal">(expiré)</span>
-                            @endif
-                        </p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-3">
-                        <span class="text-gray-500 text-xs uppercase tracking-wider">Lieu de délivrance</span>
-                        <p class="font-semibold text-gray-800">
-                            {{ $nationalite->entite->nom ?? 'Kinshasa' }}
-                        </p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-3">
-                        <span class="text-gray-500 text-xs uppercase tracking-wider">Officier d'état civil</span>
-                        <p class="font-semibold text-gray-800">
-                            {{ $nationalite->user->name ?? '—' }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Hash de vérification -->
-                <div class="bg-gray-100 rounded-lg p-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-gray-500 uppercase tracking-wider">Hash de vérification</span>
-                        <span class="text-xs font-mono text-gray-600">{{ substr($verificationHash, 0, 16) }}...</span>
-                    </div>
-                    <div class="flex items-center justify-between mt-2">
-                        <span class="text-xs text-gray-500 uppercase tracking-wider">Vérifié le</span>
-                        <span class="text-xs font-semibold text-gray-700">{{ now()->format('d/m/Y à H:i') }}</span>
-                    </div>
-                </div>
-
-                <!-- Messages -->
-                @if($isValid)
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                        <p class="text-green-800 text-sm">
-                            ✅ Cette attestation est authentique et a été délivrée conformément 
-                            à la législation en vigueur en République Démocratique du Congo.
-                        </p>
-                    </div>
+                    <p class="mt-2 text-xs text-gray-500">Photo d'identité officielle</p>
                 @else
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-                        <p class="text-red-800 text-sm">
-                            ⚠️ Cette attestation a expiré. Une attestation de nationalité est 
-                            valable 3 mois à compter de sa date de délivrance.
-                        </p>
+                    <div class="w-48 h-48 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-2">
+                        <span class="text-4xl">📷</span>
+                        <span class="text-gray-400 text-center text-sm">Aucune photo<br>disponible</span>
                     </div>
                 @endif
 
-                <!-- Actions -->
-                <div class="flex justify-center gap-4 pt-3 border-t border-gray-200">
-                    <button onclick="window.print()" class="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center gap-2">
-                        <span>🖨️</span> Imprimer cette vérification
-                    </button>
-                    <a href="{{ url('/') }}" class="px-5 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition">
-                        Retour à l'accueil
-                    </a>
+                <!-- Badge de nationalité -->
+                <div class="mt-4 w-full max-w-xs">
+                    <div class="bg-blue-600 text-white rounded-lg p-3 text-center">
+                        <div class="text-xs uppercase tracking-wider opacity-90">Nationalité</div>
+                        <div class="font-bold text-lg">Congolaise</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- GRILLE INFORMATIONS (PARENTS + ADMIN) -->
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            
+            <!-- CARTE PARENTS -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4">
+                    <h4 class="text-white font-bold text-lg flex items-center gap-2">
+                        <span>👪</span> Filiation
+                    </h4>
+                </div>
+                <div class="p-6 space-y-3">
+                    <!-- Père -->
+                    <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                            👨
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-xs text-gray-500 uppercase font-medium">Père</div>
+                            <div class="font-semibold text-gray-800">
+                                {{ $nationalite->personne->pere ?? 'Non renseigné' }}
+                            </div>
+                            @if(isset($parent->nationalite_pere))
+                                <div class="text-sm text-gray-500">{{ $parent->nationalite_pere }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    
+                    <!-- Mère -->
+                    <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600">
+                            👩
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-xs text-gray-500 uppercase font-medium">Mère</div>
+                            <div class="font-semibold text-gray-800">
+                                {{ $nationalite->personne->mere ?? 'Non renseignée' }}
+                            </div>
+                            @if(isset($parent->nationalite_mere))
+                                <div class="text-sm text-gray-500">{{ $parent->nationalite_mere }}</div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARTE ADMINISTRATIVE -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-slate-600 to-slate-700 px-6 py-4">
+                    <h4 class="text-white font-bold text-lg flex items-center gap-2">
+                        <span>🏛️</span> Informations administratives
+                    </h4>
+                </div>
+                <div class="p-6 space-y-3">
+                    <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                        <span class="text-gray-500 font-medium">Résidence :</span>
+                        <span class="font-semibold">{{ $nationalite->residence ?? 'Non définie' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                        <span class="text-gray-500 font-medium">Entité territoriale :</span>
+                        <span class="font-semibold">{{ $nationalite->entite->nom ?? 'Non définie' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                        <span class="text-gray-500 font-medium">Enregistré par :</span>
+                        <span class="font-medium">{{ $nationalite->user->name ?? 'Inconnu' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-2">
+                        <span class="text-gray-500 font-medium">Dernière modification :</span>
+                        <span class="text-sm text-gray-600">{{ $nationalite->updated_at->diffForHumans() }}</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="mt-6 text-center text-xs text-gray-500">
-            <p>République Démocratique du Congo — Service officiel de vérification des actes d'état civil</p>
-            <p class="mt-1">© {{ date('Y') }} Ministère de la Justice et Garde des Sceaux. Tous droits réservés.</p>
+        <!-- SECTION JUSTIFICATIFS -->
+        @if($nationalite->personne->photo || isset($nationalite->documents))
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
+                <h4 class="text-white font-bold text-lg flex items-center gap-2">
+                    <span>📎</span> Documents justificatifs
+                </h4>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    @if($nationalite->personne->photo)
+                    <div class="group relative">
+                        <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4]">
+                            <img src="{{ asset('storage/' . $nationalite->personne->photo) }}" 
+                                 alt="Photo d'identité"
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="mt-2 text-center text-sm font-medium text-gray-700">Photo d'identité</div>
+                    </div>
+                    @endif
+                    
+                    <!-- Placeholder pour d'autres documents si nécessaire -->
+                    <div class="group relative">
+                        <div class="relative overflow-hidden rounded-lg bg-gray-50 border-2 border-dashed border-gray-300 aspect-[3/4] flex items-center justify-center">
+                            <span class="text-gray-400 text-sm">Acte de naissance</span>
+                        </div>
+                        <div class="mt-2 text-center text-sm font-medium text-gray-700">Acte de naissance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- TIMELINE / HISTORIQUE -->
+        <div class="mt-6 text-right text-xs text-gray-400">
+            Dossier créé le {{ $nationalite->created_at->format('d/m/Y à H:i') }} 
+            • Mis à jour {{ $nationalite->updated_at->diffForHumans() }}
+            @if($nationalite->verified_at)
+                • Vérifié le {{ \Carbon\Carbon::parse($nationalite->verified_at)->format('d/m/Y') }}
+            @endif
         </div>
     </div>
-</body>
-</html>
+</x-guest-layout>

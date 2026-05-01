@@ -346,4 +346,6 @@ class ProvinceDashboardController extends Controller
         // Générer l'export Excel
         return Excel::download(new ProvinceStatsExport($stats, $statsParVille), 'statistiques_province.xlsx');
     }
+
+    
 }
