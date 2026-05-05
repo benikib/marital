@@ -379,6 +379,10 @@
             <div class="intro">
                 L'an {{ date('Y') }}, le {{ now()->translatedFormat('d F') }}, à {{ now()->format('H:i') }}
             </div>
+               <!-- Début par le soussigné -->
+            <div class="soussigne-text">
+                <strong>Je soussigné, {{ $naissance->soussignataire?? '_________________' }}, Officier de l'Etat Civil et Bourgmestre de la Commune de MATADI à Matadi,</strong> atteste par la présente qu'au vu des renseignements en ma possession,
+            </div>
 
             <!-- Identité de l'enfant -->
             <div class="identity-block">

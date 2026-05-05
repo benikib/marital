@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between flex-wrap gap-4">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Tableau de bord - Agent
+                Tableau de bord  
             </h2>
             
             <!-- Boutons d'impression -->

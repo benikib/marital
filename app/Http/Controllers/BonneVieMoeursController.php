@@ -13,6 +13,7 @@ class BonneVieMoeursController extends Controller
     public function index()
     {
         $bonneviemoeurs =BonneVieMoeurs::where('entite_id', auth()->user()->entite_id)->with('personne')->orderBy('created_at', 'desc')->paginate(15);
+        
         return view('bonneviemoeurs.index', compact('bonneviemoeurs'));
     }
 

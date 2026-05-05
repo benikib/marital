@@ -317,7 +317,7 @@
     <p><i class="fas fa-map-marker-alt"></i> Plateforme officielle de gestion et suivi des mariages · RDC</p>
     <div style="margin-top: 2rem; font-size: 1.2rem;">
       <span style="background: #ffffff20; padding: 0.4rem 1.2rem; border-radius: 40px; backdrop-filter: blur(4px);">
-        <i class="fas fa-check-circle"></i> Kinshasa · Lubumbashi · Goma · Mbuji-Mayi
+        <i class="fas fa-check-circle"></i> Kinshasa · Kongo Central · Lubumbashi · Goma · Mbuji-Mayi
       </span>
     </div>
   </header>

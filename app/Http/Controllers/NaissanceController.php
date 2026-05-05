@@ -15,7 +15,7 @@ class NaissanceController extends Controller
             ->where('entite_id', auth()->user()->entite_id)
             ->orderBy('created_at', 'desc')
             ->paginate  (10);
-
+            
         return view('naissances.index', compact('naissances'));
     }
     public function show($id)
@@ -54,7 +54,7 @@ class NaissanceController extends Controller
 
             return redirect()->route('naissances.index')->with('success', 'Naissance créée avec succès.');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
