@@ -450,7 +450,7 @@
       </div>
       <div class="info-item">
         <span class="label">⚖️ Régime</span>
-        <span class="value">{{ $mariage->regime ?? 'Comm. réduite' }}</span>
+        <span class="value">{{ $mariage->regime->contrat->nom ?? 'Comm. réduite' }}</span>
       </div>
       <div class="info-item">
         <span class="label">📋 Statut</span>

@@ -15,6 +15,7 @@ class ResidenceController extends Controller
         $personnes = Personne::orderBy('nom')->get();
 
         $residences = Residence::where('entite_id', auth()->user()->entite_id)->with('personne')->orderBy('created_at', 'desc')->paginate(15);
+        
         return view('residences.index', compact('residences', 'personnes'));
     }
 
@@ -26,39 +27,44 @@ class ResidenceController extends Controller
     }
 
     public function store(Request $request)
-    {
-        try {
-            $request->validate([
-    
-                'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-                'soussignataire' => 'nullable|string|max:255',
-                'personne_id' => 'required|exists:personnes,id',
-                
-                
-                
-            ]);
+{
+    try {
+        $data = $request->validate([
+            'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+            'soussignataire' => 'nullable|string|max:255',
+            'personne_id' => 'required|exists:personnes,id',
+        ]);
 
-            if ($request->hasFile('documents')) {
-                $documentsPath = $request->file('documents')->store('documents', 'public');
-                $request->merge(['documents' => $documentsPath]);
-            }
-
-            $request->merge([
-                'user_id' => auth()->id(),
-                'entite_id' => auth()->user()->entite_id,
-                
-            ]);
-
-            Residence::create($request->all());
-
-            return redirect()->route('residences.index')->with('success', 'Attestation de résidence créée avec succès.');
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Une erreur est survenue lors de la création de l\'attestation de résidence.']);
+        // Upload fichier
+        if ($request->hasFile('documents')) {
+            $data['documents'] = $request->file('documents')
+                ->store('documents', 'public');
         }
-    }
 
+        // Ajouter infos système
+        $data['user_id'] = auth()->id();
+        $data['entite_id'] = auth()->user()->entite_id;
+
+        // Enregistrement
+        Residence::create($data);
+
+        return redirect()
+            ->route('residences.index')
+            ->with('success', 'Attestation de résidence créée avec succès.');
+
+    } catch (\Exception $e) {
+
+        // (optionnel) log erreur
+        \Log::error($e->getMessage());
+
+        return back()->withErrors([
+            'error' => 'Une erreur est survenue lors de la création.'
+        ]);
+    }
+}
     public function show(Residence $residence)
     {
+        
         return view('residences.show', compact('residence'));
     }
 
@@ -120,7 +126,7 @@ class ResidenceController extends Controller
 
     public function pdf(Residence $residence)
     {
-        $pdf = \pdf::loadView('residences.attestation', compact('residence'));
+        $pdf = \PDF::loadView('residences.attestation', compact('residence'));
         return $pdf->download('attestation_residence_' . $residence->id . '.pdf');
     }
 

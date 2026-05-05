@@ -13,11 +13,11 @@
                     👁️ Voir attestation
                 </a>
                 
-                <a href="{{ route('deces.attestation.pdf', $dece) }}"
+                {{-- <a href="{{ route('deces.attestation.pdf', $dece) }}"
                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition">
                     📄 Télécharger PDF
                 </a>
-                
+                 --}}
                 <div class="h-6 w-px bg-gray-300"></div>
                 
                 <a href="{{ route('deces.edit', $dece) }}" 

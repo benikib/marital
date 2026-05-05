@@ -26,7 +26,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($regimes as $regime)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($regime->dotation_coutumiere, 2, ',', ' ') }} FCFA</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($regime->dotation_coutumiere, 2, ',', ' ') }} FC</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $regime->contrat->nom ?? '-' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <a href="{{ route('regimes.edit', $regime) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>

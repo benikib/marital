@@ -69,7 +69,7 @@
                         <option value="">Sélectionner un régime</option>
                         @foreach($regimes as $regime)
                             <option value="{{ $regime->id }}" @selected(old('regime_id', $mariage->regime_id ?? '') == $regime->id)>
-                                {{ $regime->contrat->nom ?? 'Contrat inconnu' }} - {{ number_format($regime->dotation_coutumiere, 2, ',', ' ') }} FCFA
+                                {{ $regime->contrat->nom ?? 'Contrat inconnu' }} - {{ number_format($regime->dotation_coutumiere, 2, ',', ' ') }} FC
                             </option>
                         @endforeach
                     </select>

@@ -13,10 +13,10 @@
                     👁️ Voir attestation
                 </a>
                 
-                <a href="{{ route('naissances.attestation.pdf', $naissance) }}"
+                {{-- <a href="{{ route('naissances.attestation.pdf', $naissance) }}"
                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition">
                     📄 Télécharger PDF
-                </a>
+                </a> --}}
                 
                 <div class="h-6 w-px bg-gray-300"></div>
                 
@@ -314,16 +314,49 @@
                         </div>
                     @endif
                     
-                    @if($naissance->documents)
-                        <div class="group relative">
-                            <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
-                                <img src="{{ asset('storage/' . $naissance->documents) }}" 
-                                     alt="Document"
-                                     class="w-full h-full object-cover">
+                 @php
+                            $file = $naissance->documents;
+                            $extension = pathinfo($file, PATHINFO_EXTENSION);
+                        @endphp
+                        @if ($naissance->documents)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+
+                                        @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                            <!-- IMAGE -->
+                                            <img src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full object-cover">
+                                        @elseif($extension === 'pdf')
+                                            <!-- PDF -->
+                                            <iframe src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full"></iframe>
+                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                            <!-- WORD -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📄</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Ouvrir le document
+                                                </a>
+                                            </div>
+                                        @else
+                                            <!-- AUTRE -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📁</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Télécharger
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Document annexe</div>
                             </div>
-                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Document annexe</div>
-                        </div>
-                    @endif
+                        @endif
+
 
                     @if($naissance->personne->photo)
                         <div class="group relative">

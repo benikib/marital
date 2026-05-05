@@ -11,10 +11,10 @@
    👁 Voir
 </a>
 
-<a href="{{ route('mariages.certificat.pdf', $mariage) }}"
+{{-- <a href="{{ route('mariages.certificat.pdf', $mariage) }}"
    class="text-red-600 hover:text-red-900">
    📄 PDF
-</a>
+</a> --}}
 </div>
             <div class="space-x-2">
                 <a href="{{ route('mariages.edit', $mariage) }}" 

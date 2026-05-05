@@ -82,6 +82,7 @@ class MariageController extends Controller
         get();
         
         $regimes = RegimeMatrimonial::with('contrat')->orderBy('id')->get();
+        
         $statuts = StatutMariage::orderBy('nom')->get();
         $entites = EntiteAdministrative::orderBy('nom')->get();
         $mariage = Mariage::orderBy('date_mariage', 'desc')->first();
