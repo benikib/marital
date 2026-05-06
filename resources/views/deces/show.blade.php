@@ -76,16 +76,16 @@
             </div>
         </div>
 
-        <!-- CARTE IDENTITÉ DE L'ENFANT -->
+        <!-- CARTE IDENTITÉ Du Décès -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
             <div class="bg-gradient-to-r from-sky-600 to-blue-600 px-6 py-4">
                 <h4 class="text-white font-bold text-lg flex items-center gap-2">
-                    <span>👶</span> Identité de l'enfant
+                    <span>👶</span> Identité du décès
                 </h4>
             </div>
             <div class="p-6">
                 <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Informations de l'enfant -->
+                    <!-- Informations du décès -->
                     <div class="space-y-4">
                         <div class="space-y-3">
                             <div class="flex justify-between items-center pb-2 border-b border-gray-100">
@@ -285,7 +285,8 @@
           
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
                 <span class="text-xs text-gray-500 uppercase">Numéro de registre</span>
-                <p class="font-bold text-gray-800">{{ $dece->numero_registre ?? 'Non attribué' }}</p>
+                <p class="font-bold text-gray-800">  Acte N° {{ str_pad($dece->id, 6, '0', STR_PAD_LEFT) }}
+</p>
             </div>
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-indigo-500">
                 <span class="text-xs text-gray-500 uppercase">Année d'enregistrement</span>
@@ -293,53 +294,81 @@
             </div>
         </div>
 
-        <!-- SECTION PIÈCES JOINTES -->
-        @if($dece->documents || $dece->certificat_medical || $dece->personne->photo)
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
-                <h4 class="text-white font-bold text-lg flex items-center gap-2">
-                    <span>📎</span> Pièces justificatives
-                </h4>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    @if($dece->certificat_medical)
-                        <div class="group relative">
-                            <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
-                                <img src="{{ asset('storage/' . $dece->certificat_medical) }}" 
-                                     alt="Certificat médical"
-                                     class="w-full h-full object-cover">
+         @if ($dece->documents || $dece->certificat_medical || $dece->personne->photo)
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
+                    <h4 class="text-white font-bold text-lg flex items-center gap-2">
+                        <span>📎</span> Pièces justificatives
+                    </h4>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        @if ($dece->certificat_medical)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <img src="{{ asset('storage/' . $dece->certificat_medical) }}"
+                                        alt="Certificat médical" class="w-full h-full object-cover">
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Certificat médical
+                                </div>
                             </div>
-                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Certificat médical</div>
-                        </div>
-                    @endif
-                    
-                    @if($dece->documents)
-                        <div class="group relative">
-                            <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
-                                <img src="{{ asset('storage/' . $dece->documents) }}" 
-                                     alt="Document"
-                                     class="w-full h-full object-cover">
-                            </div>
-                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Document annexe</div>
-                        </div>
-                    @endif
+                        @endif
+                        @php
+                            $file = $dece->documents;
+                            $extension = pathinfo($file, PATHINFO_EXTENSION);
+                        @endphp
+                        @if ($dece->documents)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
 
-                    @if($dece->personne->photo)
-                        <div class="group relative">
-                            <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
-                                <img src="{{ asset('storage/' . $dece->personne->photo) }}" 
-                                     alt="Photo"
-                                     class="w-full h-full object-cover">
+                                        @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                            <!-- IMAGE -->
+                                            <img src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full object-cover">
+                                        @elseif($extension === 'pdf')
+                                            <!-- PDF -->
+                                            <iframe src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full"></iframe>
+                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                            <!-- WORD -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📄</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Ouvrir le document
+                                                </a>
+                                            </div>
+                                        @else
+                                            <!-- AUTRE -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📁</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Télécharger
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Document annexe</div>
                             </div>
-                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Photo d'identité</div>
-                        </div>
-                    @endif
+                        @endif
+
+                        @if ($dece->personne->photo)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <img src="{{ asset('storage/' . $dece->personne->photo) }}" alt="Photo"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Photo d'identité</div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
-        @endif
-
+        @endif  
         <!-- TIMELINE / HISTORIQUE -->
         <div class="mt-6 text-right text-xs text-gray-400">
             Acte dressé le {{ $dece->created_at->format('d/m/Y à H:i') }} 

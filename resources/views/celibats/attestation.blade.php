@@ -380,7 +380,7 @@
                 L'an {{ date('Y') }}, le {{ now()->translatedFormat('d F') }}, à {{ now()->format('H:i') }}
             </div>
 
-            <!-- Identité de l'enfant -->
+            <!-- Identité de l'inhumation -->
             <div class="identity-block">
                 <div class="identity-row">
                     <span class="label">Nom et Prénoms :</span>
@@ -418,7 +418,7 @@
 
             <!-- Parents -->
             <div class="parents-block">
-                <div class="parents-title">👪 Filiation</div>
+                <div class="parents-title"> Filiation</div>
                 <div class="identity-row">
                     <span class="label">Père :</span>
                     <span class="value">{{ $celibat->pere_nom ?? $celibat->personne->pere ?? '_________________' }}</span>
@@ -443,11 +443,11 @@
 
             <!-- Déclaration -->
             <div class="declaration-block">
-                <div style="font-weight: 700; font-size: 11px; margin-bottom: 5px;">📝 Déclaration</div>
-                <div class="identity-row">
+                <div style="font-weight: 700; font-size: 11px; margin-bottom: 5px;"> Déclaration</div>
+                {{-- <div class="identity-row">
                     <span class="label">Déclarant :</span>
                     <span class="value">{{ $celibat->declarant_nom ?? '_________________' }}</span>
-                </div>
+                </div> --}}
                 @if($celibat->declarant_qualite)
                 <div class="identity-row">
                     <span class="label">Qualité :</span>

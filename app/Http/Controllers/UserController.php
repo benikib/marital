@@ -8,13 +8,29 @@ use App\Models\Role;
 use App\Models\EntiteAdministrative;
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-         $users = User::With('role')->With('entite')->
-         orderBy('name')->paginate(15);
-         
-       
-        return view('users.index', compact('users'));
+        $query = User::with('role', 'entite')->orderBy('name');
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhereHas('role', function ($qRole) use ($search) {
+                        $qRole->where('nom', 'like', "%{$search}%");
+                    })->orWhereHas('entite', function ($qEntite) use ($search) {
+                        $qEntite->where('nom', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $stats = [
+            'total' => User::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $users = $query->paginate(15)->withQueryString();
+        return view('users.index', compact('users', 'stats'));
     }
 
     public function create()

@@ -11,7 +11,7 @@
                     <form action="{{ route('deces.store') }}"  method="POST" enctype="multipart/form-data"  class="space-y-6">
                         @csrf
                         @include('deces._form')
-                        <div class="flex items-center gap-4 mt-4">
+                        <div class="mt-4 flex items-center gap-4 mt-4">
                             <x-primary-button>Enregistrer</x-primary-button>
                             <a href="{{ route('deces.index') }}" class="text-gray-600 hover:text-gray-900">Annuler</a>
                         </div>

@@ -54,7 +54,6 @@
             opacity: 0.5;
         }
 
-        /* En-tête */
         .header {
             text-align: center;
             margin-bottom: 12px;
@@ -114,7 +113,6 @@
             margin-top: 5px;
         }
 
-        /* Corps */
         .content {
             margin: 12px 0;
             font-size: 12px;
@@ -138,11 +136,12 @@
         .identity-row {
             display: flex;
             margin-bottom: 5px;
+            flex-wrap: wrap;
         }
 
         .label {
             font-weight: 700;
-            min-width: 130px;
+            min-width: 140px;
             color: #5f4e2e;
             text-transform: uppercase;
             font-size: 10px;
@@ -173,19 +172,20 @@
             padding-bottom: 3px;
         }
 
+        .inhumation-block {
+            margin: 10px 0;
+            padding: 10px 16px;
+            background: #eef2ff;
+            border-radius: 8px;
+            border-left: 4px solid #4f46e5;
+        }
+
         .declaration-block {
             margin: 10px 0;
             padding: 10px 12px;
             background: #f8fafc;
             border-radius: 6px;
             border: 1px solid #cbd5e1;
-        }
-
-        .declarant-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 5px;
         }
 
         .attestation-text {
@@ -209,7 +209,6 @@
             border-left: 3px solid #f59e0b;
         }
 
-        /* Signature */
         .signature-section {
             display: flex;
             justify-content: space-between;
@@ -244,7 +243,6 @@
             color: #6f6a5e;
         }
 
-        /* QR Code */
         .qr-section {
             margin-top: 12px;
             padding-top: 10px;
@@ -287,7 +285,6 @@
             white-space: nowrap;
         }
 
-        /* Bouton */
         .print-btn {
             position: fixed;
             top: 16px;
@@ -312,7 +309,6 @@
             background: #0369a1;
         }
 
-        /* Impression */
         @media print {
             html, body {
                 height: 100%;
@@ -355,7 +351,6 @@
     </button>
 
     <div class="acte">
-        <!-- Drapeau -->
         <div class="flag">
             <div class="blue"></div>
             <div class="yellow"></div>
@@ -364,91 +359,94 @@
             <div class="red"></div>
         </div>
 
-        <!-- En-tête -->
         <div class="header">
             <div class="republic">RÉPUBLIQUE DÉMOCRATIQUE DU CONGO</div>
             <div class="ministere">MINISTÈRE DE L'INTÉRIEUR ET SÉCURITÉ</div>
-            <div class="title">ACTE DE DECES</div>
+            <div class="ministere">SERVICE DE L'ÉTAT CIVIL</div>
+            <div class="title">ACTE D'INHUMATION</div>
             <div class="numero">
-                N° {{ $dece->numero_acte ?? 'DEC-' . date('Y') . '-' . str_pad($dece->id, 5, '0', STR_PAD_LEFT) }}
+                N° {{ $inhumation->numero_acte ?? 'INH-' . date('Y') . '-' . str_pad($inhumation->id ?? 1, 5, '0', STR_PAD_LEFT) }}
             </div>
         </div>
 
-        <!-- Corps -->
         <div class="content">
             <div class="intro">
                 L'an {{ date('Y') }}, le {{ now()->translatedFormat('d F') }}, à {{ now()->format('H:i') }}
             </div>
 
-            <!-- Identité de l'enfant -->
+            <!-- Identité du défunt -->
             <div class="identity-block">
                 <div class="identity-row">
-                    <span class="label">Nom et Prénoms :</span>
+                    <span class="label">Nom et prénoms :</span>
                     <span class="value">
-                        <strong>{{ strtoupper($inhumation->personne->nom) }}</strong> 
-                        {{ $inhumation->personne->prenom }}
-                        @if($inhumation->personne->postnom)
+                        <strong>{{ strtoupper($inhumation->personne->nom ?? '__________') }}</strong> 
+                        {{ $inhumation->personne->prenom ?? '__________' }}
+                        @if(($inhumation->personne->postnom ?? false))
                             {{ $inhumation->personne->postnom }}
                         @endif
                     </span>
                 </div>
                 <div class="identity-row">
                     <span class="label">Sexe :</span>
-                    <span class="value">{{ $inhumation->personne->sexe == 'M' ? 'Masculin' : 'Féminin' }}</span>
+                    <span class="value">{{ ($inhumation->personne->sexe ?? '') == 'M' ? 'Masculin' : 'Féminin' }}</span>
                 </div>
                 <div class="identity-row">
-                    <span class="label">Né(e) le :</span>
+                    <span class="label">Date de naissance :</span>
                     <span class="value">
-                        {{ $inhumation->personne->date_naissance ? \Carbon\Carbon::parse($inhumation->personne->date_naissance)->translatedFormat('d F Y') : '_________' }}
-                        @if($inhumation->personne->heure_naissance)
-                            à {{ $inhumation->personne->heure_naissance }}
-                        @endif
+                        {{ isset($inhumation->personne->date_naissance) ? \Carbon\Carbon::parse($inhumation->personne->date_naissance)->translatedFormat('d F Y') : '__________' }}
                     </span>
                 </div>
                 <div class="identity-row">
-                    <span class="label">À :</span>
-                    <span class="value">
-                        {{ $inhumation->personne->lieu_naissance ?? $inhumation->lieu_inhumation ?? '_________________' }}
-                        @if($inhumation->personne->etablissement)
-                            ({{ $inhumation->personne->etablissement }})
-                        @endif
-                    </span>
+                    <span class="label">Lieu de naissance :</span>
+                    <span class="value">{{ $inhumation->personne->lieu_naissance ?? '__________' }}</span>
                 </div>
+                {{-- <div class="identity-row">
+                    <span class="label">Date du décès :</span>
+                    <span class="value">{{ isset($inhumation->date_deces) ? \Carbon\Carbon::parse($inhumation->date_deces)->translatedFormat('d F Y') : '__________' }}</span>
+                </div> --}}
             </div>
 
-            <!-- Parents -->
+            <!-- Filiation -->
             <div class="parents-block">
-                <div class="parents-title">👪 Filiation</div>
+                <div class="parents-title"> Filiation du défunt</div>
                 <div class="identity-row">
                     <span class="label">Père :</span>
-                    <span class="value">{{ $inhumation->pere_nom ?? $inhumation->personne->pere ?? '_________________' }}</span>
+                    <span class="value">{{ $inhumation->pere_nom ?? $inhumation->personne->pere ?? '__________' }}</span>
                 </div>
-                @if($inhumation->pere_profession)
                 <div class="identity-row">
-                    <span class="label">Profession :</span>
-                    <span class="value">{{ $inhumation->pere_profession }}</span>
-                </div>
-                @endif
-                <div class="identity-row" style="margin-top: 8px;">
                     <span class="label">Mère :</span>
-                    <span class="value">{{ $inhumation->mere_nom ?? $inhumation->personne->mere ?? '_________________' }}</span>
+                    <span class="value">{{ $inhumation->mere_nom ?? $inhumation->personne->mere ?? '__________' }}</span>
                 </div>
-                @if($inhumation->mere_profession)
-                <div class="identity-row">
-                    <span class="label">Profession :</span>
-                    <span class="value">{{ $inhumation->mere_profession }}</span>
-                </div>
-                @endif
             </div>
 
-            <!-- Déclaration -->
+            <!-- Informations d'inhumation -->
+            <div class="inhumation-block">
+                <div class="identity-row">
+                    <span class="label">Lieu d'inhumation :</span>
+                    <span class="value">{{ $inhumation->lieu_inhumation ?? '__________' }}</span>
+                </div>
+                <div class="identity-row">
+                    <span class="label">Date d'inhumation :</span>
+                    <span class="value">{{ isset($inhumation->date_inhumation) ? \Carbon\Carbon::parse($inhumation->date_inhumation)->translatedFormat('d F Y') : '__________' }}</span>
+                </div>
+                {{-- <div class="identity-row">
+                    <span class="label">Heure de l'inhumation :</span>
+                    <span class="value">{{ $inhumation->heure_inhumation ?? '__________' }}</span>
+                </div> --}}
+                <div class="identity-row">
+                    <span class="label">Concession / Cimetière :</span>
+                    <span class="value">{{ $inhumation->cimetiere ?? '__________' }}</span>
+                </div>
+            </div>
+
+            <!-- Déclarant -->
             <div class="declaration-block">
                 <div style="font-weight: 700; font-size: 11px; margin-bottom: 5px;">📝 Déclaration</div>
                 <div class="identity-row">
                     <span class="label">Déclarant :</span>
-                    <span class="value">{{ $inhumation->declarant_nom ?? '_________________' }}</span>
+                    <span class="value">{{ $inhumation->declarant_nom ?? '__________' }}</span>
                 </div>
-                @if($inhumation->declarant_qualite)
+                @if($inhumation->declarant_qualite ?? false)
                 <div class="identity-row">
                     <span class="label">Qualité :</span>
                     <span class="value">{{ $inhumation->declarant_qualite }}</span>
@@ -457,25 +455,13 @@
                 <div class="identity-row">
                     <span class="label">Date de déclaration :</span>
                     <span class="value">
-                        {{ $inhumation->date_declaration ? \Carbon\Carbon::parse($inhumation->date_declaration)->format('d/m/Y') : $inhumation->created_at->format('d/m/Y') }}
+                        {{ isset($inhumation->date_declaration) ? \Carbon\Carbon::parse($inhumation->date_declaration)->format('d/m/Y') : (isset($inhumation->created_at) ? $inhumation->created_at->format('d/m/Y') : '__________') }}
                     </span>
                 </div>
             </div>
 
-            <!-- Informations complémentaires -->
-            <div style="display: flex; gap: 15px; margin: 8px 0; font-size: 11px;">
-                <div>
-                    <span style="font-weight: 700;">Type de naissance :</span> 
-                    {{ $inhumation->type_naissance ?? 'Simple' }}
-                </div>
-                <div>
-                    <span style="font-weight: 700;">Registre N° :</span> 
-                    {{ $inhumation->numero_registre ?? '________' }}
-                </div>
-            </div>
-
             <!-- Mention marginale -->
-            @if($inhumation->mention_marginale)
+            @if($inhumation->mention_marginale ?? false)
             <div class="mention-box">
                 <strong>📌 Mention marginale :</strong> {{ $inhumation->mention_marginale }}
             </div>
@@ -484,10 +470,13 @@
             <!-- Texte légal -->
             <div class="attestation-text">
                 <p>
-                    Le présent acte est dressé conformément aux dispositions des articles 107 à 129 
-                    du Code de la Famille de la République Démocratique du Congo. 
-                    Il est transcrit sur les registres de l'état civil de 
-                    <strong>{{ $inhumation->entite->nom ?? '_________________' }}</strong>.
+                    Le présent acte d'inhumation est dressé conformément aux dispositions du Code de la Famille 
+                    de la République Démocratique du Congo et au règlement sur les sépultures et cimetières.
+                    Il atteste que le corps de la personne ci-dessus désignée a été inhumé au lieu et date indiqués.
+                </p>
+                <p style="margin-top: 6px;">
+                    Transcription sur les registres de l'état civil de 
+                    <strong>{{ $inhumation->entite->nom ?? '__________' }}</strong>.
                 </p>
             </div>
 
@@ -499,17 +488,17 @@
         <!-- Signature -->
         <div class="signature-section">
             <div class="date-place">
-                <p>Fait à {{ $dece->entite->nom ?? 'Kinshasa' }},</p>
+                <p>Fait à {{ $inhumation->entite->nom ?? 'Kinshasa' }},</p>
                 <p>Le {{ now()->translatedFormat('d F Y') }}</p>
             </div>
             <div class="signature">
                 <div class="signature-line"></div>
                 <div class="officier">L'Officier de l'État Civil</div>
                 <div style="margin-top: 2px; font-size: 10px;">
-                    {{ $inhumation->officier_nom ?? $inhumation->user->name ?? '_______________' }}
+                    {{ $inhumation->officier_nom ?? ($inhumation->user->name ?? '_______________') }}
                 </div>
                 <div class="seal">
-                    (Signature et Sceau officiel)
+                    (Signature et sceau officiel)
                 </div>
             </div>
         </div>
@@ -518,26 +507,25 @@
         <div class="qr-section">
             <div class="qr-code">
                 <img width="65" height="65" 
-                     src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data={{ urlencode(route('deces.verify', $inhumation)) }}&bgcolor=fffdf8&color=0284c7" 
-                     alt="QR">
+                     src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data={{ urlencode(route('inhumations.verify', $inhumation->id ?? 1)) }}&bgcolor=fffdf8&color=0284c7" 
+                     alt="QR Code de vérification">
             </div>
             <div class="qr-text">
-                <p><strong>Vérification d'authenticité</strong></p>
-                <p>Scannez ce code pour vérifier la validité de l'acte.</p>
+                <p><strong>🔐 Vérification d'authenticité</strong></p>
+                <p>Scannez ce code pour vérifier la validité de l'acte d'inhumation.</p>
                 <p style="margin-top: 3px; font-size: 7px;">
-                    Réf : {{ $inhumation->numero_acte ?? 'DEC-' . $inhumation->id }}
+                    Réf : {{ $inhumation->numero_acte ?? 'INH-' . ($inhumation->id ?? 'XXXXX') }}
                 </p>
             </div>
         </div>
 
         <!-- Mentions légales -->
         <div class="legal-footer">
-            République Démocratique du Congo — Acte authentique délivré conformément au Code de la Famille.<br>
+            République Démocratique du Congo — Acte authentique d'inhumation délivré conformément au Code de la Famille.<br>
             Document officiel • Toute falsification expose aux poursuites pénales (Art. 124 CP).
         </div>
 
-        <!-- Filigrane -->
-        <div class="watermark">ACTE DE INHUMATION</div>
+        <div class="watermark">ACTE D'INHUMATION</div>
     </div>
 </body>
-</html>
+</html> 

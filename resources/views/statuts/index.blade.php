@@ -12,6 +12,8 @@
                 <div class="mb-4 rounded-lg bg-green-50 border border-green-200 p-4 text-green-700">{{ session('success') }}</div>
             @endif
 
+            @include('components.index-search-stats', ['stats' => $stats ?? null])
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="overflow-x-auto">

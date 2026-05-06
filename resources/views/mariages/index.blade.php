@@ -36,7 +36,21 @@
         </a>
     </div>
 
-</form> 
+</form>
+
+    @if(isset($stats))
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="text-sm text-blue-600 font-medium">Total mariages</div>
+                <div class="text-2xl font-bold text-blue-900">{{ $stats['total'] }}</div>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <div class="text-sm text-indigo-600 font-medium">Résultats filtrés</div>
+                <div class="text-2xl font-bold text-indigo-900">{{ $stats['filtered'] }}</div>
+            </div>
+        </div>
+    @endif
+
     <div class="py-12">
         <div class="">
             @if(session('success'))
@@ -53,6 +67,7 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Épouse</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lieu</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entité d'enregistrement</th>
                                     <th class="px-6 py-3"></th>
                                 </tr>
                             </thead>
@@ -63,6 +78,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $mariage->epouse->nom ?? '-' }} {{ $mariage->epouse->prenom ?? '' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ optional($mariage->date_mariage)->format('Y-m-d') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mariage->lieu_mariage }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mariage->entite->nom  ?? 'N/A' }} ({{ ($mariage->entite->type  ?? 'N/A') }}) </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <a href="{{ route('mariages.show', $mariage) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
                                 

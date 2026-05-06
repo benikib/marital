@@ -381,7 +381,7 @@
             </div>
                <!-- Début par le soussigné -->
             <div class="soussigne-text">
-                <strong>Je soussigné, {{ $naissance->soussignataire?? '_________________' }}, Officier de l'Etat Civil et Bourgmestre de la Commune de MATADI à Matadi,</strong> atteste par la présente qu'au vu des renseignements en ma possession,
+                <strong>Je soussigné, {{ $naissance->soussignataire?? '_________________' }}, Officier de l'Etat Civil </strong> atteste par la présente qu'au vu des renseignements en ma possession,
             </div>
 
             <!-- Identité de l'enfant -->
@@ -422,7 +422,7 @@
 
             <!-- Parents -->
             <div class="parents-block">
-                <div class="parents-title">👪 Filiation</div>
+                <div class="parents-title"> Filiation</div>
                 <div class="identity-row">
                     <span class="label">Père :</span>
                     <span class="value">{{ $naissance->pere_nom ?? $naissance->personne->pere ?? '_________________' }}</span>
@@ -447,7 +447,7 @@
 
             <!-- Déclaration -->
             <div class="declaration-block">
-                <div style="font-weight: 700; font-size: 11px; margin-bottom: 5px;">📝 Déclaration</div>
+                <div style="font-weight: 700; font-size: 11px; margin-bottom: 5px;"> Déclaration</div>
                 <div class="identity-row">
                     <span class="label">Déclarant :</span>
                     <span class="value">{{ $naissance->declarant_nom ?? '_________________' }}</span>
@@ -468,20 +468,20 @@
 
             <!-- Informations complémentaires -->
             <div style="display: flex; gap: 15px; margin: 8px 0; font-size: 11px;">
-                <div>
+                {{-- <div>
                     <span style="font-weight: 700;">Type de naissance :</span> 
                     {{ $naissance->type_naissance ?? 'Simple' }}
-                </div>
+                </div> --}}
                 <div>
                     <span style="font-weight: 700;">Registre N° :</span> 
-                    {{ $naissance->numero_registre ?? '________' }}
+                    {{ str_pad($naissance->id, 6, '0', STR_PAD_LEFT) ?? '________' }}
                 </div>
             </div>
 
             <!-- Mention marginale -->
             @if($naissance->mention_marginale)
             <div class="mention-box">
-                <strong>📌 Mention marginale :</strong> {{ $naissance->mention_marginale }}
+                <strong> Mention marginale :</strong> {{ $naissance->mention_marginale }}
             </div>
             @endif
 

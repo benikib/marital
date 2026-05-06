@@ -51,9 +51,14 @@ class MariageController extends Controller
         $query->where('lieu_mariage', 'like', "%{$request->lieu}%");
     }
 
+    $stats = [
+        'total' => Mariage::count(),
+        'filtered' => (clone $query)->count(),
+    ];
+
     $mariages = $query->latest()->paginate(10)->withQueryString();
 
-    return view('mariages.index', compact('mariages'));
+    return view('mariages.index', compact('mariages', 'stats'));
 }
 
     public function create()

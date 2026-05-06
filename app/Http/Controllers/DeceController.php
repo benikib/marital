@@ -10,10 +10,27 @@ use Illuminate\Support\Facades\Storage;
 
 class DeceController extends Controller
 {
-        public function index()
+        public function index(Request $request)
         {
-            $deces = Dece::with('personne')->latest()->paginate(10);
-            return view('deces.index', compact('deces'));
+            $query = Dece::with('personne')->latest();
+
+            if ($search = $request->query('search')) {
+                $query->where(function ($q) use ($search) {
+                    $q->whereHas('personne', function ($qPersonne) use ($search) {
+                        $qPersonne->where('nom', 'like', "%{$search}%")
+                            ->orWhere('prenom', 'like', "%{$search}%")
+                            ->orWhere('postnom', 'like', "%{$search}%");
+                    })->orWhere('soussignataire', 'like', "%{$search}%");
+                });
+            }
+
+            $stats = [
+                'total' => Dece::count(),
+                'filtered' => (clone $query)->count(),
+            ];
+
+            $deces = $query->paginate(10)->withQueryString();
+            return view('deces.index', compact('deces', 'stats'));
         }
     
         public function create()
@@ -29,22 +46,20 @@ class DeceController extends Controller
 
         public function store(Request $request)
         {
-            $request->validate([
+           $validatedData =  $request->validate([
                 'soussignataire' => 'required|string|max:255',
                 'documents' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
                 'personne_id' => 'required|exists:personnes,id',
             ]);
 
             if ($request->hasFile('documents')) {
-                $request->merge(['documents' => $request->file('documents')->store('dece_docs', 'public')]);
+                $validatedData['documents'] = $request->file('documents')->store('dece_docs', 'public');
             }
 
-            $request->merge([
-                'user_id' => auth()->id(),
-                'entite_id' => auth()->user()->entite_id,
-            ]);
+            $validatedData['user_id'] = auth()->id();
+            $validatedData['entite_id'] = auth()->user()->entite_id;
 
-            Dece::create($request->all());
+            Dece::create($validatedData);
 
             return redirect()->route('deces.index')->with('success', 'Décès créé avec succès.');
         }
@@ -57,7 +72,7 @@ class DeceController extends Controller
     
             public function update(Request $request, Dece $dece)
             {
-                $request->validate([
+                $validatedData = $request->validate([
                     'soussignataire' => 'required|string|max:255',
                     'documents' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
                     'personne_id' => 'required|exists:personnes,id',
@@ -67,10 +82,10 @@ class DeceController extends Controller
                     if ($dece->documents) {
                         Storage::disk('public')->delete($dece->documents);
                     }
-                    $request->merge(['documents' => $request->file('documents')->store('dece_docs', 'public')]);
+                    $validatedData['documents'] = $request->file('documents')->store('dece_docs', 'public');
                 }
     
-                $dece->update($request->all());
+                $dece->update($validatedData);
     
                 return redirect()->route('deces.index')->with('success', 'Décès mis à jour avec succès.');
             }

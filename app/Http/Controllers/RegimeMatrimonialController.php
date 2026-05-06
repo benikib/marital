@@ -8,11 +8,24 @@ use Illuminate\Http\Request;
 
 class RegimeMatrimonialController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $regimes = RegimeMatrimonial::with('contrat')->orderBy('id')->paginate(15);
+        $query = RegimeMatrimonial::with('contrat')->orderBy('id');
 
-        return view('regimes.index', compact('regimes'));
+        if ($search = $request->query('search')) {
+            $query->where('dotation_coutumiere', 'like', "%{$search}%")
+                ->orWhereHas('contrat', function ($q) use ($search) {
+                    $q->where('nom', 'like', "%{$search}%");
+                });
+        }
+
+        $stats = [
+            'total' => RegimeMatrimonial::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $regimes = $query->paginate(15)->withQueryString();
+        return view('regimes.index', compact('regimes', 'stats'));
     }
 
     public function create()

@@ -96,6 +96,7 @@ Route::middleware('auth', 'role:agent,superAdmin')->group(function () {
     Route::resource('inhumations', App\Http\Controllers\InhumationController::class)->except(['show']);
     Route::get('/inhumations/{inhumation}', [App\Http\Controllers\InhumationController::class, 'show'])->name('inhumations.show');
 });
+
 Route::get('/inhumations/{inhumation}/pdf', [App\Http\Controllers\InhumationController::class, 'pdf'])->name('inhumations.attestation.pdf');
 Route::get('/inhumations/{inhumation}/attestation', [App\Http\Controllers\InhumationController::class, 'attestation'])->name('inhumations.attestation');
 Route::get('/inhumations/{inhumation}/verify', [App\Http\Controllers\InhumationController::class, 'verify'])->name('inhumations.verify');

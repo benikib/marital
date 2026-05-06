@@ -7,11 +7,22 @@ use Illuminate\Http\Request;
 
 class EntiteAdministrativeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $entites = EntiteAdministrative::with('parent')->orderBy('nom')->paginate(15);
+        $query = EntiteAdministrative::with('parent')->orderBy('nom');
 
-        return view('entites.index', compact('entites'));
+        if ($search = $request->query('search')) {
+            $query->where('nom', 'like', "%{$search}%")
+                ->orWhere('type', 'like', "%{$search}%");
+        }
+
+        $stats = [
+            'total' => EntiteAdministrative::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $entites = $query->paginate(15)->withQueryString();
+        return view('entites.index', compact('entites', 'stats'));
     }
 
     public function create()

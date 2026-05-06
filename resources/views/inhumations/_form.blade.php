@@ -43,9 +43,15 @@
                 <div>
                     <x-input-label for="date_inhumation" value="Date d'inhumation" />
                     <x-text-input id="date_inhumation" name="date_inhumation" type="date" class="mt-1 block w-full"
-                        value="{{ old('date_inhumation', $inhumation?->date_inhumation?->format('Y-m-d') ?? '') }}" required />   
+                        value="{{ old('date_inhumation', $inhumation?->date_inhumation ?? '') }}" required />   
                     <x-input-error :messages="$errors->get('date_inhumation')" class="mt-2" />
                 </div>
+
+                <div>
+                    <x-input-label for="cimetiere" value="Cimetière" />
+                    <x-text-input id="cimetiere" name="cimetiere" type="text" class="mt-1 block w-full"
+                        value="{{ old('cimetiere', $inhumation?->cimetiere ?? '') }}" required />   
+                    <x-input-error :messages="$errors->get('cimetiere')" class="mt-2" />
     
     <div>
         <x-input-label for="documents" value="Documents fournis" />

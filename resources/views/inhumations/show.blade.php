@@ -76,11 +76,11 @@
             </div>
         </div>
 
-        <!-- CARTE IDENTITÉ DE L'ENFANT -->
+        <!-- CARTE IDENTITÉ DE L'INHUMATION -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
             <div class="bg-gradient-to-r from-sky-600 to-blue-600 px-6 py-4">
                 <h4 class="text-white font-bold text-lg flex items-center gap-2">
-                    <span>👶</span> Identité de l'enfant
+                    <span>👶</span> Identité de l'inhumation
                 </h4>
             </div>
             <div class="p-6">
@@ -285,7 +285,7 @@
           
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
                 <span class="text-xs text-gray-500 uppercase">Numéro de registre</span>
-                <p class="font-bold text-gray-800">{{ $inhumation->numero_registre ?? 'Non attribué' }}</p>
+                <p class="font-bold text-gray-800">Acte N° {{ str_pad($inhumation->id, 6, '0', STR_PAD_LEFT) }}</p>
             </div>
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-indigo-500">
                 <span class="text-xs text-gray-500 uppercase">Année d'enregistrement</span>

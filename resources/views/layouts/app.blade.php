@@ -191,6 +191,15 @@
                     </a>
                 </li>
                 <li>
+                    {{-- bonneviemoeurs --}}
+                    <a href="{{ route('bonneviemoeurs.index') }}"
+                    class="sidebar-item {{ request()->routeIs('bonneviemoeurs.*') ? 'active' : '' }}">
+                        <span>✅</span>
+                        <span>Attest Bonne Vie & Moeurs</span>
+                    </a>
+                </li>
+               
+                <li>
                     <a href="{{ route('residences.index') }}"
                     class="sidebar-item {{ request()->routeIs('residences.*') ? 'active' : '' }}">
                         <span>🏠</span>

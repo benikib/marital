@@ -7,11 +7,22 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::orderBy('nom')->paginate(15);
+        $query = Role::orderBy('nom');
 
-        return view('roles.index', compact('roles'));
+        if ($search = $request->query('search')) {
+            $query->where('nom', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        $stats = [
+            'total' => Role::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $roles = $query->paginate(15)->withQueryString();
+        return view('roles.index', compact('roles', 'stats'));
     }
 
     public function create()

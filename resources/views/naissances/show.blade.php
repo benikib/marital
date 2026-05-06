@@ -285,12 +285,17 @@
           
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
                 <span class="text-xs text-gray-500 uppercase">Numéro de registre</span>
-                <p class="font-bold text-gray-800">{{ $naissance->numero_registre ?? 'Non attribué' }}</p>
+                @php
+                    
+                @endphp
+                <p class="font-bold text-gray-800">  Acte N° {{ str_pad($naissance->id, 6, '0', STR_PAD_LEFT) }}    </p>
             </div>
             <div class="bg-white rounded-xl shadow p-4 border-l-4 border-indigo-500">
                 <span class="text-xs text-gray-500 uppercase">Année d'enregistrement</span>
                 <p class="font-bold text-gray-800">{{ $naissance->annee_enregistrement ?? date('Y') }}</p>
             </div>
+        </div>
+         
         </div>
 
         <!-- SECTION PIÈCES JOINTES -->
