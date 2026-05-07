@@ -10,11 +10,28 @@ use Barryvdh\DomPDF\PDF;
 
 class BonneVieMoeursController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bonneviemoeurs =BonneVieMoeurs::where('entite_id', auth()->user()->entite_id)->with('personne')->orderBy('created_at', 'desc')->paginate(15);
-        
-        return view('bonneviemoeurs.index', compact('bonneviemoeurs'));
+        $baseQuery = BonneVieMoeurs::where('entite_id', auth()->user()->entite_id)->with('personne');
+        $query = (clone $baseQuery)->orderBy('created_at', 'desc');
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('personne', function ($qPersonne) use ($search) {
+                    $qPersonne->where('nom', 'like', "%{$search}%")
+                        ->orWhere('prenom', 'like', "%{$search}%")
+                        ->orWhere('postnom', 'like', "%{$search}%");
+                })->orWhere('soussignataire', 'like', "%{$search}%");
+            });
+        }
+
+        $stats = [
+            'total' => (clone $baseQuery)->count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $bonneviemoeurs = $query->paginate(15)->withQueryString();
+        return view('bonneviemoeurs.index', compact('bonneviemoeurs', 'stats'));
     }
 
     public function show($id)
@@ -32,7 +49,7 @@ class BonneVieMoeursController extends Controller
         public function store(Request $request)
         {
             try {
-                $request->validate([
+                $validated = $request->validate([
                     'personne_id' => 'required|exists:personnes,id',
                     
                     'soussignataire' => 'required|string|max:255',
@@ -40,14 +57,12 @@ class BonneVieMoeursController extends Controller
                 ]);
                 if ($request->hasFile('documents')) {
                     $documentsPath = $request->file('documents')->store('documents', 'public');
-                    $request->merge(['documents' => $documentsPath]);
+                    $validated['documents'] = $documentsPath;
                 }
-                $request->merge([
-                    'user_id' => auth()->id(),
-                    'entite_id' => auth()->user()->entite_id,
-                ]);
+                $validated['user_id'] = auth()->id();
+                $validated['entite_id'] = auth()->user()->entite_id;
 
-                BonneVieMoeurs::create($request->all());
+                BonneVieMoeurs::create($validated);
 
                 return redirect()->route('bonneviemoeurs.index')->with('success', 'Bonne Vie Moeurs créée avec succès.');
             } catch (\Exception $e) {
@@ -68,7 +83,7 @@ class BonneVieMoeursController extends Controller
             try {
                 $bonneviemoeur = BonneVieMoeurs::where('entite_id', auth()->user()->entite_id)->findOrFail($id);
 
-                $request->validate([
+                $validated = $request->validate([
                     'personne_id' => 'required|exists:personnes,id',
                     'soussignataire' => 'required|string|max:255',
                     'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
@@ -76,14 +91,14 @@ class BonneVieMoeursController extends Controller
 
                 if ($request->hasFile('documents')) {
                     $documentsPath = $request->file('documents')->store('documents', 'public');
-                    $request->merge(['documents' => $documentsPath]);
+                    $validated['documents'] = $documentsPath;
                 }
 
-                $bonneviemoeur->update($request->all());
+                $bonneviemoeur->update($validated);
 
                 return redirect()->route('bonneviemoeurs.index')->with('success', 'Bonne Vie Moeurs mise à jour avec succès.');
             } catch (\Exception $e) {
-                dd($e->getMessage());
+                
                 return back()->withErrors(['error' => $e->getMessage()])->withInput();
             }
         }

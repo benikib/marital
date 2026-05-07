@@ -10,13 +10,30 @@ use App\Models\EntiteAdministrative;
 
 class ResidenceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $personnes = Personne::orderBy('nom')->get();
 
-        $residences = Residence::where('entite_id', auth()->user()->entite_id)->with('personne')->orderBy('created_at', 'desc')->paginate(15);
-        
-        return view('residences.index', compact('residences', 'personnes'));
+        $baseQuery = Residence::where('entite_id', auth()->user()->entite_id)->with('personne');
+        $query = (clone $baseQuery)->orderBy('created_at', 'desc');
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('personne', function ($qPersonne) use ($search) {
+                    $qPersonne->where('nom', 'like', "%{$search}%")
+                        ->orWhere('prenom', 'like', "%{$search}%")
+                        ->orWhere('postnom', 'like', "%{$search}%");
+                })->orWhere('soussignataire', 'like', "%{$search}%");
+            });
+        }
+
+        $stats = [
+            'total' => (clone $baseQuery)->count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $residences = $query->paginate(15)->withQueryString();
+        return view('residences.index', compact('residences', 'personnes', 'stats'));
     }
 
     public function create()

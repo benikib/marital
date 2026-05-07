@@ -8,13 +8,63 @@ use Illuminate\Http\Request;
 
 class PersonneController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $entites = EntiteAdministrative::all();
+        
+        $query = Personne::orderBy('nom');
 
-        $personnes = Personne::orderBy('nom')->paginate(15);
+        // Recherche simple
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                    ->orWhere('prenom', 'like', "%{$search}%")
+                    ->orWhere('sexe', 'like', "%{$search}%")
+                    ->orWhere('lieu_naissance', 'like', "%{$search}%")
+                    ->orWhere('date_naissance', 'like', "%{$search}%");
+            });
+        }
 
-        return view('personnes.index', compact('personnes','entites'));
+        // Recherche avancée - Sexe
+        if ($sexe = $request->query('sexe')) {
+            $query->where('sexe', $sexe);
+        }
+
+        // Recherche avancée - Lieu de naissance
+        if ($lieu = $request->query('lieu')) {
+            $query->where('lieu_naissance', 'like', "%{$lieu}%");
+        }
+
+        // Recherche avancée - Date de naissance (entre deux dates)
+        if ($dateDebut = $request->query('date_debut')) {
+            $query->where('date_naissance', '>=', $dateDebut);
+        }
+        if ($dateFin = $request->query('date_fin')) {
+            $query->where('date_naissance', '<=', $dateFin);
+        }
+
+        // Statistiques totales (avant pagination)
+        $totalPersonnes = Personne::count();
+        $totalHommes = Personne::where('sexe', 'M')->count();
+        $totalFemmes = Personne::where('sexe', 'F')->count();
+        
+        // Statistiques sur les résultats filtrés
+        $resultatsFiltres = $query->count();
+        $statsHommesFiltres = (clone $query)->where('sexe', 'M')->count();
+        $statsFemmesFiltres = (clone $query)->where('sexe', 'F')->count();
+
+        $personnes = $query->paginate(15)->withQueryString();
+
+        $stats = [
+            'total' => $totalPersonnes,
+            'hommes' => $totalHommes,
+            'femmes' => $totalFemmes,
+            'resultats_filtres' => $resultatsFiltres,
+            'hommes_filtres' => $statsHommesFiltres,
+            'femmes_filtres' => $statsFemmesFiltres,
+        ];
+
+        return view('personnes.index', compact('personnes', 'entites', 'stats'));
     }
 
     public function create()
@@ -27,7 +77,7 @@ class PersonneController extends Controller
     public function store(Request $request)
     {
         try {
-           $request->validate([
+         $valideted =  $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'sexe' => 'required|in:M,F',
@@ -37,23 +87,25 @@ class PersonneController extends Controller
             'profession' => 'nullable|string|max:255',
             'nationalite' => 'required|string|max:255',
             'photo' => 'nullable|image',
+            'pere' => 'nullable|string|max:255',
+            'mere' => 'nullable|string|max:255',
         ]);
 
         if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
-                $request->merge(['photo' => $photoPath]);
-            }
-        $request->merge([
-            'user_id' => auth()->id(),
-            'entite_id' => auth()->user()->entite_id,
-        ]);
+            $photoPath = $request->file('photo')->store('photos', 'public');
+            $valideted['photo'] = $photoPath;
+        }
 
-        Personne::create($request->all());
+         $valideted['user_id'] = auth()->id();
+         $valideted['entite_id'] = auth()->user()->entite_id;
+
+         Personne::create($valideted);
+        
 
         return redirect()->route('personnes.index')->with('success', 'Personne créée avec succès.');
             
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
@@ -67,13 +119,15 @@ class PersonneController extends Controller
     public function update(Request $request, Personne $personne)
     {
         try {
-            $request->validate([
+           $valideted= $request->validate([
                 'nom' => 'required|string|max:255',
                 'prenom' => 'required|string|max:255',
                 'sexe' => 'required|in:M,F',
                 'date_naissance' => 'required|date',
                 'lieu_naissance' => 'required|string|max:255',
                 'adresse' => 'required|string|max:255',
+                 'pere' => 'nullable|string|max:255',
+                 'mere' => 'nullable|string|max:255',
                 'profession' => 'nullable|string|max:255',
                 'nationalite' => 'required|string|max:255',
                 'photo' => 'nullable|image',
@@ -81,14 +135,14 @@ class PersonneController extends Controller
 
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('photos', 'public');
-                $request->merge(['photo' => $photoPath]);
+                $valideted['photo'] = $photoPath;
             }
-            $request->merge([
-                'user_id' => auth()->id(),
-                'entite_id' => auth()->user()->entite_id,
-            ]);
+            $valideted['user_id'] = auth()->id();
+            $valideted['entite_id'] = auth()->user()->entite_id;
+            
 
-            $personne->update($request->all());
+            $personne->update($valideted );
+             
 
             return redirect()->route('personnes.index')->with('success', 'Personne mise à jour avec succès.');
         } catch (\Exception $e) {

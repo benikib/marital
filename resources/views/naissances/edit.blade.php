@@ -11,7 +11,7 @@
                         @csrf
                         @method('PUT')
                         @include('naissances._form')
-                        <div class="flex items-center gap-4">
+                        <div class=" p-4 flex items-center gap-4">
                             <x-primary-button>Mettre à jour</x-primary-button>
                             <a href="{{ route('naissances.index') }}" class="text-gray-600 hover:text-gray-900">Retour</a>
                         </div>

@@ -380,7 +380,7 @@
     </div>
 
     <div class="intro-text">
-      ⚭ Nous, Officier de l’État Civil, certifions que le mariage a été célébré entre :
+       Nous, Officier de l’État Civil, certifions que le mariage a été célébré entre :
     </div>
 
     <!-- ÉPOUX & ÉPOUSE -->

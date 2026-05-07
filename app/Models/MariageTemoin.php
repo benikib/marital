@@ -16,7 +16,7 @@ class MariageTemoin extends Model
     protected $fillable = [
         'mariage_id',
         'personne_id',
-       // 'role',
+        'role',
     ];
 
     public function mariage()

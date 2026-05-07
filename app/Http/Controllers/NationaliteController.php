@@ -11,13 +11,45 @@ use App\Models\EntiteAdministrative;
 
 class NationaliteController extends Controller
 {
-     public function  index ()
+     public function index(Request $request)
     {
-    
-    $personnes = Personne::orderBy('nom')->get();
+        $personnes = Personne::orderBy('nom')->get();
 
-    $nationalites = Nationalite::where('entite_id', auth()->user()->entite_id)->with('personne')->orderBy('created_at', 'desc')->paginate(15);
-    return view('nationalites.index', compact('nationalites', 'personnes'));
+        $query = Nationalite::with('personne');
+
+        // Recherche simple
+        if ($search = $request->query('search')) {
+            $query->whereHas('personne', function ($q) use ($search) {
+                $q->where('nom', 'like', "%{$search}%")
+                    ->orWhere('prenom', 'like', "%{$search}%")
+                    ->orWhere('postnom', 'like', "%{$search}%");
+            })->orWhere('residence', 'like', "%{$search}%");
+        }
+
+        // Recherche avancée - Personne ID
+        if ($personne_id = $request->query('personne_id')) {
+            $query->where('personne_id', $personne_id);
+        }
+
+        // Recherche avancée - Residence
+        if ($residence = $request->query('residence')) {
+            $query->where('residence', 'like', "%{$residence}%");
+        }
+
+        // Statistiques totales
+        $totalNationalites = Nationalite::where('entite_id', auth()->user()->entite_id)->count();
+        
+        // Statistiques sur les résultats filtrés
+        $resultatsFiltres = (clone $query)->count();
+
+        $nationalites = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+
+        $stats = [
+            'total' => $totalNationalites,
+            'resultats_filtres' => $resultatsFiltres,
+        ];
+
+        return view('nationalites.index', compact('nationalites', 'personnes', 'stats'));
     }
 
     public function create()
@@ -27,44 +59,49 @@ class NationaliteController extends Controller
         return view('nationalites.create', compact('personnes', 'entites'));
     }
 
-    public function store(Request $request)
-    {
-        try {
-            
-            $request->validate([
-    
-                'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-                'quittance' => 'nullable|string',
-                'soussignataire' => 'nullable|string|max:255',
-                'personne_id' => 'required|exists:personnes,id',
-                
-                'residence' => 'required|string|max:255',
-                'motif' => 'nullable|string',
-                'nationalite_pere' => 'nullable|string|max:255',
-                'nationalite_mere' => 'nullable|string|max:255',
-            ]);
+   public function store(Request $request)
+{
+    try {
 
-            if ($request->hasFile('documents')) {
-                $documentsPath = $request->file('documents')->store('documents', 'public');
-                $request->merge(['documents' => $documentsPath]);
+        $validated = $request->validate([
+            'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+            'quittance' => 'nullable|string',
+            'soussignataire' => 'nullable|string|max:255',
+            'personne_id' => 'required|exists:personnes,id',
+            'residence' => 'required|string|max:255',
+            'motif' => 'nullable|string',
+            'nationalite_pere' => 'nullable|string|max:255',
+            'nationalite_mere' => 'nullable|string|max:255',
+        ]);
+
+        // 📁 Gestion du fichier
+        if ($request->hasFile('documents')) {
+            $file = $request->file('documents');
+
+            if ($file->isValid()) {
+                $validated['documents'] = $file->store('documents', 'public');
             }
-
-            $request->merge([
-                'user_id' => auth()->id(),
-                'entite_id' => auth()->user()->entite_id,
-                'dont_cout' => str_replace(',', '.', "SDZ ".number_format(10000, 2, ',', ' ')),
-                'nationalite' => "Congolaise",
-            ]);
-
-            Nationalite::create($request->all());
-
-            return redirect()->route('nationalites.index')->with('success', 'Nationalité créée avec succès.');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
-    }
 
+        // 🔐 Données système
+        $validated['user_id'] = auth()->id();
+        $validated['entite_id'] = auth()->user()->entite_id;
+        $validated['dont_cout'] = "SDZ 10 000,00";
+        $validated['nationalite'] = "Congolaise";
+
+        // 💾 Enregistrement
+        Nationalite::create($validated);
+
+        return redirect()->route('nationalites.index')
+            ->with('success', 'Nationalité créée avec succès.');
+
+    } catch (\Exception $e) {
+
+        return back()
+            ->withErrors(['error' => $e->getMessage()])
+            ->withInput();
+    }
+}
         public function edit(Nationalite $nationalite)
         {
             $personnes = Personne::orderBy('nom')->get();
@@ -75,25 +112,31 @@ class NationaliteController extends Controller
         public function update(Request $request, Nationalite $nationalite)
         {
             try {
-                $request->validate([
-                    'dont_cout' => 'required|numeric',
+               $validated= $request->validate([
+                    
                     'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
                     'quittance' => 'nullable|string',
                     'soussignataire' => 'nullable|string|max:255',
                     'personne_id' => 'required|exists:personnes,id',
-                    'nationalite' => 'required|string|max:255',
+                   
                     'residence' => 'required|string|max:255',
 
                     'nationalite_pere' => 'nullable|string|max:255',
                     'nationalite_mere' => 'nullable|string|max:255',
                 ]);
+                if ($request->hasFile('documents')) {
+                    $file = $request->file('documents');
 
-                $request->merge([
-                    'user_id' => auth()->id(),
-                    'entite_id' => auth()->user()->entite_id,
-                ]);
+                    if ($file->isValid()) {
+                        $validated['documents'] = $file->store('documents', 'public');
+                    }
+                }
 
-                $nationalite->update($request->all());
+                $validated['user_id'] = auth()->id();
+                $validated['entite_id'] = auth()->user()->entite_id;    
+
+
+                $nationalite->update($validated);
 
                 return redirect()->route('nationalites.index')->with('success', 'Nationalité mise à jour avec succès.');
             } catch (\Exception $e) {
@@ -115,6 +158,7 @@ class NationaliteController extends Controller
 
         public function show(Nationalite $nationalite)
         {
+            
             return view('nationalites.show', compact('nationalite'));
         }
 

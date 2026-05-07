@@ -15,6 +15,7 @@ class Inhumation extends Model
         'residence_temporaire',
         'lieu_inhumation',
         'date_inhumation',
+        'cimetiere',
         
     ];
 

@@ -11,7 +11,7 @@
                         @csrf
                         @method('PUT')
                         @include('celibats._form')
-                        <div class="flex items-center gap-4">
+                        <div class="mt-4 flex items-center gap-4">
                             <x-primary-button>Mettre à jour</x-primary-button>
                             <a href="{{ route('celibats.index') }}" class="text-gray-600 hover:text-gray-900">Retour</a>
                         </div>

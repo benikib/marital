@@ -379,8 +379,11 @@
             <div class="intro">
                 L'an {{ date('Y') }}, le {{ now()->translatedFormat('d F') }}, à {{ now()->format('H:i') }}
             </div>
-
-            <!-- Identité de l'enfant -->
+   <!-- Début par le soussigné -->
+            <div class="soussigne-text">
+                <strong>Je soussigné,{{ $residence->officier_nom ?? '_________________' }}, Officier de l'Etat Civil </strong> atteste par la présente qu'au vu des renseignements en ma possession,
+            </div>
+            <!-- Identité du résident -->
             <div class="identity-block">
                 <div class="identity-row">
                     <span class="label">Nom et Prénoms :</span>

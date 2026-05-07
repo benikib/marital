@@ -380,7 +380,7 @@
                 L'an {{ date('Y') }}, le {{ now()->translatedFormat('d F') }}, à {{ now()->format('H:i') }}
             </div>
 
-            <!-- Identité de l'enfant -->
+            <!-- Identité du décès -->
             <div class="identity-block">
                 <div class="identity-row">
                     <span class="label">Nom et Prénoms :</span>

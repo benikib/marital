@@ -7,11 +7,21 @@ use Illuminate\Http\Request;
 
 class ContratController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $contrats = Contrat::orderBy('nom')->paginate(15);
+        $query = Contrat::orderBy('nom');
 
-        return view('contrats.index', compact('contrats'));
+        if ($search = $request->query('search')) {
+            $query->where('nom', 'like', "%{$search}%");
+        }
+
+        $stats = [
+            'total' => Contrat::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $contrats = $query->paginate(15)->withQueryString();
+        return view('contrats.index', compact('contrats', 'stats'));
     }
 
     public function create()

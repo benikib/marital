@@ -10,10 +10,30 @@ use App\Models\EntiteAdministrative;
 
 class VeuvageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $veuvages = Veuvage::with('personne', 'user', 'entite')->orderBy('created_at', 'desc')->paginate(10);
-        return view('veuvages.index', compact('veuvages'));
+        $query = Veuvage::with('personne', 'user', 'entite')->orderBy('created_at', 'desc');
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('personne', function ($qPersonne) use ($search) {
+                    $qPersonne->where('nom', 'like', "%{$search}%")
+                        ->orWhere('prenom', 'like', "%{$search}%")
+                        ->orWhere('postnom', 'like', "%{$search}%");
+                })->orWhereHas('entite', function ($qEntite) use ($search) {
+                    $qEntite->where('nom', 'like', "%{$search}%")
+                        ->orWhere('type', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $stats = [
+            'total' => Veuvage::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $veuvages = $query->paginate(10)->withQueryString();
+        return view('veuvages.index', compact('veuvages', 'stats'));
     }
 
     public function create()

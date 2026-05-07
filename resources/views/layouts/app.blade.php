@@ -39,11 +39,19 @@
     <!-- Argon Dashboard CSS -->
     <link href="{{ asset('assets/css/argon-dashboard-tailwind.min.css') }}" rel="stylesheet" />
 
+    <!-- Skeleton Loaders -->
+    @include('components.skeleton-loaders')
+
     <!-- Vite Scripts -->
    
 </head>
 
 <body class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500">
+    
+    <!-- Global Loader -->
+    @if(!isset($disableGlobalLoader) || !$disableGlobalLoader)
+        @include('components.global-loader', ['context' => $loaderContext ?? 'general'])
+    @endif
     
     <div class="absolute w-full bg-blue-500 dark:hidden min-h-12"></div>
     
@@ -190,6 +198,15 @@
                         <span>Attest Naissances</span>
                     </a>
                 </li>
+                <li>
+                    {{-- bonneviemoeurs --}}
+                    <a href="{{ route('bonneviemoeurs.index') }}"
+                    class="sidebar-item {{ request()->routeIs('bonneviemoeurs.*') ? 'active' : '' }}">
+                        <span>✅</span>
+                        <span>Attest Bonne Vie & Moeurs</span>
+                    </a>
+                </li>
+               
                 <li>
                     <a href="{{ route('residences.index') }}"
                     class="sidebar-item {{ request()->routeIs('residences.*') ? 'active' : '' }}">

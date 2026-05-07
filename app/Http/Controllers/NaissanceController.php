@@ -9,14 +9,31 @@ use App\Models\Personne;
 class NaissanceController extends Controller
 {   
 
-    public function index()
+    public function index(Request $request)
     {
-        $naissances = Naissance::with(['personne', 'user', 'entite'])
-            ->where('entite_id', auth()->user()->entite_id)
-            ->orderBy('created_at', 'desc')
-            ->paginate  (10);
-            
-        return view('naissances.index', compact('naissances'));
+        $baseQuery = Naissance::with(['personne', 'user', 'entite'])
+            ->where('entite_id', auth()->user()->entite_id);
+
+        $query = (clone $baseQuery)->orderBy('created_at', 'desc');
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('personne', function ($qPersonne) use ($search) {
+                    $qPersonne->where('nom', 'like', "%{$search}%")
+                        ->orWhere('prenom', 'like', "%{$search}%")
+                        ->orWhere('postnom', 'like', "%{$search}%");
+                })->orWhere('soussignataire', 'like', "%{$search}%")
+                  ->orWhere('motif', 'like', "%{$search}%");
+            });
+        }
+
+        $stats = [
+            'total' => (clone $baseQuery)->count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $naissances = $query->paginate(10)->withQueryString();
+        return view('naissances.index', compact('naissances', 'stats'));
     }
     public function show($id)
     {
@@ -34,27 +51,26 @@ class NaissanceController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
+           $valideted = $request->validate([
                 'personne_id' => 'required|exists:personnes,id',
+                'soussignataire' => 'required|string|max:255',
                 'motif' => 'nullable|string|max:255',
                 'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
             ]);
 
             if ($request->hasFile('documents')) {
                 $documentsPath = $request->file('documents')->store('documents', 'public');
-                $request->merge(['documents' => $documentsPath]);
+                $valideted['documents'] = $documentsPath;
             }
 
-            $request->merge([
-                'user_id' => auth()->id(),
-                'entite_id' => auth()->user()->entite_id,
-            ]);
+            $valideted['user_id'] = auth()->id();
+            $valideted['entite_id'] = auth()->user()->entite_id;
 
-            Naissance::create($request->all());
+            Naissance::create($valideted);
 
             return redirect()->route('naissances.index')->with('success', 'Naissance créée avec succès.');
         } catch (\Exception $e) {
-            
+            dd($e->getMessage());
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
@@ -71,7 +87,7 @@ class NaissanceController extends Controller
         try {
             $naissance = Naissance::where('entite_id', auth()->user()->entite_id)->findOrFail($id);
 
-            $request->validate([
+            $valideted = $request->validate([
                 'personne_id' => 'required|exists:personnes,id',
                 'motif' => 'nullable|string|max:255',
                 'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
@@ -79,10 +95,10 @@ class NaissanceController extends Controller
 
             if ($request->hasFile('documents')) {
                 $documentsPath = $request->file('documents')->store('documents', 'public');
-                $request->merge(['documents' => $documentsPath]);
+                $valideted['documents'] = $documentsPath;
             }
 
-            $naissance->update($request->all());
+            $naissance->update($valideted);
 
             return redirect()->route('naissances.index')->with('success', 'Naissance mise à jour avec succès.');
         } catch (\Exception $e) {

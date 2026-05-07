@@ -331,35 +331,80 @@
             </div>
         </div>
 
-        <!-- SECTION DOCUMENTS -->
-        @if($bonneviemoeur->documents || $bonneviemoeur->personne->photo)
+        
+        <!-- SECTION PIÈCES JOINTES -->
+        @if($bonneviemoeur->documents || $bonneviemoeur->certificat_medical || $bonneviemoeur->personne->photo)
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
                 <h4 class="text-white font-bold text-lg flex items-center gap-2">
-                    <span>📎</span> Pièces jointes
+                    <span>📎</span> Pièces justificatives
                 </h4>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    @if($bonneviemoeur->documents)
+                    @if($bonneviemoeur->certificat_medical)
                         <div class="group relative">
                             <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
-                                <img src="{{ asset('storage/' . $bonneviemoeur->documents) }}" 
-                                     alt="Document justificatif"
+                                <img src="{{ asset('storage/' . $bonneVieMoeur->certificat_medical) }}" 
+                                     alt="Certificat médical"
                                      class="w-full h-full object-cover">
                             </div>
-                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Document justificatif</div>
+                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Certificat médical</div>
                         </div>
                     @endif
                     
-                    @if($bonneviemoeur->casier_judiciaire)
+                 @php
+                            $file = $bonneviemoeur->documents;
+                            $extension = pathinfo($file, PATHINFO_EXTENSION);
+                        @endphp
+                        @if ($bonneviemoeur->documents)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+
+                                        @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                            <!-- IMAGE -->
+                                            <img src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full object-cover">
+                                        @elseif($extension === 'pdf')
+                                            <!-- PDF -->
+                                            <iframe src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full"></iframe>
+                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                            <!-- WORD -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📄</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Ouvrir le document
+                                                </a>
+                                            </div>
+                                        @else
+                                            <!-- AUTRE -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📁</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Télécharger
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Document annexe</div>
+                            </div>
+                        @endif
+
+
+                    @if($bonneviemoeur->personne->photo)
                         <div class="group relative">
                             <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
-                                <img src="{{ asset('storage/' . $bonneviemoeur->casier_judiciaire) }}" 
-                                     alt="Casier judiciaire"
+                                <img src="{{ asset('storage/' . $bonneviemoeur->personne->photo) }}" 
+                                     alt="Photo"
                                      class="w-full h-full object-cover">
                             </div>
-                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Casier judiciaire</div>
+                            <div class="mt-2 text-center text-sm font-medium text-gray-700">Photo d'identité</div>
                         </div>
                     @endif
                 </div>

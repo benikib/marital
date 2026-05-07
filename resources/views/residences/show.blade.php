@@ -78,11 +78,11 @@
             </div>
         </div>
 
-        <!-- CARTE IDENTITÉ DE L'ENFANT -->
+        <!-- CARTE IDENTITÉ DU RÉSIDENT -->
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
             <div class="bg-gradient-to-r from-sky-600 to-blue-600 px-6 py-4">
                 <h4 class="text-white font-bold text-lg flex items-center gap-2">
-                    <span>👶</span> Identité de l'enfant
+                    <span>👶</span> Identité du résident
                 </h4>
             </div>
             <div class="p-6">

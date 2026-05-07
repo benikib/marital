@@ -16,9 +16,10 @@
                     <select id="epoux_id" name="personne_id" class="search-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                         <option value="">Sélectionner une personne</option>
                         @foreach($personnes as $personne)
-                            <option value="{{ $personne->id }}" @selected(old('personne_id', $nationalite?->personne_id ?? '') == $personne->id)>
+                            <option value="{{ $personne->id }}" @selected(old('personne_id', $bonneviemoeur ?->personne_id ?? '') == $personne->id)>
                                 {{ $personne->nom }} {{ $personne->prenom }}  {{ $personne->postnom }}({{ $personne->date_naissance->format('Y-m-d') }}) - {{ $personne->sexe }}
                             </option>
+
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('personne_id')" class="mt-2" />

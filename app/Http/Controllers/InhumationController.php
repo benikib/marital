@@ -9,10 +9,30 @@ use App\Models\Personne;
 
 class InhumationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $inhumations = Inhumation::with('personne')->latest()->paginate(10);
-        return view('inhumations.index', compact('inhumations'));
+        $query = Inhumation::with('personne')->latest();
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('personne', function ($qPersonne) use ($search) {
+                    $qPersonne->where('nom', 'like', "%{$search}%")
+                        ->orWhere('prenom', 'like', "%{$search}%")
+                        ->orWhere('postnom', 'like', "%{$search}%")
+                        ->orWhere('lieu_naissance', 'like', "%{$search}%");
+                })->orWhere('date_inhumation', 'like', "%{$search}%")
+                  ->orWhere('lieu_inhumation', 'like', "%{$search}%")
+                  ->orWhere('cimetiere', 'like', "%{$search}%");
+            });
+        }
+
+        $stats = [
+            'total' => Inhumation::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $inhumations = $query->paginate(10)->withQueryString();
+        return view('inhumations.index', compact('inhumations', 'stats'));
     }
     public function create()
     {
@@ -22,27 +42,25 @@ class InhumationController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+       $validated = $request->validate([
             'soussignataire' => 'required|string|max:255',
             'documents' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'date_inhumation' => 'required|date',
             'lieu_inhumation' => 'required|string|max:255',
-             
+            'cimetiere' => 'required|string|max:255',
             'personne_id' => 'required|exists:personnes,id',
         ]);
 
         if ($request->hasFile('documents')) {
-            $request->merge(['documents' => $request->file('documents')->store('inhumation_docs', 'public')]);
+            $validated['documents'] = $request->file('documents')->store('inhumation_docs', 'public');
         }
 
        
 
-        $request->merge([
-            'user_id' => auth()->id(),
-            'entite_id' => auth()->user()->entite_id,
-        ]);
+        $validated['user_id'] = auth()->id();
+        $validated['entite_id'] = auth()->user()->entite_id;
 
-        Inhumation::create($request->all());
+        Inhumation::create($validated);
 
         return redirect()->route('inhumations.index')->with('success', 'Inhumation créée avec succès.');
     }
@@ -60,20 +78,20 @@ class InhumationController extends Controller
 
     public function update(Request $request, Inhumation $inhumation)
     {
-        $request->validate([
+        $validated = $request->validate([
             'soussignataire' => 'required|string|max:255',
             'documents' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'date_inhumation' => 'required|date',
             'lieu_inhumation' => 'required|string|max:255',
-             
+             'cimetiere' => 'required|string|max:255',
             'personne_id' => 'required|exists:personnes,id',
         ]);
 
         if ($request->hasFile('documents')) {
-            $request->merge(['documents' => $request->file('documents')->store('inhumation_docs', 'public')]);
+            $validated['documents'] = $request->file('documents')->store('inhumation_docs', 'public');
         }
 
-        $inhumation->update($request->all());
+        $inhumation->update($validated);
 
         return redirect()->route('inhumations.index')->with('success', 'Inhumation mise à jour avec succès.');
     }

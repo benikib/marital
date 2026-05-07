@@ -7,11 +7,21 @@ use Illuminate\Http\Request;
 
 class StatutMariageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $statuts = StatutMariage::orderBy('nom')->paginate(15);
+        $query = StatutMariage::orderBy('nom');
 
-        return view('statuts.index', compact('statuts'));
+        if ($search = $request->query('search')) {
+            $query->where('nom', 'like', "%{$search}%");
+        }
+
+        $stats = [
+            'total' => StatutMariage::count(),
+            'filtered' => (clone $query)->count(),
+        ];
+
+        $statuts = $query->paginate(15)->withQueryString();
+        return view('statuts.index', compact('statuts', 'stats'));
     }
 
     public function create()

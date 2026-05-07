@@ -257,45 +257,88 @@
         </div>
 
         <!-- SECTION JUSTIFICATIFS -->
-        @if($nationalite->personne->photo || isset($nationalite->documents))
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
-                <h4 class="text-white font-bold text-lg flex items-center gap-2">
-                    <span>📎</span> Documents justificatifs
-                </h4>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    @if($nationalite->personne->photo)
-                    <div class="group relative">
-                        <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-[3/4]">
-                            <img src="{{ asset('storage/' . $nationalite->personne->photo) }}" 
-                                 alt="Photo d'identité"
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="mt-2 text-center text-sm font-medium text-gray-700">Photo d'identité</div>
-                    </div>
-                    @endif
-                    
-                    <!-- Placeholder pour d'autres documents si nécessaire -->
-                    <div class="group relative">
-                        <div class="relative overflow-hidden rounded-lg bg-gray-50 border-2 border-dashed border-gray-300 aspect-[3/4] flex items-center justify-center">
-                            <span class="text-gray-400 text-sm">Acte de naissance</span>
-                        </div>
-                        <div class="mt-2 text-center text-sm font-medium text-gray-700">Acte de naissance</div>
+          
+        @if ($nationalite->documents || $nationalite->certificat_medical || $nationalite->personne->photo)
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4">
+                    <h4 class="text-white font-bold text-lg flex items-center gap-2">
+                        <span>📎</span> Pièces justificatives
+                    </h4>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        @if ($nationalite->certificat_medical)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <img src="{{ asset('storage/' . $nationalite->certificat_medical) }}"
+                                        alt="Certificat médical" class="w-full h-full object-cover">
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Certificat médical
+                                </div>
+                            </div>
+                        @endif
+                        @php
+                            $file = $nationalite->documents;
+                            $extension = pathinfo($file, PATHINFO_EXTENSION);
+                        @endphp
+                        @if ($nationalite->documents)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+
+                                        @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                            <!-- IMAGE -->
+                                            <img src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full object-cover">
+                                        @elseif($extension === 'pdf')
+                                            <!-- PDF -->
+                                            <iframe src="{{ asset('storage/' . $file) }}"
+                                                class="w-full h-full"></iframe>
+                                        @elseif(in_array($extension, ['doc', 'docx']))
+                                            <!-- WORD -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📄</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Ouvrir le document
+                                                </a>
+                                            </div>
+                                        @else
+                                            <!-- AUTRE -->
+                                            <div class="flex flex-col items-center justify-center h-full">
+                                                <span class="text-4xl">📁</span>
+                                                <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                                    class="text-blue-500 underline">
+                                                    Télécharger
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Document annexe</div>
+                            </div>
+                        @endif
+
+                        @if ($nationalite->personne->photo)
+                            <div class="group relative">
+                                <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-square">
+                                    <img src="{{ asset('storage/' . $nationalite->personne->photo) }}" alt="Photo"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="mt-2 text-center text-sm font-medium text-gray-700">Photo d'identité</div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
-        </div>
         @endif
 
         <!-- TIMELINE / HISTORIQUE -->
         <div class="mt-6 text-right text-xs text-gray-400">
-            Dossier créé le {{ $nationalite->created_at->format('d/m/Y à H:i') }} 
-            • Mis à jour {{ $nationalite->updated_at->diffForHumans() }}
-            @if($nationalite->verified_at)
-                • Vérifié le {{ \Carbon\Carbon::parse($nationalite->verified_at)->format('d/m/Y') }}
-            @endif
+            Acte dressé le {{ $nationalite->created_at->format('d/m/Y à H:i') }}
+            • Dernière mise à jour {{ $nationalite->updated_at->diffForHumans() }}
         </div>
     </div>
+    
 </x-app-layout>
