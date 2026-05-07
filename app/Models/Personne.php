@@ -99,4 +99,23 @@ public function localite()
     {
         return $this->belongsTo(EntiteAdministrative::class, 'province_id');
     }
+    public function inhumations()
+    {
+        return $this->hasMany(Inhumation::class);   
+    }
+
+    public function entite()
+    {
+        return $this->belongsTo(EntiteAdministrative::class, 'entite_id');
+    }
+
+     public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+     public function celibats()
+    {
+        return $this->hasMany(Celibat::class);   
+    }
 }

@@ -100,10 +100,7 @@ class PersonneController extends Controller
          $valideted['entite_id'] = auth()->user()->entite_id;
 
          Personne::create($valideted);
-        $valideted['user_id'] = auth()->id();
-        $valideted['entite_id'] = auth()->user()->entite_id;
-
-        Personne::create($valideted);
+        
 
         return redirect()->route('personnes.index')->with('success', 'Personne créée avec succès.');
             
@@ -142,8 +139,10 @@ class PersonneController extends Controller
             }
             $valideted['user_id'] = auth()->id();
             $valideted['entite_id'] = auth()->user()->entite_id;
+            
 
             $personne->update($valideted );
+             
 
             return redirect()->route('personnes.index')->with('success', 'Personne mise à jour avec succès.');
         } catch (\Exception $e) {

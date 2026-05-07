@@ -15,7 +15,7 @@ class NationaliteController extends Controller
     {
         $personnes = Personne::orderBy('nom')->get();
 
-        $query = Nationalite::where('entite_id', auth()->user()->entite_id)->with('personne');
+        $query = Nationalite::with('personne');
 
         // Recherche simple
         if ($search = $request->query('search')) {

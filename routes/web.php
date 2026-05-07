@@ -137,7 +137,7 @@ Route::get('/mariages/{mariage}/verify', [App\Http\Controllers\MariageController
 use App\Http\Controllers\NationaliteVerificationController;
 
 // Vérification par QR code (GET)
-Route::get('/nationalites/verify/{id}', [NationaliteVerificationController::class, 'verify'])->name('nationalites.verify');
+Route::get('/nationalites/verify/{id}', [NationaliteVerificationController::class, 'verify'])->name('nationalites.verify.qr');
 
 // Formulaire de vérification manuelle
 Route::get('/verification', [NationaliteVerificationController::class, 'verificationForm'])->name('verification.form');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BonneVieMoeurs;
 use App\Models\User;
 use App\Models\Mariage;
 use App\Models\Dece;
@@ -16,6 +17,7 @@ use App\Models\EntiteAdministrative;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ProvinceDashboardController extends Controller
 {
@@ -56,7 +58,7 @@ class ProvinceDashboardController extends Controller
         $period = $request->get('period', 'today');
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
-        
+       //dd($evolution, $endDate);
         return view('dashboard.province', compact(
             'province',
             'stats',
@@ -81,7 +83,7 @@ class ProvinceDashboardController extends Controller
         
         // Récupérer les villes de la province
         $villes = EntiteAdministrative::where('parent_id', $provinceId)
-            ->where('type', 'ville')
+            
             ->pluck('id')
             ->toArray();
         
@@ -90,7 +92,7 @@ class ProvinceDashboardController extends Controller
         // Récupérer les communes des villes
         foreach ($villes as $villeId) {
             $communes = EntiteAdministrative::where('parent_id', $villeId)
-                ->where('type', 'commune')
+                
                 ->pluck('id')
                 ->toArray();
             $ids = array_merge($ids, $communes);
@@ -98,7 +100,6 @@ class ProvinceDashboardController extends Controller
         
         // Récupérer les territoires de la province
         $territoires = EntiteAdministrative::where('parent_id', $provinceId)
-            ->where('type', 'territoire')
             ->pluck('id')
             ->toArray();
         
@@ -123,7 +124,7 @@ class ProvinceDashboardController extends Controller
             'total_nationalites' => Nationalite::whereIn('entite_id', $entiteIds)->count(),
             'total_agents' => User::where('entite_id', $entiteIds)->count(),
             'total_villes' => EntiteAdministrative::where('parent_id', $entiteIds[0] ?? 0)
-                ->where('type', 'ville')->count(),
+                ->count(),
         ];
     }
     
@@ -132,9 +133,9 @@ class ProvinceDashboardController extends Controller
      */
     private function getStatsByVille($provinceId)
     {
-        $villes = EntiteAdministrative::where('parent_id', $provinceId)
-            ->where('type', 'ville')
-            ->get();
+        // Cache les statistiques pendant 1 heure
+        return Cache::remember("province_stats_{$provinceId}", 3600, function () use ($provinceId) {
+            $villes = EntiteAdministrative::where('parent_id', $provinceId)->get();
         
         $stats = [];
         foreach ($villes as $ville) {
@@ -142,7 +143,6 @@ class ProvinceDashboardController extends Controller
             
             // Ajouter les communes de la ville
             $communes = EntiteAdministrative::where('parent_id', $ville->id)
-                ->where('type', 'commune')
                 ->pluck('id')
                 ->toArray();
             $entiteIds = array_merge($entiteIds, $communes);
@@ -153,16 +153,30 @@ class ProvinceDashboardController extends Controller
                 'mariages' => Mariage::whereIn('entite_id', $entiteIds)->count(),
                 'naissances' => Naissance::whereIn('entite_id', $entiteIds)->count(),
                 'deces' => Dece::whereIn('entite_id', $entiteIds)->count(),
-                'total' => 0
+                'celibats' => Celibat::whereIn('entite_id', $entiteIds)->count(),
+                'residences' => Residence::whereIn('entite_id', $entiteIds)->count(),
+                'veuvages' => Veuvage::whereIn('entite_id', $entiteIds)->count(),
+                'nationalites' => Nationalite::whereIn('entite_id', $entiteIds)->count(),
+                'Bonneviemoeurs'=> BonneVieMoeurs::whereIn('entite_id', $entiteIds)->count(),
+                'inhumations' => Inhumation::whereIn('entite_id', $entiteIds)->count(),
+                'agents' => User::whereIn('entite_id', $entiteIds)->count(),
+                'total' => 0, // Calculé plus tard
             ];
             
             $stats[count($stats) - 1]['total'] = 
                 $stats[count($stats) - 1]['mariages'] +
                 $stats[count($stats) - 1]['naissances'] +
-                $stats[count($stats) - 1]['deces'];
+                $stats[count($stats) - 1]['deces'] +
+                $stats[count($stats) - 1]['celibats'] +
+                $stats[count($stats) - 1]['residences'] +
+                $stats[count($stats) - 1]['veuvages'] +
+                $stats[count($stats) - 1]['nationalites'] +
+                $stats[count($stats) - 1]['Bonneviemoeurs'] +
+                $stats[count($stats) - 1]['inhumations'];
         }
         
         return collect($stats)->sortByDesc('total')->values();
+        });
     }
     
     /**
@@ -179,6 +193,9 @@ class ProvinceDashboardController extends Controller
             'residences' => Residence::whereIn('entite_id', $entiteIds)->count(),
             'veuvages' => Veuvage::whereIn('entite_id', $entiteIds)->count(),
             'nationalites' => Nationalite::whereIn('entite_id', $entiteIds)->count(),
+            'Bonneviemoeurs' => BonneVieMoeurs::whereIn('entite_id', $entiteIds)->count(),
+            
+            'total' => 0, // Calculé plus tard
         ];
     }
     
@@ -207,6 +224,31 @@ class ProvinceDashboardController extends Controller
                 ->whereYear('created_at', $date->year)
                 ->whereMonth('created_at', $date->month)
                 ->count();
+            $evolution['celibats'][$mois] = Celibat::whereIn('entite_id', $entiteIds)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+            $evolution['residences'][$mois] = Residence::whereIn('entite_id', $entiteIds)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+            $evolution['veuvages'][$mois] = Veuvage::whereIn('entite_id', $entiteIds)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+            $evolution['nationalites'][$mois] = Nationalite::whereIn('entite_id', $entiteIds)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+            $evolution['Bonneviemoeurs'][$mois] = BonneVieMoeurs::whereIn('entite_id', $entiteIds)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+            $evolution['inhumations'][$mois] = Inhumation::whereIn('entite_id', $entiteIds)
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+
         }
         
         return $evolution;
@@ -227,14 +269,14 @@ class ProvinceDashboardController extends Controller
     private function getAgentsStatsByVille($provinceId)
     {
         $villes = EntiteAdministrative::where('parent_id', $provinceId)
-            ->where('type', 'ville')
+            
             ->get();
         
         $stats = [];
         foreach ($villes as $ville) {
             $entiteIds = [$ville->id];
             $communes = EntiteAdministrative::where('parent_id', $ville->id)
-                ->where('type', 'commune')
+                
                 ->pluck('id')
                 ->toArray();
             $entiteIds = array_merge($entiteIds, $communes);
@@ -307,7 +349,7 @@ class ProvinceDashboardController extends Controller
         
         // Ajouter les communes
         $communes = EntiteAdministrative::where('parent_id', $villeId)
-            ->where('type', 'commune')
+            
             ->pluck('id')
             ->toArray();
         $entiteIds = array_merge($entiteIds, $communes);

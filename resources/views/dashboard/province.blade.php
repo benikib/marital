@@ -19,9 +19,19 @@
         </div>
     </x-slot>
 
+    <!-- Global Loader -->
+   
+    
     <div class="py-6">
+        <!-- Loader de chargement -->
+        <div id="loading-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-6 flex items-center space-x-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                <span class="text-gray-700">Chargement des statistiques...</span>
+            </div>
+        </div>
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
             <!-- Cartes statistiques principales -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -179,6 +189,7 @@
                                          style="width: {{ max($statsParActe) > 0 ? ($statsParActe['deces'] / max($statsParActe)) * 100 : 0 }}%"></div>
                                 </div>
                             </div>
+
                             <div>
                                 <div class="flex justify-between text-sm mb-1">
                                     <span>💑 Célibats</span>
@@ -216,6 +227,11 @@
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Mariages</th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Naissances</th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Décès</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Célibats</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Résidences</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Veuvages</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Nationalités</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Bonne Vie et Moeurs</th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Total</th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Agents</th>
                                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -230,6 +246,12 @@
                                         <td class="px-6 py-4 text-center">{{ number_format($ville['mariages']) }}</td>
                                         <td class="px-6 py-4 text-center">{{ number_format($ville['naissances']) }}</td>
                                         <td class="px-6 py-4 text-center">{{ number_format($ville['deces']) }}</td>
+                                        <td class="px-6 py-4 text-center">{{ number_format($ville['celibats']) }}</td>
+                                        <td class="px-6 py-4 text-center">{{ number_format($ville['residences']) }}</td>
+                                        <td class="px-6 py-4 text-center">{{ number_format($ville['veuvages']) }}</td>
+                                        <td class="px-6 py-4 text-center">{{ number_format($ville['nationalites']) }}</td>
+                                        <td class="px-6 py-4 text-center">{{ number_format($ville['Bonneviemoeurs']) }}</td>    
+                                        
                                         <td class="px-6 py-4 text-center font-bold text-indigo-600">
                                             {{ number_format($ville['total']) }}
                                         </td>
@@ -302,7 +324,50 @@
                         backgroundColor: 'rgba(107, 114, 128, 0.1)',
                         tension: 0.4,
                         fill: true
-                    }
+                    },
+                    {
+                        label: 'Célibats',
+                        data: Object.values(evolutionData.celibats),
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Résidences',
+                        data: Object.values(evolutionData.residences),
+                        borderColor: 'rgb(245, 158, 11)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Veuvages',
+                        data: Object.values(evolutionData.veuvages),
+                        borderColor: 'rgb(139, 92, 246)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Nationalités',
+                        data: Object.values(evolutionData.nationalites),
+                        borderColor: 'rgb(239, 68, 68)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                        {
+                            label: 'Bonne Vie et Moeurs',
+                            data: Object.values(evolutionData.Bonneviemoeurs),
+                            borderColor: 'rgb(79, 70, 229)',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                   
+                        
+                        
                 ]
             },
             options: {
@@ -434,6 +499,32 @@
                 closeVilleModal();
             }
         }
+
+        // Gestion du loader
+        window.addEventListener('load', function() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            
+            // Masquer les skeletons et afficher le contenu réel
+            document.querySelectorAll('[data-skeleton="true"]').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('[data-content="true"]').forEach(el => {
+                el.style.display = 'block';
+            });
+        });
+
+        // Afficher le loader lors des changements de page ou actualisation
+        window.addEventListener('beforeunload', function() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        });
+
+        // S'assurer que le loader global disparaît
+        window.addEventListener('load', function() {
+            const globalLoader = document.getElementById('global-loader');
+            if (globalLoader) {
+                globalLoader.style.display = 'none';
+            }
+            document.getElementById('loading-overlay').classList.add('hidden');
+        });
     </script>
-   
 </x-app-layout>
