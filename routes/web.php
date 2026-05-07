@@ -27,6 +27,7 @@ Route::get('/dashboard', function () {
   
 });
 
+
 Route::middleware('auth', 'role:superAdmin')->group(function () {
     Route::get('/dashboard-superadmin', [App\Http\Controllers\DashboardController::class, 'superAdmin'])->name('dashboard.superAdmin');
     
@@ -48,14 +49,14 @@ Route::middleware('auth', 'role:superAdmin')->group(function () {
     Route::post('mariages/parents', [App\Http\Controllers\MariageController::class, 'storeParent'])->name('mariages.parents.store');
 });
 // Dans routes/web.php
-Route::middleware(['auth', 'role:province_admin,superAdmin'])->prefix('province')->group(function () {
+Route::middleware(['auth', 'role:admin,superAdmin'])->prefix('province')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\ProvinceDashboardController::class, 'index'])->name('province.dashboard');
     Route::get('/ville/{villeId}/details', [App\Http\Controllers\ProvinceDashboardController::class, 'villeDetails'])->name('province.ville.details');
     Route::get('/export', [App\Http\Controllers\ProvinceDashboardController::class, 'exportStats'])->name('province.export');
 });
 
 //route pour agent
-Route::middleware('auth', 'role:agent,superAdmin')->group(function () {
+Route::middleware('auth', 'role:agent,superAdmin,admin')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'agent'])->name('dashboard');
 
     Route::get('/rapport/imprimer', [App\Http\Controllers\DashboardController::class, 'imprimerRapport'])->name('rapport.imprimer');
