@@ -82,7 +82,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 font-medium">État civil :</span>
-                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->etat_civil_epoux }}</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->epoux->etat_civil }}</span>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 font-medium">État civil :</span>
-                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->etat_civil_epouse }}</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->epouse->etat_civil }}</span>
                     </div>
                 </div>
             </div>

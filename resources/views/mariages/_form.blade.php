@@ -69,7 +69,7 @@
                         <option value="">Sélectionner un régime</option>
                         @foreach($regimes as $regime)
                             <option value="{{ $regime->id }}" @selected(old('regime_id', $mariage->regime_id ?? '') == $regime->id)>
-                                {{ $regime->contrat->nom ?? 'Contrat inconnu' }} - {{ number_format($regime->dotation_coutumiere, 2, ',', ' ') }} FC
+                                {{ $regime->contrat->nom ?? 'Contrat inconnu' }}
                             </option>
                         @endforeach
                     </select>
@@ -87,18 +87,7 @@
                     <x-input-error :messages="$errors->get('statut_id')" class="mt-2" />
                 </div>
 
-                <div class="md:col-span-2">
-                    <x-input-label for="entite_id" value="🏛️ Entité administrative" class="font-semibold" />
-                    <select id="entite_id" name="entite_id" class="search-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                        <option value="">Sélectionner une entité</option>
-                        @foreach($entites as $entite)
-                            <option value="{{ $entite->id }}" @selected(old('entite_id', $mariage->entite_id ?? '') == $entite->id)>
-                                {{ $entite->nom }} ({{ $entite->type }})
-                            </option>
-                        @endforeach
-                    </select>
-                    <x-input-error :messages="$errors->get('entite_id')" class="mt-2" />
-                </div>
+                
             </div>
         </div>
     </div>

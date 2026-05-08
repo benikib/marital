@@ -63,10 +63,11 @@ class MariageController extends Controller
 
     public function create()
     {
-        $personnes = Personne::orderBy('nom')->orderBy('prenom')->get();
+        $personnes = Personne::orderBy('nom')->orderBy('prenom')->where("statut_vie", "en vie")->get();
         // qui lle statut du mariage est "en cours" ou "dissous" ou "annulé"
 
         $personnes_epoux = Personne::orderBy('nom')->orderBy('prenom')->where("sexe", "M")->
+         where("statut_vie", "en vie")->
         whereDoesntHave('mariagesEpoux', function ($query) {
             $query->whereIn('statut_id', function ($subQuery) {
                 $subQuery->select('id')
@@ -76,7 +77,8 @@ class MariageController extends Controller
         })->
         get();
 
-       $personnes_epouse = Personne::orderBy('nom')->orderBy('prenom')->where("sexe", "F")->
+       $personnes_epouse = Personne::orderBy('nom')->orderBy('prenom')->where("sexe", "F")
+        ->where("statut_vie", "en vie")->
         whereDoesntHave('mariagesEpouse', function ($query) {
             $query->whereIn('statut_id', function ($subQuery) {
                 $subQuery->select('id')
@@ -92,7 +94,7 @@ class MariageController extends Controller
         $entites = EntiteAdministrative::orderBy('nom')->get();
         $mariage = Mariage::orderBy('date_mariage', 'desc')->first();
 
-        return view('mariages.create', compact('personnes', 'regimes', 'statuts', 'entites', 'mariage','personnes_epoux', 'personnes_epouse'));
+        return view('mariages.create', compact('personnes', 'regimes', 'statuts', 'entites', 'personnes_epoux', 'personnes_epouse'));
     }
 
     public function store(Request $request)
@@ -111,7 +113,7 @@ class MariageController extends Controller
         'photo_couple' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'etat_civil_epoux' => 'required|string|max:50',
         'etat_civil_epouse' => 'required|string|max:50',
-        'entite_id' => 'required|exists:entite_administratives,id',
+       
     ]);
 
     // Upload images (propre)
@@ -121,8 +123,11 @@ class MariageController extends Controller
 
     // Ajouter user
     $validated['user_id'] = auth()->id();
+    $validated['entite_id'] = auth()->user()->entite_id;
 
     Mariage::create($validated);
+    changeEtatCivil($validated['epoux_id'], 'marié');
+    changeEtatCivil($validated['epouse_id'], 'marié');
 
     return redirect()->route('mariages.index')
         ->with('success', 'Mariage créé avec succès.');
@@ -130,9 +135,10 @@ class MariageController extends Controller
 
     public function edit(Mariage $mariage)
     {
-        $personnes = Personne::orderBy('nom')->orderBy('prenom')->get();
+        $personnes = Personne::orderBy('nom')->orderBy('prenom')->where("statut_vie", "en vie")->get();
 
         $personnes_epoux = Personne::orderBy('nom')->orderBy('prenom')->where("sexe", "M")->
+        where("statut_vie", "en vie")->
         whereDoesntHave('mariagesEpoux', function ($query) use ($mariage) {
             $query->whereIn('statut_id', function ($subQuery) {
                 $subQuery->select('id')
@@ -142,6 +148,7 @@ class MariageController extends Controller
         })->get();
 
         $personnes_epouse = Personne::orderBy('nom')->orderBy('prenom')->where("sexe", "F")->
+        where("statut_vie", "en vie")->
         whereDoesntHave('mariagesEpouse', function ($query) use ($mariage) {
             $query->whereIn('statut_id', function ($subQuery) {
                 $subQuery->select('id')
@@ -153,13 +160,13 @@ class MariageController extends Controller
         $regimes = RegimeMatrimonial::with('contrat')->orderBy('id')->get();
         $statuts = StatutMariage::orderBy('nom')->get();
         $entites = EntiteAdministrative::orderBy('nom')->get();
-
+        
         return view('mariages.edit', compact('mariage', 'personnes', 'regimes', 'statuts', 'entites', 'personnes_epoux', 'personnes_epouse'));
     }
 
     public function update(Request $request, Mariage $mariage)
     {
-        $request->validate([
+      $validated =  $request->validate([
             'epoux_id' => 'required|exists:personnes,id',
             'epouse_id' => 'required|exists:personnes,id',
             'regime_id' => 'required|exists:regimes_matrimoniaux,id',
@@ -176,22 +183,14 @@ class MariageController extends Controller
             'entite_id' => 'required|exists:entite_administratives,id',
         ]);
             
-         if ($request->hasFile('photo_epoux')) {
-                $photoEpouxPath = $request->file('photo_epoux')->store('photos', 'public');
-                $request->merge(['photo_epoux' => $photoEpouxPath]);
-            }
+        // Upload images (propre)
+        $validated['photo_epoux'] = $this->uploadImage($request, 'photo_epoux') ?? $mariage->photo_epoux;
+        $validated['photo_epouse'] = $this->uploadImage($request, 'photo_epouse') ?? $mariage->photo_epouse;
+        $validated['photo_couple'] = $this->uploadImage($request, 'photo_couple') ?? $mariage->photo_couple;    
+         
+        $validated['user_id'] = auth()->id();
 
-            if ($request->hasFile('photo_epouse')) {
-                $photoEpousePath = $request->file('photo_epouse')->store('photos', 'public');
-                $request->merge(['photo_epouse' => $photoEpousePath]);
-            }
-
-            if ($request->hasFile('photo_couple')) {
-                $photoCouplePath = $request->file('photo_couple')->store('photos', 'public');
-                $request->merge(['photo_couple' => $photoCouplePath]);
-            }
-
-        $mariage->update($request->all());
+        $mariage->update($validated);
 
         return redirect()->route('mariages.index')->with('success', 'Mariage mis à jour.');
     }
@@ -206,7 +205,7 @@ class MariageController extends Controller
     public function temoins(Mariage $mariage)
     {
         $temoins = $mariage->temoins()->with('personne')->get();
-         $personnes = Personne::orderBy('nom')->orderBy('prenom')->get();
+         $personnes = Personne::orderBy('nom')->orderBy('prenom')->where("statut_vie", "en vie")->get();
         
         return view('mariages.temoins', compact('mariage', 'temoins', 'personnes'));
     }
@@ -214,7 +213,8 @@ class MariageController extends Controller
     public function parents(Mariage $mariage)
     {
         $parents = $mariage->parents()->with('personne')->get();
-        $personnes = Personne::orderBy('nom')->orderBy('prenom')->get();
+        
+        $personnes = Personne::orderBy('nom')->orderBy('prenom')->where("statut_vie", "en vie")->get();
 
         return view('mariages.parents', compact('mariage', 'parents', 'personnes'));
     }
@@ -304,4 +304,25 @@ public function verify(Mariage $mariage)
 
     return view('mariages.verify', compact('mariage'));
 }
+ public function changeStatut(Mariage $mariage, $statut_id)
+    {
+        $statut = StatutMariage::findOrFail($statut_id);
+        $mariage->update(['statut_id' => $statut->id]);
+
+        // Si le mariage est dissous ou annulé, changer l'état civil des époux
+        if (in_array($statut->nom, ['dissous', 'annulé'])) {
+            changeEtatCivil($mariage->epoux_id, 'célibataire');
+            changeEtatCivil($mariage->epouse_id, 'célibataire');
+        }
+
+        return redirect()->route('mariages.show', $mariage)->with('success', 'Statut du mariage mis à jour.');
+    }
+    
+    
+}
+
+function changeEtatCivil($personne_id, $etat_civil)
+{
+    $personne = Personne::findOrFail($personne_id);
+    $personne->update(['etat_civil' => $etat_civil]);
 }
