@@ -11,6 +11,7 @@ use App\Models\Nationalite;
 use App\Models\Personne;
 use App\Models\User;
 use App\Models\EntiteAdministrative;
+use App\Http\Controllers\NationaliteVerificationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,6 +43,9 @@ Route::middleware('auth', 'role:superAdmin')->group(function () {
     Route::resource('regimes', App\Http\Controllers\RegimeMatrimonialController::class)->except(['show']);
     Route::resource('statuts', App\Http\Controllers\StatutMariageController::class)->except(['show']);
     Route::resource('mariages', App\Http\Controllers\MariageController::class)->except(['show']);
+    
+    // API pour récupérer les détails d'une personne
+   
     Route::get('mariages/{mariage}/temoins', [App\Http\Controllers\MariageController::class, 'temoins'])->name('mariages.temoins');
     Route::get('mariages/{mariage}/parents', [App\Http\Controllers\MariageController::class, 'parents'])->name('mariages.parents');
     Route::get('mariages/{mariage}', [App\Http\Controllers\MariageController::class, 'show'])->name('mariages.show');
@@ -55,10 +59,9 @@ Route::middleware(['auth', 'role:admin,superAdmin'])->prefix('province')->group(
     Route::get('/export', [App\Http\Controllers\ProvinceDashboardController::class, 'exportStats'])->name('province.export');
 });
 
-//route pour agent
-Route::middleware('auth', 'role:agent,superAdmin,admin')->group(function () {
+Route::middleware(['auth', 'role:agent,superAdmin,admin'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'agent'])->name('dashboard');
-
+    
     Route::get('/rapport/imprimer', [App\Http\Controllers\DashboardController::class, 'imprimerRapport'])->name('rapport.imprimer');
     Route::get('/rapport/exporter', [App\Http\Controllers\DashboardController::class, 'exporterExcel'])->name('rapport.exporter');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -66,6 +69,10 @@ Route::middleware('auth', 'role:agent,superAdmin,admin')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('personnes', App\Http\Controllers\PersonneController::class)->except(['show']);
 
+    Route::get('/personnes/{personne}/json', [App\Http\Controllers\PersonneController::class, 'apiShow'])
+        ->name('personnes.json');
+    
+    // API pour récupérer les détails d'une personne
     Route::resource('mariages', App\Http\Controllers\MariageController::class)->except(['show']);
     Route::get('mariages/{mariage}/temoins', [App\Http\Controllers\MariageController::class, 'temoins'])->name('mariages.temoins');
     Route::get('mariages/{mariage}/parents', [App\Http\Controllers\MariageController::class, 'parents'])->name('mariages.parents');
@@ -97,6 +104,8 @@ Route::middleware('auth', 'role:agent,superAdmin,admin')->group(function () {
     Route::resource('inhumations', App\Http\Controllers\InhumationController::class)->except(['show']);
     Route::get('/inhumations/{inhumation}', [App\Http\Controllers\InhumationController::class, 'show'])->name('inhumations.show');
 });
+
+ 
 
 Route::get('/inhumations/{inhumation}/pdf', [App\Http\Controllers\InhumationController::class, 'pdf'])->name('inhumations.attestation.pdf');
 Route::get('/inhumations/{inhumation}/attestation', [App\Http\Controllers\InhumationController::class, 'attestation'])->name('inhumations.attestation');
@@ -135,7 +144,7 @@ Route::get('/mariages/{mariage}/certificat', [App\Http\Controllers\MariageContro
 Route::get('/mariages/{mariage}/certificat/pdf', [App\Http\Controllers\MariageController::class, 'certificatPdf'])->name('mariages.certificat.pdf');
 
 Route::get('/mariages/{mariage}/verify', [App\Http\Controllers\MariageController::class, 'verify'])->name('mariages.verify');
-use App\Http\Controllers\NationaliteVerificationController;
+
 
 // Vérification par QR code (GET)
 Route::get('/nationalites/verify/{id}', [NationaliteVerificationController::class, 'verify'])->name('nationalites.verify.qr');
