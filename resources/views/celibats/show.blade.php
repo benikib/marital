@@ -316,7 +316,7 @@
                             </div>
                         @endif
                         @php
-                            $file = $dece->documents;
+                            $file = $celibat->documents;
                             $extension = pathinfo($file, PATHINFO_EXTENSION);
                         @endphp
                         @if ($celibat->documents)
