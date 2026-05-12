@@ -125,11 +125,19 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="{{ route('mariages.index') }}"
                     class="sidebar-item {{ request()->routeIs('mariages.*') ? 'active' : '' }}">
                         <span>📜</span>
                         <span>Certificat Mariages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('composition_familiales.index') }}"
+                    class="sidebar-item {{ request()->routeIs('composition_familiales.*') ? 'active' : '' }}">
+                        <span>📜</span>
+                        <span>Certificat Composition Familiale</span>
                     </a>
                 </li>
                 
