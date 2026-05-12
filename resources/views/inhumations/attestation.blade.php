@@ -365,7 +365,7 @@
             <div class="ministere">SERVICE DE L'ÉTAT CIVIL</div>
             <div class="title">ACTE D'INHUMATION</div>
             <div class="numero">
-                N° {{ $inhumation->numero_acte ?? 'INH-' . date('Y') . '-' . str_pad($inhumation->id ?? 1, 5, '0', STR_PAD_LEFT) }}
+                N° {{ $inhumation->num_acte ?? 'INH-' . date('Y') . '-' . str_pad($inhumation->id ?? 1, 5, '0', STR_PAD_LEFT) }}
             </div>
         </div>
 
@@ -514,7 +514,7 @@
                 <p><strong>🔐 Vérification d'authenticité</strong></p>
                 <p>Scannez ce code pour vérifier la validité de l'acte d'inhumation.</p>
                 <p style="margin-top: 3px; font-size: 7px;">
-                    Réf : {{ $inhumation->numero_acte ?? 'INH-' . ($inhumation->id ?? 'XXXXX') }}
+                    Réf : {{ $inhumation->num_acte ?? 'INH-' . ($inhumation->id ?? 'XXXXX') }}
                 </p>
             </div>
         </div>

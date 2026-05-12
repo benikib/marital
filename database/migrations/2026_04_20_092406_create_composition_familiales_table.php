@@ -12,15 +12,35 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('composition_familiales', function (Blueprint $table) {
-            $table->id();
-            $table->string('soussignataire', 255);            
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('entite_id')->constrained('entite_administratives');
-            $table->foreignId('personne_id')->constrained('personnes')->onDelete('cascade');
-             $table->string('documents')->nullable();
+                $table->id();
+
+            $table->string('soussignataire', 255);
+
+            $table->integer('nombre_enfants')->default(0);
+
+            $table->foreignId('mariage_id')
+                ->constrained('mariages')
+                ->onDelete('cascade');
+
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+
+            $table->foreignId('entite_id')
+                ->constrained('entite_administratives')
+                ->onDelete('cascade');
+
+          
+
+            $table->string('documents')->nullable();
+
+            $table->string('num_acte')->nullable()->unique();
+
             $table->timestamps();
         });
     }
+
+    
 
     /**
      * Reverse the migrations.

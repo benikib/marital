@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('residence_temporaire')->nullable();
             $table->string('lieu_inhumation');
             $table->date('date_inhumation');
+            $table->string('num_acte')->unique()->default(null);
             //cimetière
             $table->string('cimetiere');
 

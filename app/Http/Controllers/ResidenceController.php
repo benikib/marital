@@ -61,6 +61,7 @@ class ResidenceController extends Controller
         // Ajouter infos système
         $data['user_id'] = auth()->id();
         $data['entite_id'] = auth()->user()->entite_id;
+        $data['num_acte'] = 'RES-' . strtoupper(uniqid()) . '-' . date('Y');
 
         // Enregistrement
         Residence::create($data);

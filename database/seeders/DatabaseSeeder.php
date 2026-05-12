@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Contrat;
 use App\Models\EntiteAdministrative;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\RegimeMatrimonial;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,6 +30,7 @@ class DatabaseSeeder extends Seeder
             'nom' => 'superAdmin',
             'description' => 'SuperAdmin has all permissions.',
         ]);
+
     
 
         User::factory()->create([
@@ -39,11 +42,14 @@ class DatabaseSeeder extends Seeder
              
         ]);
 
+        
+
           $this->call([
         
         PersonnesSeeder::class,
         // Autres seeders...
     ]);
+
 
 
     }

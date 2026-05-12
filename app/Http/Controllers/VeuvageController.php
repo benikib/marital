@@ -47,7 +47,7 @@ class VeuvageController extends Controller
     {
         try {
             
-            $request->validate([
+            $validated = $request->validate([
                 'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
                 'soussignataire' => 'nullable|string|max:255',
                 'personne_id' => 'required|exists:personnes,id',
@@ -55,15 +55,13 @@ class VeuvageController extends Controller
 
             if ($request->hasFile('documents')) {
                 $documentsPath = $request->file('documents')->store('documents', 'public');
-                $request->merge(['documents' => $documentsPath]);
+                $validated['documents'] = $documentsPath;
             }
+                $validated['entite_id'] = auth()->user()->entite_id;
+                $validated['user_id'] = auth()->id();
+            $validated['num_acte'] = 'VEU-' . strtoupper(uniqid()) . '-' . date('Y');
 
-            $request->merge([
-                'user_id' => auth()->id(),
-                'entite_id' => auth()->user()->entite_id,
-            ]);
-
-            Veuvage::create($request->all());
+            Veuvage::create($validated);
 
             return redirect()->route('veuvages.index')->with('success', 'Veuvage créé avec succès.');
         } catch (\Exception $e) {
@@ -86,7 +84,7 @@ class VeuvageController extends Controller
         public function update(Request $request, Veuvage $veuvage)
         {
             try {
-                $request->validate([
+                $validated = $request->validate([
                     'documents' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
                     'soussignataire' => 'nullable|string|max:255',
                     'personne_id' => 'required|exists:personnes,id',
@@ -94,13 +92,12 @@ class VeuvageController extends Controller
 
                 if ($request->hasFile('documents')) {
                     $documentsPath = $request->file('documents')->store('documents', 'public');
-                    $request->merge(['documents' => $documentsPath]);
+                    $validated['documents'] = $documentsPath;
                 }
+                    $validated['entite_id'] = auth()->user()->entite_id;
+                    $validated['user_id'] = auth()->id();
 
-                $request->merge([
-                    'user_id' => auth()->id(),
-                    'entite_id' => auth()->user()->entite_id,
-                ]);
+            
 
                 $veuvage->update($request->all());
 

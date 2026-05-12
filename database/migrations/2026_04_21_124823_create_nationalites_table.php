@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('soussignataire', 255);            
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('entite_id')->constrained('entite_administratives');
+            $table->string('num_acte')->unique()->default(null);
             $table->timestamps();
         });
     }

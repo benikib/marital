@@ -16,6 +16,7 @@ class Inhumation extends Model
         'lieu_inhumation',
         'date_inhumation',
         'cimetiere',
+        'num_acte',
         
     ];
 

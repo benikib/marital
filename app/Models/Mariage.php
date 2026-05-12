@@ -27,6 +27,8 @@ class Mariage extends Model
         'etat_civil_epouse',
         'user_id',
         'entite_id',
+        
+         'num_acte',
     ];
 
     protected $casts = [

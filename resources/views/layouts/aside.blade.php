@@ -132,6 +132,14 @@
                         <span>Certificat Mariages</span>
                     </a>
                 </li>
+                
+                <li>
+                    <a href="{{ route('divorces.index') }}"
+                    class="sidebar-item {{ request()->routeIs('divorces.*') ? 'active' : '' }}">
+                        <span>📜</span>
+                        <span>Attest Divorces</span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ route('nationalites.index') }}"
                     class="sidebar-item {{ request()->routeIs('nationalites.*') ? 'active' : '' }}">

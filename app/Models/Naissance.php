@@ -12,6 +12,7 @@ class Naissance extends Model
         'personne_id',
         'user_id',
         'entite_id',
+        'num_acte',
         
         
     ];

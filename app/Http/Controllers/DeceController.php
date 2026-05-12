@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Dece;
 use App\Models\Personne;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 
 class DeceController extends Controller
@@ -46,11 +47,38 @@ class DeceController extends Controller
 
         public function store(Request $request)
         {
-           $validatedData =  $request->validate([
+            
+        
+          try {
+                $validatedData =  $request->validate([
                 'soussignataire' => 'required|string|max:255',
                 'documents' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
                 'personne_id' => 'required|exists:personnes,id',
             ]);
+             //change les status de la personne à décédé
+            $personne = Personne::find($validatedData['personne_id']);
+            // $personne->statut_vie = 'décédé';
+            // $personne->save();
+
+              if ($personne->etat_civil == 'marié') {
+                $mariage = DB::table('mariages')
+                    ->where(function ($query) use ($personne) {
+                        $query->where('epoux_id', $personne->id)
+                              ->orWhere('epouse_id', $personne->id);
+                    })
+                    ->where('statut_id', 1) // statut_id 1 pour les mariages actifs
+                    ->first();
+                    
+
+               
+                if ($mariage) {
+                    if ($mariage->epoux_id == $personne->id) {
+                        DB::table('personnes')->where('id', $mariage->epouse_id)->update(['etat_civil' => 'veuf']);
+                    } else {
+                        DB::table('personnes')->where('id', $mariage->epoux_id)->update(['etat_civil' => 'veuf']);
+                    }
+                }
+              } 
 
             if ($request->hasFile('documents')) {
                 $validatedData['documents'] = $request->file('documents')->store('dece_docs', 'public');
@@ -58,10 +86,28 @@ class DeceController extends Controller
 
             $validatedData['user_id'] = auth()->id();
             $validatedData['entite_id'] = auth()->user()->entite_id;
+            $validatedData['num_acte'] = 'DEC-' . strtoupper(uniqid()) . '-' . date('Y');
 
             Dece::create($validatedData);
+            //change les status de la personne à décédé
+            $personne = Personne::find($validatedData['personne_id']);
+            $personne->statut_vie = 'décédé';
+            $personne->save();
+
+            // change etat civile de l'epoux ou de l'epouse dans le cas ou la personne décédée est marié
+          
+            
+                   
+
 
             return redirect()->route('deces.index')->with('success', 'Décès créé avec succès.');
+
+                
+            } catch (\Exception $e) {
+
+            dd($e->getMessage());
+                return redirect()->back()->withInput()->with('error', 'Une erreur est survenue lors de la création du décès.');
+            }
         }
 
             public function edit(Dece $dece)

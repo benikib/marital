@@ -61,6 +61,7 @@ class BonneVieMoeursController extends Controller
                 }
                 $validated['user_id'] = auth()->id();
                 $validated['entite_id'] = auth()->user()->entite_id;
+                $validated['num_acte'] = 'BVM-' . strtoupper(uniqid()) . '-' . date('Y');
 
                 BonneVieMoeurs::create($validated);
 

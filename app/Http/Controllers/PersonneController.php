@@ -78,6 +78,7 @@ class PersonneController extends Controller
     {
         try {
          $valideted =  $request->validate([
+
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'sexe' => 'required|in:M,F',
@@ -86,9 +87,23 @@ class PersonneController extends Controller
             'adresse' => 'required|string|max:255',
             'profession' => 'nullable|string|max:255',
             'nationalite' => 'required|string|max:255',
+
             'photo' => 'nullable|image',
             'pere' => 'nullable|string|max:255',
             'mere' => 'nullable|string|max:255',
+            'statut_vie' => 'required|in:en vie,décédé',
+           
+            'province_id' => 'required|exists:entite_administratives,id',
+            'territoire_id' => 'nullable|exists:entite_administratives,id',
+            'secteur_id' => 'nullable|exists:entite_administratives,id',
+            'district_id' => 'nullable|exists:entite_administratives,id',
+            'localite_id' => 'nullable|exists:entite_administratives,id',
+            'ville_id' => 'nullable|exists:entite_administratives,id',
+            'cin' => 'nullable|string|max:255|unique:personnes,cin',
+            'telephone' => 'nullable|string|max:255',
+           
+
+
         ]);
 
         if ($request->hasFile('photo')) {
@@ -98,7 +113,7 @@ class PersonneController extends Controller
 
          $valideted['user_id'] = auth()->id();
          $valideted['entite_id'] = auth()->user()->entite_id;
-
+    
          Personne::create($valideted);
         
 
@@ -122,15 +137,29 @@ class PersonneController extends Controller
            $valideted= $request->validate([
                 'nom' => 'required|string|max:255',
                 'prenom' => 'required|string|max:255',
+                'postnom' => 'nullable|string|max:255',
                 'sexe' => 'required|in:M,F',
                 'date_naissance' => 'required|date',
                 'lieu_naissance' => 'required|string|max:255',
+                
                 'adresse' => 'required|string|max:255',
-                 'pere' => 'nullable|string|max:255',
-                 'mere' => 'nullable|string|max:255',
+                'pere' => 'nullable|string|max:255',
+                'mere' => 'nullable|string|max:255',
                 'profession' => 'nullable|string|max:255',
                 'nationalite' => 'required|string|max:255',
                 'photo' => 'nullable|image',
+                'statut_vie' => 'required|in:en vie,décédé',
+                'etat_civil' => 'required|string|max:255',
+                'province_id' => 'required|exists:entite_administratives,id',
+                'territoire_id' => 'nullable|exists:entite_administratives,id', 
+                'secteur_id' => 'nullable|exists:entite_administratives,id',
+                'district_id' => 'nullable|exists:entite_administratives,id',
+                'localite_id' => 'nullable|exists:entite_administratives,id',
+                'ville_id' => 'nullable|exists:entite_administratives,id',
+                'cin' => 'nullable|string|max:255|unique:personnes,cin,' . $personne->id,       
+                'telephone' => 'nullable|string|max:255'
+
+
             ]);
 
             if ($request->hasFile('photo')) {
@@ -158,4 +187,29 @@ class PersonneController extends Controller
 
         return redirect()->route('personnes.index')->with('success', 'Personne supprimée.');
     }
+
+    public function apiShow(Personne $personne)
+    {
+        return response()->json([
+            'id' => $personne->id,
+            'nom' => $personne->nom,
+            'prenom' => $personne->prenom,
+            'postnom' => $personne->postnom,
+            'sexe' => $personne->sexe,
+            'date_naissance' => $personne->date_naissance ? $personne->date_naissance->format('d/m/Y') : null,
+            'lieu_naissance' => $personne->lieu_naissance,
+            'adresse' => $personne->adresse,
+            'pere' => $personne->pere,
+            'mere' => $personne->mere,
+            'profession' => $personne->profession,
+            'nationalite' => $personne->nationalite,
+            'statut_vie' => $personne->statut_vie,
+            'etat_civil' => $personne->etat_civil,
+            'cin' => $personne->cin,
+            'telephone' => $personne->telephone,
+            'photo' => $personne->photo ? asset($personne->photo) : null,
+        ]);
+    }
+
+    
 }

@@ -88,6 +88,7 @@ class NationaliteController extends Controller
         $validated['entite_id'] = auth()->user()->entite_id;
         $validated['dont_cout'] = "SDZ 10 000,00";
         $validated['nationalite'] = "Congolaise";
+        $validated['num_acte'] = 'NAT-' . strtoupper(uniqid()) . '-' . date('Y');
 
         // 💾 Enregistrement
         Nationalite::create($validated);

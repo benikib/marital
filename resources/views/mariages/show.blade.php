@@ -17,6 +17,12 @@
 </a> --}}
 </div>
             <div class="space-x-2">
+                @if(optional($mariage->statut)->nom === 'en cours')
+                    <a href="{{ route('divorces.create', ['mariage_id' => $mariage->id]) }}"
+                       class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                        💔 Créer un divorce
+                    </a>
+                @endif
                 <a href="{{ route('mariages.edit', $mariage) }}" 
                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
                     ✏️ Modifier
@@ -82,7 +88,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 font-medium">État civil :</span>
-                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->etat_civil_epoux }}</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->epoux->etat_civil }}</span>
                     </div>
                 </div>
             </div>
@@ -109,7 +115,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 font-medium">État civil :</span>
-                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->etat_civil_epouse }}</span>
+                        <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">{{ $mariage->epouse->etat_civil }}</span>
                     </div>
                 </div>
             </div>
