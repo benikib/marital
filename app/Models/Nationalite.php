@@ -20,6 +20,7 @@ class Nationalite extends Model
         'motif',
         'nationalite_pere',
         'nationalite_mere',
+        'num_acte',
 
         
         

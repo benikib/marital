@@ -118,4 +118,13 @@ public function localite()
     {
         return $this->hasMany(Celibat::class);   
     }
+    public function compositionsFamiliales()
+{
+    return $this->belongsToMany(
+        CompositionFamiliale::class,
+        'composition_familiale_personnes',
+        'personne_id',
+        'composition_familiale_id'
+    );
+}
 }

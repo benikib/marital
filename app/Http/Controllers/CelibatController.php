@@ -58,6 +58,7 @@ class CelibatController extends Controller
 
          $validatedData['user_id'] = auth()->id();
          $validatedData['entite_id'] = auth()->user()->entite_id;
+            $validatedData['num_acte'] = 'CEL-' . strtoupper(uniqid()) . '-' . date('Y');
         
         if ($request->hasFile('documents')) {
             $validatedData['documents'] = $request->file('documents')->store('celibat_docs', 'public');

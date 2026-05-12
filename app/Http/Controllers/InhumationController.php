@@ -59,6 +59,7 @@ class InhumationController extends Controller
 
         $validated['user_id'] = auth()->id();
         $validated['entite_id'] = auth()->user()->entite_id;
+        $validated['num_acte'] = 'INH-' . strtoupper(uniqid()) . '-' . date('Y');
 
         Inhumation::create($validated);
 

@@ -71,6 +71,9 @@ Route::middleware(['auth', 'role:agent,superAdmin,admin'])->group(function () {
 
     Route::get('/personnes/{personne}/json', [App\Http\Controllers\PersonneController::class, 'apiShow'])
         ->name('personnes.json');
+
+    Route::get('/api/mariages/details', [App\Http\Controllers\DivorceController::class, 'getMariageDetails'])
+        ->name('mariages.details.json');
     
     // API pour récupérer les détails d'une personne
     Route::resource('mariages', App\Http\Controllers\MariageController::class)->except(['show']);
@@ -79,6 +82,9 @@ Route::middleware(['auth', 'role:agent,superAdmin,admin'])->group(function () {
     Route::get('mariages/{mariage}', [App\Http\Controllers\MariageController::class, 'show'])->name('mariages.show');
     Route::post('mariages/temoins', [App\Http\Controllers\MariageController::class, 'storeTemoin'])->name('mariages.temoins.store');
     Route::post('mariages/parents', [App\Http\Controllers\MariageController::class, 'storeParent'])->name('mariages.parents.store');
+
+    Route::resource('divorces', App\Http\Controllers\DivorceController::class)->except(['show']);
+    Route::get('/divorces/{divorce}', [App\Http\Controllers\DivorceController::class, 'show'])->name('divorces.show');
 
     Route::resource('nationalites', NationaliteController::class)->except(['show']);
     Route::get('/nationalites/{nationalite}', [App\Http\Controllers\NationaliteController::class, 'show'])->name('nationalites.show');
@@ -103,7 +109,14 @@ Route::middleware(['auth', 'role:agent,superAdmin,admin'])->group(function () {
 
     Route::resource('inhumations', App\Http\Controllers\InhumationController::class)->except(['show']);
     Route::get('/inhumations/{inhumation}', [App\Http\Controllers\InhumationController::class, 'show'])->name('inhumations.show');
+
+    Route::resource('composition_familiales', App\Http\Controllers\CompositionFamilialeController::class)->except(['show']);
+    Route::get('/composition_familiales/{compositionFamiliale}', [App\Http\Controllers\CompositionFamilialeController::class, 'show'])->name('composition_familiales.show');
 });
+
+Route::get('/composition_familiales/{compositionFamiliale}/pdf', [App\Http\Controllers\CompositionFamilialeController::class, 'pdf'])->name('composition_familiales.attestation.pdf');
+Route::get('/composition_familiales/{compositionFamiliale}/attestation', [App\Http\Controllers\CompositionFamilialeController::class, 'attestation'])->name('composition_familiales.attestation');
+Route::get('/composition_familiales/{compositionFamiliale}/verify', [App\Http\Controllers\CompositionFamilialeController::class, 'verify'])->name('composition_familiales.verify');
 
  
 
@@ -148,6 +161,10 @@ Route::get('/mariages/{mariage}/verify', [App\Http\Controllers\MariageController
 
 // Vérification par QR code (GET)
 Route::get('/nationalites/verify/{id}', [NationaliteVerificationController::class, 'verify'])->name('nationalites.verify.qr');
+
+Route::get('/divorces/{divorce}/attestation', [App\Http\Controllers\DivorceController::class, 'attestation'])->name('divorces.attestation');
+Route::get('/divorces/{divorce}/pdf', [App\Http\Controllers\DivorceController::class, 'pdf'])->name('divorces.attestation.pdf');
+Route::get('/divorces/{divorce}/verify', [App\Http\Controllers\DivorceController::class, 'verify'])->name('divorces.verify');
 
 // Formulaire de vérification manuelle
 Route::get('/verification', [NationaliteVerificationController::class, 'verificationForm'])->name('verification.form');

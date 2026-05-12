@@ -40,7 +40,8 @@ return new class extends Migration
         'célibataire',
         'marié',
         'divorcé',
-        'veuf'
+        'veuf',
+        'veuve',
     ])->default('célibataire');
             $table->string('cin')->unique()->nullable();
             $table->string('telephone')->nullable();
@@ -76,6 +77,7 @@ return new class extends Migration
 
         Schema::create('mariages', function (Blueprint $table) {
             $table->id();
+            $table->string('num_acte')->unique()->default(null);
             $table->foreignId('epoux_id')->constrained('personnes');
             $table->foreignId('epouse_id')->constrained('personnes');
             $table->foreignId('regime_id')->constrained('regimes_matrimoniaux');

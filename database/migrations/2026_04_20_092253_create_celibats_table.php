@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('entite_id')->constrained('entite_administratives');
              $table->string('documents')->nullable();
+             $table->string('num_acte')->unique()->default(null);
             $table->foreignId('personne_id')->constrained('personnes')->onDelete('cascade');
             $table->timestamps();
         });

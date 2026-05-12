@@ -124,6 +124,7 @@ class MariageController extends Controller
     // Ajouter user
     $validated['user_id'] = auth()->id();
     $validated['entite_id'] = auth()->user()->entite_id;
+    $validated['num_acte'] = 'MAR-' . strtoupper(uniqid()) . '-' . date('Y');
 
     Mariage::create($validated);
     changeEtatCivil($validated['epoux_id'], 'marié');
@@ -166,7 +167,8 @@ class MariageController extends Controller
 
     public function update(Request $request, Mariage $mariage)
     {
-      $validated =  $request->validate([
+     try {
+         $validated =  $request->validate([
             'epoux_id' => 'required|exists:personnes,id',
             'epouse_id' => 'required|exists:personnes,id',
             'regime_id' => 'required|exists:regimes_matrimoniaux,id',
@@ -180,7 +182,7 @@ class MariageController extends Controller
             'photo_couple' => 'nullable|image',
             'etat_civil_epoux' => 'required|string|max:50',
             'etat_civil_epouse' => 'required|string|max:50',
-            'entite_id' => 'required|exists:entite_administratives,id',
+           
         ]);
             
         // Upload images (propre)
@@ -189,10 +191,17 @@ class MariageController extends Controller
         $validated['photo_couple'] = $this->uploadImage($request, 'photo_couple') ?? $mariage->photo_couple;    
          
         $validated['user_id'] = auth()->id();
+        $validated['entite_id'] = auth()->user()->entite_id;
+        
 
         $mariage->update($validated);
 
         return redirect()->route('mariages.index')->with('success', 'Mariage mis à jour.');
+     } catch (\Throwable $th) {
+       
+        return back()->withErrors(['error' => 'Une erreur est survenue lors de la mise à jour du mariage.']);
+        
+     }
     }
 
     public function destroy(Mariage $mariage)

@@ -17,6 +17,12 @@
 </a> --}}
 </div>
             <div class="space-x-2">
+                @if(optional($mariage->statut)->nom === 'en cours')
+                    <a href="{{ route('divorces.create', ['mariage_id' => $mariage->id]) }}"
+                       class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                        💔 Créer un divorce
+                    </a>
+                @endif
                 <a href="{{ route('mariages.edit', $mariage) }}" 
                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
                     ✏️ Modifier

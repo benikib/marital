@@ -65,6 +65,7 @@ class NaissanceController extends Controller
 
             $valideted['user_id'] = auth()->id();
             $valideted['entite_id'] = auth()->user()->entite_id;
+                $valideted['num_acte'] = 'NAI-' . strtoupper(uniqid()) . '-' . date('Y');
 
             Naissance::create($valideted);
 
