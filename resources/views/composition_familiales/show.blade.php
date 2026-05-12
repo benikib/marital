@@ -5,6 +5,13 @@
                 <h2 class="text-2xl font-semibold text-gray-900">Détails de la composition familiale</h2>
                 <p class="text-sm text-gray-500">Vue detaillee de l'acte et des membres de la famille.</p>
             </div>
+                <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <a href="{{ route('composition_familiales.attestation', $compositionFamiliale) }}"
+                        class="inline-flex items-center rounded-2xl bg-green-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-green-700">
+                        📄 Attestation
+                    </a>
+                    
+                </div>
             <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('composition_familiales.edit', $compositionFamiliale) }}"
                     class="inline-flex items-center rounded-2xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700">
