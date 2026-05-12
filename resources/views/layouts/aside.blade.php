@@ -114,6 +114,13 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+                {{-- provinnce  --}}
+                    <li>
+                        <a href="{{ route('province.dashboard') }}"
+                        class="sidebar-item {{ request()->routeIs('province.dashboard') ? 'active' : '' }}">
+                            <span>🏢</span>
+                            <span>Dashboard Province</span>
+                        </a>
 
                 @endif
 
