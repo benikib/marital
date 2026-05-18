@@ -218,7 +218,7 @@
 
         <option value="">-- Sélectionner --</option>
         <option value="celibataire" {{ old('etat_civil_epoux', $mariage->etat_civil_epoux ?? '') == 'celibataire' ? 'selected' : '' }}>Célibataire</option>
-        <option value="marie" {{ old('etat_civil_epoux', $mariage->etat_civil_epoux ?? '') == 'marie' ? 'selected' : '' }}>Marié</option>
+    
         <option value="divorce" {{ old('etat_civil_epoux', $mariage->etat_civil_epoux ?? '') == 'divorce' ? 'selected' : '' }}>Divorcé</option>
         <option value="veuf" {{ old('etat_civil_epoux', $mariage->etat_civil_epoux ?? '') == 'veuf' ? 'selected' : '' }}>Veuf</option>
     </select>

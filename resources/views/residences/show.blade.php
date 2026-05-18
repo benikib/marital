@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="text-xl font-semibold text-gray-800">
-                👶 Détails de l'acte de naissance
+                👶 Détails de l'acte de Residences
             </h2>
 
             <div class="flex items-center gap-3">
