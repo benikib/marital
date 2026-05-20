@@ -188,6 +188,11 @@ class PersonneController extends Controller
         return redirect()->route('personnes.index')->with('success', 'Personne supprimée.');
     }
 
+    public function show(Personne $personne)
+    {
+        return view('personnes.show', compact('personne'));
+    }
+
     public function apiShow(Personne $personne)
     {
         return response()->json([

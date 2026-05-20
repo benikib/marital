@@ -68,6 +68,7 @@ Route::middleware(['auth', 'role:agent,superAdmin,admin'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('personnes', App\Http\Controllers\PersonneController::class)->except(['show']);
+    Route::get('/personnes/{personne}', [App\Http\Controllers\PersonneController::class, 'show'])->name('personnes.show');  
 
     Route::get('/personnes/{personne}/json', [App\Http\Controllers\PersonneController::class, 'apiShow'])
         ->name('personnes.json');

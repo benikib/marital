@@ -116,15 +116,16 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $personne->prenom }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $personne->sexe }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $personne->lieu_naissance }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $personne->date_naissance->format('Y-m-d') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $personne->date_naissance->format('d-m-Y') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $personne->entite->nom  ?? 'N/A' }} ({{ ($personne->entite->type  ?? 'N/A') }}) </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <a href="{{ route('personnes.show', $personne) }}" class="text-blue-600 hover:text-blue-900">Voir </a>
                                             <a href="{{ route('personnes.edit', $personne) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
-                                            <form action="{{ route('personnes.destroy', $personne) }}" method="POST" class="inline">
+                                            {{-- <form action="{{ route('personnes.destroy', $personne) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Supprimer cette personne ?')">Supprimer</button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
