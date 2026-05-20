@@ -72,11 +72,13 @@ class DeceController extends Controller
 
                
                 if ($mariage) {
+
                     if ($mariage->epoux_id == $personne->id) {
                         DB::table('personnes')->where('id', $mariage->epouse_id)->update(['etat_civil' => 'veuf']);
                     } else {
                         DB::table('personnes')->where('id', $mariage->epoux_id)->update(['etat_civil' => 'veuf']);
                     }
+                        DB::table('mariages')->where('id', $mariage->id)->update(['statut_id' => 2]); // statut_id 2 pour les mariages terminés
                 }
               } 
 
