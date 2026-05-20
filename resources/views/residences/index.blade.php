@@ -36,11 +36,11 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <a href="{{ route('residences.show', $residence) }}" class="text-blue-600 hover:text-blue-900">Voir </a>
                                             <a href="{{ route('residences.edit', $residence) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
-                                            <form action="{{ route('residences.destroy', $residence) }}" method="POST" class="inline">
+                                            {{-- <form action="{{ route('residences.destroy', $residence) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Supprimer cette naissance ?')">Supprimer</button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach

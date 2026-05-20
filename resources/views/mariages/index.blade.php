@@ -86,11 +86,11 @@
 
                                             <a href="{{ route('mariages.parents', $mariage) }}" class="text-yellow-600 hover:text-yellow-900">Parents</a>
                                             <a href="{{ route('mariages.edit', $mariage) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
-                                            <form action="{{ route('mariages.destroy', $mariage) }}" method="POST" class="inline">
+                                            {{-- <form action="{{ route('mariages.destroy', $mariage) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Supprimer ce mariage ?')">Supprimer</button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach
