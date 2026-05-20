@@ -17,7 +17,10 @@ use App\Models\EntiteAdministrative;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use App\Exports\ProvinceStatsExport;
+
 
 class ProvinceDashboardController extends Controller
 {
@@ -386,7 +389,10 @@ class ProvinceDashboardController extends Controller
         $statsParVille = $this->getStatsByVille($provinceId);
         
         // Générer l'export Excel
-        return Excel::download(new ProvinceStatsExport($stats, $statsParVille), 'statistiques_province.xlsx');
+       return Excel::download(
+    new ProvinceStatsExport($stats, $statsParVille),
+    'statistiques_province.xlsx'
+);
     }
 
     
