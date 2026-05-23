@@ -110,6 +110,7 @@ class PersonnesSeeder extends Seeder
                 'statut_vie' => rand(0, 100) > 95 ? 'décédé' : 'en vie',
                 'created_at' => Carbon::now()->subDays(rand(0, 365)),
                 'updated_at' => Carbon::now(),
+                'ni' =>  env('Province').'-'.strtoupper(substr(md5(uniqid()), 0, 8))
             ];
             
             // Insert par lots de 50 pour éviter les surcharges mémoire

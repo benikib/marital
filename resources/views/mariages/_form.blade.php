@@ -470,6 +470,10 @@
                     <p id="modalCin" class="mt-1 font-medium text-gray-900"></p>
                 </div>
                 <div>
+                    <p class="text-xs uppercase tracking-wide text-gray-500">NI</p>
+                    <p id="modalNi" class="mt-1 font-medium text-gray-900"></p>
+                </div>  
+                <div>
                     <p class="text-xs uppercase tracking-wide text-gray-500">Téléphone</p>
                     <p id="modalTelephone" class="mt-1 font-medium text-gray-900"></p>
                 </div>
@@ -580,6 +584,8 @@ function showConfirmationModalWithDetails(personne) {
     const dateNaissance = personne.date_naissance ? new Date(personne.date_naissance) : null;
     const age = dateNaissance ? Math.floor((new Date() - dateNaissance) / (365.25 * 24 * 60 * 60 * 1000)) : null;
     document.getElementById('modalSexeAge').textContent = `${sexeLabel}${age ? ` • ${age} ans` : ''}`;
+    const ni = personne.ni ? `NI: ${personne.ni}` : '';
+    document.getElementById('modalNi').textContent = ni;
     
     // Photo
  if (personne.photo && personne.photo !== '') {

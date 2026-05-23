@@ -120,7 +120,10 @@ class PersonneController extends Controller
                 ->with('error', '⚠️ Cette personne existe déjà dans le système.');
         }
 
+
+         $valideted['ni'] =  env('Province').'-'.strtoupper(substr(md5(uniqid()), 0, 8)).'-'. auth()->user()->entite_id. '-'. time().'-'. rand(1000, 9999).'-'. auth()->user()->entite_id;
         // PHOTO
+
         if ($request->photo_base64) {
 
             $image = $request->photo_base64;
@@ -143,7 +146,7 @@ class PersonneController extends Controller
 
         $valideted['user_id'] = auth()->id();
         $valideted['entite_id'] = auth()->user()->entite_id;
-
+        
         Personne::create($valideted);
 
         return redirect()
@@ -243,6 +246,7 @@ class PersonneController extends Controller
 
     public function show(Personne $personne)
     {
+        
         return view('personnes.show', compact('personne'));
     }
 
@@ -266,6 +270,7 @@ class PersonneController extends Controller
             'cin' => $personne->cin,
             'telephone' => $personne->telephone,
             'photo' => $personne->photo ? asset($personne->photo) : null,
+            'ni' => $personne->ni,
         ]);
     }
 }

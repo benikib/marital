@@ -137,6 +137,12 @@
                                     <dd class="w-2/3 font-medium">{{ $personne->cin }}</dd>
                                 </div>
                                 @endif
+                                @if($personne->ni)
+                                <div class="flex">
+                                    <dt class="w-1/3 text-gray-600">NI :</dt>
+                                    <dd class="w-2/3 font-medium">{{ $personne->ni }}</dd>
+                                </div>
+                                @endif
                             </dl>
                         </div>
 
