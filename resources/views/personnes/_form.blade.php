@@ -133,21 +133,12 @@
         </select>
         <x-input-error :messages="$errors->get('statut_vie')" />
     </div>
-
-    {{-- Photo --}}
-    <div class="col-span-2">
-        <x-input-label for="photo" value="Photo" />
-        <input type="file" name="photo" class="mt-1 block w-full" accept="image/*">
-
-        @if ($personne?->photo)
-            <div class="mt-2">
-                <img src="{{ asset('storage/photos/' . $personne->photo) }}" alt="Photo de {{ $personne->prenom }} {{ $personne->nom }}"
-                     class="h-20 w-20 rounded-full object-cover">
-            </div>
-        @endif
-
-        <x-input-error :messages="$errors->get('photo')" />
-    </div>
+<x-photo-capture
+    name="photo_base64"
+    :value="$personne?->photo
+        ? asset('storage/' . $personne->photo)
+        : null"
+/>
 
     {{-- Province --}}
     <div>

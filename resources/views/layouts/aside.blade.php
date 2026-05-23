@@ -33,8 +33,16 @@
                     </a>
                 </li>
 
+
                 <li class="text-xs text-gray-400 uppercase px-4 pt-4 pb-2">
                     Gestion
+                </li>
+                 <li>
+                    <a href="{{ route('personnes.index') }}"
+                       class="sidebar-item {{ request()->routeIs('personnes.*') ? 'active' : '' }}">
+                        <span>👤</span>
+                        <span>Identification</span>
+                    </a>
                 </li>
 
                 <li>
@@ -45,13 +53,7 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="{{ route('personnes.index') }}"
-                       class="sidebar-item {{ request()->routeIs('personnes.*') ? 'active' : '' }}">
-                        <span>👤</span>
-                        <span>Personnes</span>
-                    </a>
-                </li>
+               
 
                 <li>
                     <a href="{{ route('entites.index') }}"
@@ -130,6 +132,17 @@
                        class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <span>🏛</span>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+                     <li class="text-xs text-gray-400 uppercase px-4 pt-4 pb-2">
+                    Gestion
+                </li>
+                 <li>
+                    <a href="{{ route('personnes.index') }}"
+                    class="sidebar-item {{ request()->routeIs('personnes.*') ? 'active' : '' }}">
+                
+                        <span>👤</span>
+                        <span>Identification</span>
                     </a>
                 </li>
 
@@ -213,13 +226,7 @@
                         <span>Attest Inhumations</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('personnes.index') }}"
-                    class="sidebar-item {{ request()->routeIs('personnes.*') ? 'active' : '' }}">
-                        <span>👤</span>
-                        <span>Personnes</span>
-                    </a>
-                </li>
+               
                 @endif
 
                 <li class="text-xs text-gray-400 uppercase px-4 pt-6 pb-2">
