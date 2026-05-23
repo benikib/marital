@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Fiche de la personne') }}
+                {{ __('Fiche de l\'identification') }}
             </h2>
             <div class="space-x-2">
                 <a href="{{ route('personnes.edit', $personne) }}" 
@@ -135,6 +135,12 @@
                                 <div class="flex">
                                     <dt class="w-1/3 text-gray-600">CIN :</dt>
                                     <dd class="w-2/3 font-medium">{{ $personne->cin }}</dd>
+                                </div>
+                                @endif
+                                @if($personne->ni)
+                                <div class="flex">
+                                    <dt class="w-1/3 text-gray-600">NI :</dt>
+                                    <dd class="w-2/3 font-medium">{{ $personne->ni }}</dd>
                                 </div>
                                 @endif
                             </dl>

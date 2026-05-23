@@ -36,6 +36,7 @@ class Personne extends Model
         'documents',
         'postnom',
         'etat_civil',
+        'ni',
         
         
 

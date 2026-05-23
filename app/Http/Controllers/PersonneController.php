@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\EntiteAdministrative;
 use App\Models\Personne;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PersonneController extends Controller
 {
     public function index(Request $request)
     {
         $entites = EntiteAdministrative::all();
-        
+
         $query = Personne::orderBy('nom');
 
         // Recherche simple
@@ -47,7 +48,7 @@ class PersonneController extends Controller
         $totalPersonnes = Personne::count();
         $totalHommes = Personne::where('sexe', 'M')->count();
         $totalFemmes = Personne::where('sexe', 'F')->count();
-        
+
         // Statistiques sur les résultats filtrés
         $resultatsFiltres = $query->count();
         $statsHommesFiltres = (clone $query)->where('sexe', 'M')->count();
@@ -68,17 +69,17 @@ class PersonneController extends Controller
     }
 
     public function create()
-
     {
         $entites = EntiteAdministrative::all();
+
         return view('personnes.create', compact('entites'));
     }
 
     public function store(Request $request)
-    {
-        try {
-         $valideted =  $request->validate([
+{
+    try {
 
+        $valideted = $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'sexe' => 'required|in:M,F',
@@ -87,12 +88,9 @@ class PersonneController extends Controller
             'adresse' => 'required|string|max:255',
             'profession' => 'nullable|string|max:255',
             'nationalite' => 'required|string|max:255',
-
-            'photo' => 'nullable|image',
             'pere' => 'nullable|string|max:255',
             'mere' => 'nullable|string|max:255',
             'statut_vie' => 'required|in:en vie,décédé',
-           
             'province_id' => 'required|exists:entite_administratives,id',
             'territoire_id' => 'nullable|exists:entite_administratives,id',
             'secteur_id' => 'nullable|exists:entite_administratives,id',
@@ -101,84 +99,142 @@ class PersonneController extends Controller
             'ville_id' => 'nullable|exists:entite_administratives,id',
             'cin' => 'nullable|string|max:255|unique:personnes,cin',
             'telephone' => 'nullable|string|max:255',
-           
-
-
         ]);
 
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('photos', 'public');
-            $valideted['photo'] = $photoPath;
+        // 🔎 CHECK DUPLICATE
+        $duplicate = Personne::where(function ($query) use ($request) {
+
+            $query->where('cin', $request->cin)
+                  ->orWhere(function ($q) use ($request) {
+                      $q->where('nom', $request->nom)
+                        ->where('prenom', $request->prenom)
+                        ->where('date_naissance', $request->date_naissance);
+                  });
+
+        })->first();
+
+        if ($duplicate) {
+
+            return back()
+                ->withInput()
+                ->with('error', '⚠️ Cette personne existe déjà dans le système.');
         }
 
-         $valideted['user_id'] = auth()->id();
-         $valideted['entite_id'] = auth()->user()->entite_id;
-    
-         Personne::create($valideted);
+
+         $valideted['ni'] =  env('Province').'-'.strtoupper(substr(md5(uniqid()), 0, 8)).'-'. auth()->user()->entite_id. '-'. time().'-'. rand(1000, 9999).'-'. auth()->user()->entite_id;
+        // PHOTO
+
+        if ($request->photo_base64) {
+
+            $image = $request->photo_base64;
+
+            preg_match("/data:image\/(.*?);base64/", $image, $extension);
+
+            $image = preg_replace('/^data:image\/\w+;base64,/', '', $image);
+
+            $image = str_replace(' ', '+', $image);
+
+            $imageName = time().'.'.($extension[1] ?? 'png');
+
+            Storage::disk('public')->put(
+                'photos/'.$imageName,
+                base64_decode($image)
+            );
+
+            $valideted['photo'] = 'photos/'.$imageName;
+        }
+
+        $valideted['user_id'] = auth()->id();
+        $valideted['entite_id'] = auth()->user()->entite_id;
         
+        Personne::create($valideted);
 
-        return redirect()->route('personnes.index')->with('success', 'Personne créée avec succès.');
-            
-        } catch (\Exception $e) {
-            
-            return back()->withErrors(['error' => $e->getMessage()])->withInput();
-        }
+        return redirect()
+            ->route('personnes.index')
+            ->with('success', 'Personne créée avec succès.');
+
+    } catch (\Exception $e) {
+
+        return back()
+            ->withInput()
+            ->with('error', 'Erreur: ' . $e->getMessage());
     }
+
+        }
+    
 
     public function edit(Personne $personne)
     {
         $entites = EntiteAdministrative::all();
+
         return view('personnes.edit', compact('personne', 'entites'));
     }
 
     public function update(Request $request, Personne $personne)
     {
         try {
-           $valideted= $request->validate([
+            $valideted = $request->validate([
                 'nom' => 'required|string|max:255',
                 'prenom' => 'required|string|max:255',
                 'postnom' => 'nullable|string|max:255',
                 'sexe' => 'required|in:M,F',
                 'date_naissance' => 'required|date',
                 'lieu_naissance' => 'required|string|max:255',
-                
+
                 'adresse' => 'required|string|max:255',
                 'pere' => 'nullable|string|max:255',
                 'mere' => 'nullable|string|max:255',
                 'profession' => 'nullable|string|max:255',
                 'nationalite' => 'required|string|max:255',
-                'photo' => 'nullable|image',
+                
                 'statut_vie' => 'required|in:en vie,décédé',
                 'etat_civil' => 'required|string|max:255',
                 'province_id' => 'required|exists:entite_administratives,id',
-                'territoire_id' => 'nullable|exists:entite_administratives,id', 
+                'territoire_id' => 'nullable|exists:entite_administratives,id',
                 'secteur_id' => 'nullable|exists:entite_administratives,id',
                 'district_id' => 'nullable|exists:entite_administratives,id',
                 'localite_id' => 'nullable|exists:entite_administratives,id',
                 'ville_id' => 'nullable|exists:entite_administratives,id',
-                'cin' => 'nullable|string|max:255|unique:personnes,cin,' . $personne->id,       
-                'telephone' => 'nullable|string|max:255'
-
+                'cin' => 'nullable|string|max:255|unique:personnes,cin,'.$personne->id,
+                'telephone' => 'nullable|string|max:255',
 
             ]);
 
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
-                $valideted['photo'] = $photoPath;
+            if ($request->photo_base64) {
+
+                $image = $request->photo_base64;
+
+                preg_match("/data:image\/(.*?);base64/", $image, $extension);
+
+                $image = preg_replace(
+                    '/^data:image\/\w+;base64,/',
+                    '',
+                    $image
+                );
+
+                $image = str_replace(' ', '+', $image);
+
+                $imageName = time().'.'.($extension[1] ?? 'png');
+
+                Storage::disk('public')->put(
+                    'photos/'.$imageName,
+                    base64_decode($image)
+                );
+
+                $valideted['photo'] = 'photos/'.$imageName;
+
             }
             $valideted['user_id'] = auth()->id();
             $valideted['entite_id'] = auth()->user()->entite_id;
-            
 
-            $personne->update($valideted );
-             
+            $personne->update($valideted);
 
             return redirect()->route('personnes.index')->with('success', 'Personne mise à jour avec succès.');
         } catch (\Exception $e) {
-          
+
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
-        
+
     }
 
     public function destroy(Personne $personne)
@@ -190,6 +246,7 @@ class PersonneController extends Controller
 
     public function show(Personne $personne)
     {
+        
         return view('personnes.show', compact('personne'));
     }
 
@@ -213,8 +270,7 @@ class PersonneController extends Controller
             'cin' => $personne->cin,
             'telephone' => $personne->telephone,
             'photo' => $personne->photo ? asset($personne->photo) : null,
+            'ni' => $personne->ni,
         ]);
     }
-
-    
 }

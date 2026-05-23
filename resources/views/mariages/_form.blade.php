@@ -258,119 +258,156 @@
         </div>
     </div>
 
-    <!-- SECTION: PHOTOS -->
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div class="bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-4">
-            <h3 class="text-white font-bold text-lg flex items-center gap-2">
-                <span>📸</span> Galerie photos
-            </h3>
-        </div>
-        <div class="p-6">
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                <!-- Photo époux -->
-                <div>
-                    <x-input-label for="photo_epoux" value="👨 Photo de l'époux" class="font-semibold" />
-                    <input type="file" id="photo_epoux" name="photo_epoux" 
-                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
-                           accept="image/*" 
-                           onchange="previewImage(this, 'preview_epoux')">
-                    
-                    @if($mariage && $mariage->photo_epoux)
-                        <div class="mt-3">
-                            <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                                <img src="{{ asset($mariage->photo_epoux) }}" 
-                                     alt="Photo époux actuelle" 
-                                     class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="text-white text-xs">Actuel</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    
-                    <div id="preview_epoux" class="mt-3 hidden">
-                        <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                            <img src="" alt="Aperçu" class="w-full h-full object-cover">
-                            <button type="button" onclick="clearPreview('preview_epoux', 'photo_epoux')" 
-                                    class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
-                                ✕
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <x-input-error :messages="$errors->get('photo_epoux')" class="mt-2" />
-                </div>
+   <!-- SECTION: PHOTOS -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-                <!-- Photo épouse -->
-                <div>
-                    <x-input-label for="photo_epouse" value="👩 Photo de l'épouse" class="font-semibold" />
-                    <input type="file" id="photo_epouse" name="photo_epouse" 
-                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
-                           accept="image/*"
-                           onchange="previewImage(this, 'preview_epouse')">
-                    
-                    @if($mariage && $mariage->photo_epouse)
-                        <div class="mt-3">
-                            <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                                <img src="{{ asset($mariage->photo_epouse) }}" 
-                                     alt="Photo épouse actuelle" 
-                                     class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="text-white text-xs">Actuel</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    
-                    <div id="preview_epouse" class="mt-3 hidden">
-                        <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                            <img src="" alt="Aperçu" class="w-full h-full object-cover">
-                            <button type="button" onclick="clearPreview('preview_epouse', 'photo_epouse')" 
-                                    class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
-                                ✕
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <x-input-error :messages="$errors->get('photo_epouse')" class="mt-2" />
-                </div>
-
-                <!-- Photo couple -->
-                <div>
-                    <x-input-label for="photo_couple" value="💑 Photo du couple" class="font-semibold" />
-                    <input type="file" id="photo_couple" name="photo_couple" 
-                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
-                           accept="image/*"
-                           onchange="previewImage(this, 'preview_couple')">
-                    
-                    @if($mariage && $mariage->photo_couple)
-                        <div class="mt-3">
-                            <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                                <img src="{{ asset($mariage->photo_couple) }}" 
-                                     alt="Photo couple actuelle" 
-                                     class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span class="text-white text-xs">Actuel</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    
-                    <div id="preview_couple" class="mt-3 hidden">
-                        <div class="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                            <img src="" alt="Aperçu" class="w-full h-full object-cover">
-                            <button type="button" onclick="clearPreview('preview_couple', 'photo_couple')" 
-                                    class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
-                                ✕
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <x-input-error :messages="$errors->get('photo_couple')" class="mt-2" />
-                </div>
-            </div>
-        </div>
+    <div class="bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-4">
+        <h3 class="text-white font-bold text-lg flex items-center gap-2">
+            <span>📸</span> Galerie photos
+        </h3>
     </div>
+
+    <div class="p-6">
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+
+          
+
+            {{-- Photo époux --}}
+<div>
+
+    <x-input-label
+        value="👨 Photo de l'époux"
+        class="font-semibold"
+    />
+
+    <div class="mt-3">
+
+        <div class="relative w-40 h-40 rounded-xl overflow-hidden bg-gray-100 border">
+
+            <img
+                id="photo_epoux_img"
+                src="{{ $mariage?->epoux?->photo
+                    ? asset('storage/photos/' . $mariage->epoux->photo)
+                    : '' }}"
+                class="w-full h-full object-cover {{ $mariage?->epoux?->photo ? '' : 'hidden' }}">
+
+            <div
+                id="photo_epoux_placeholder"
+                class="w-full h-full flex items-center justify-center text-gray-400 text-sm {{ $mariage?->epoux?->photo ? 'hidden' : '' }}">
+
+                Aucune photo
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            {{-- Photo épouse --}}
+<div>
+
+    <x-input-label
+        value="👩 Photo de l'épouse"
+        class="font-semibold"
+    />
+
+    <div class="mt-3">
+
+        <div class="relative w-40 h-40 rounded-xl overflow-hidden bg-gray-100 border">
+
+            <img
+                id="photo_epouse_img"
+                src="{{ $mariage?->epouse?->photo
+                    ? asset('storage/photos/' . $mariage->epouse->photo)
+                    : '' }}"
+                class="w-full h-full object-cover {{ $mariage?->epouse?->photo ? '' : 'hidden' }}">
+
+            <div
+                id="photo_epouse_placeholder"
+                class="w-full h-full flex items-center justify-center text-gray-400 text-sm {{ $mariage?->epouse?->photo ? 'hidden' : '' }}">
+
+                Aucune photo
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+            {{-- Photo couple --}}
+            <div>
+
+                <x-input-label
+                    for="photo_couple"
+                    value="💑 Photo du couple"
+                    class="font-semibold"
+                />
+
+                <input
+                    type="file"
+                    id="photo_couple"
+                    name="photo_couple"
+                    class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    accept="image/*"
+                    onchange="previewImage(this, 'preview_couple')">
+
+                {{-- Photo actuelle --}}
+                @if($mariage && $mariage->photo_couple)
+
+                    <div class="mt-3">
+
+                        <div class="relative w-40 h-40 rounded-xl overflow-hidden bg-gray-100 border">
+
+                            <img
+                                src="{{ asset($mariage->photo_couple) }}"
+                                alt="Photo couple"
+                                class="w-full h-full object-cover">
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+                {{-- Preview --}}
+                <div id="preview_couple" class="mt-3 hidden">
+
+                    <div class="relative w-40 h-40 rounded-xl overflow-hidden bg-gray-100 border">
+
+                        <img
+                            src=""
+                            alt="Aperçu"
+                            class="w-full h-full object-cover">
+
+                        <button
+                            type="button"
+                            onclick="clearPreview('preview_couple', 'photo_couple')"
+                            class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+
+                            ✕
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <x-input-error
+                    :messages="$errors->get('photo_couple')"
+                    class="mt-2"
+                />
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 </div>
 
 <div id="confirmationModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40">
@@ -432,6 +469,10 @@
                     <p class="text-xs uppercase tracking-wide text-gray-500">CIN</p>
                     <p id="modalCin" class="mt-1 font-medium text-gray-900"></p>
                 </div>
+                <div>
+                    <p class="text-xs uppercase tracking-wide text-gray-500">NI</p>
+                    <p id="modalNi" class="mt-1 font-medium text-gray-900"></p>
+                </div>  
                 <div>
                     <p class="text-xs uppercase tracking-wide text-gray-500">Téléphone</p>
                     <p id="modalTelephone" class="mt-1 font-medium text-gray-900"></p>
@@ -543,12 +584,18 @@ function showConfirmationModalWithDetails(personne) {
     const dateNaissance = personne.date_naissance ? new Date(personne.date_naissance) : null;
     const age = dateNaissance ? Math.floor((new Date() - dateNaissance) / (365.25 * 24 * 60 * 60 * 1000)) : null;
     document.getElementById('modalSexeAge').textContent = `${sexeLabel}${age ? ` • ${age} ans` : ''}`;
+    const ni = personne.ni ? `NI: ${personne.ni}` : '';
+    document.getElementById('modalNi').textContent = ni;
     
     // Photo
-    if (personne.photo) {
-        document.getElementById('photoImg').src = personne.photo;
-        document.getElementById('modalPhoto').classList.remove('hidden');
-    } else {
+ if (personne.photo && personne.photo !== '') {
+    // Nettoyage complet
+    let cleanPath = normalizePhotoUrl(personne.photo);
+    
+    console.log('Affichage de la photo:', cleanPath);
+    document.getElementById('photoImg').src = cleanPath;
+    document.getElementById('modalPhoto').classList.remove('hidden');
+} else {
         document.getElementById('modalPhoto').classList.add('hidden');
     }
     
@@ -572,17 +619,55 @@ function showConfirmationModalWithDetails(personne) {
     modal.classList.remove('hidden');
 }
 
+// function confirmSelection() {
+//     const modal = document.getElementById('confirmationModal');
+//     const select = document.getElementById(pendingSelectId);
+    
+//     if (select) {
+//         select.value = pendingSelectValue;
+//         select.dataset.previousValue = pendingSelectValue;
+//     }
+    
+//     modal.classList.add('hidden');
+//     pendingSelectId = null;
+//     pendingSelectValue = null;
+// }
 function confirmSelection() {
+
     const modal = document.getElementById('confirmationModal');
+
     const select = document.getElementById(pendingSelectId);
-    
+
     if (select) {
+
         select.value = pendingSelectValue;
+
         select.dataset.previousValue = pendingSelectValue;
+
+        // Mise à jour photo galerie
+        if (pendingSelectId === 'epoux_id') {
+
+            updateGalleryPhoto(
+                'epoux_id',
+                'photo_epoux_img',
+                'photo_epoux_placeholder'
+            );
+        }
+
+        if (pendingSelectId === 'epouse_id') {
+
+            updateGalleryPhoto(
+                'epouse_id',
+                'photo_epouse_img',
+                'photo_epouse_placeholder'
+            );
+        }
     }
-    
+
     modal.classList.add('hidden');
+
     pendingSelectId = null;
+
     pendingSelectValue = null;
 }
 
@@ -701,3 +786,80 @@ function clearPreview(previewId, inputId) {
     }
 }
 </style>
+<script>
+
+function updateGalleryPhoto(selectId, imageId, placeholderId) {
+
+    const select = document.getElementById(selectId);
+
+    const option = select.options[select.selectedIndex];
+
+    const image = document.getElementById(imageId);
+
+    const placeholder = document.getElementById(placeholderId);
+
+    const personneId = option.value;
+
+    if (!personneId) {
+
+        image.src = '';
+
+        image.classList.add('hidden');
+
+        placeholder.classList.remove('hidden');
+
+        return;
+    }
+
+    fetch(`/personnes/${personneId}/json`)
+        .then(response => response.json())
+        .then(personne => {
+
+            if (personne.photo) {
+
+                image.src = normalizePhotoUrl(personne.photo);
+
+                image.classList.remove('hidden');
+
+                placeholder.classList.add('hidden');
+
+            } else {
+
+                image.src = '';
+
+                image.classList.add('hidden');
+
+                placeholder.classList.remove('hidden');
+            }
+        })
+        .catch(error => {
+
+            console.error(error);
+        });
+        
+}
+function normalizePhotoUrl(photo) {
+
+    if (!photo) return '';
+
+    // Déjà une URL complète
+    if (photo.startsWith('http://') || photo.startsWith('https://')) {
+
+        // extraire seulement le nom du fichier
+        const parts = photo.split('/');
+
+        const filename = parts[parts.length - 1];
+
+        return `/storage/photos/${filename}`;
+    }
+
+    // déjà chemin storage
+    if (photo.startsWith('/storage/')) {
+        return photo;
+    }
+
+    // simple filename
+    return `/storage/photos/${photo}`;
+}
+
+</script>
