@@ -76,73 +76,89 @@ class PersonneController extends Controller
     }
 
     public function store(Request $request)
-    {
-        try {
-            $valideted = $request->validate([
+{
+    try {
 
-                'nom' => 'required|string|max:255',
-                'prenom' => 'required|string|max:255',
-                'sexe' => 'required|in:M,F',
-                'date_naissance' => 'required|date',
-                'lieu_naissance' => 'required|string|max:255',
-                'adresse' => 'required|string|max:255',
-                'profession' => 'nullable|string|max:255',
-                'nationalite' => 'required|string|max:255',
+        $valideted = $request->validate([
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'sexe' => 'required|in:M,F',
+            'date_naissance' => 'required|date',
+            'lieu_naissance' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'profession' => 'nullable|string|max:255',
+            'nationalite' => 'required|string|max:255',
+            'pere' => 'nullable|string|max:255',
+            'mere' => 'nullable|string|max:255',
+            'statut_vie' => 'required|in:en vie,décédé',
+            'province_id' => 'required|exists:entite_administratives,id',
+            'territoire_id' => 'nullable|exists:entite_administratives,id',
+            'secteur_id' => 'nullable|exists:entite_administratives,id',
+            'district_id' => 'nullable|exists:entite_administratives,id',
+            'localite_id' => 'nullable|exists:entite_administratives,id',
+            'ville_id' => 'nullable|exists:entite_administratives,id',
+            'cin' => 'nullable|string|max:255|unique:personnes,cin',
+            'telephone' => 'nullable|string|max:255',
+        ]);
 
-                
-                'pere' => 'nullable|string|max:255',
-                'mere' => 'nullable|string|max:255',
-                'statut_vie' => 'required|in:en vie,décédé',
+        // 🔎 CHECK DUPLICATE
+        $duplicate = Personne::where(function ($query) use ($request) {
 
-                'province_id' => 'required|exists:entite_administratives,id',
-                'territoire_id' => 'nullable|exists:entite_administratives,id',
-                'secteur_id' => 'nullable|exists:entite_administratives,id',
-                'district_id' => 'nullable|exists:entite_administratives,id',
-                'localite_id' => 'nullable|exists:entite_administratives,id',
-                'ville_id' => 'nullable|exists:entite_administratives,id',
-                'cin' => 'nullable|string|max:255|unique:personnes,cin',
-                'telephone' => 'nullable|string|max:255',
+            $query->where('cin', $request->cin)
+                  ->orWhere(function ($q) use ($request) {
+                      $q->where('nom', $request->nom)
+                        ->where('prenom', $request->prenom)
+                        ->where('date_naissance', $request->date_naissance);
+                  });
 
-            ]);
+        })->first();
 
-             if ($request->photo_base64) {
+        if ($duplicate) {
 
-                $image = $request->photo_base64;
-
-                preg_match("/data:image\/(.*?);base64/", $image, $extension);
-
-                $image = preg_replace(
-                    '/^data:image\/\w+;base64,/',
-                    '',
-                    $image
-                );
-
-                $image = str_replace(' ', '+', $image);
-
-                $imageName = time().'.'.($extension[1] ?? 'png');
-
-                Storage::disk('public')->put(
-                    'photos/'.$imageName,
-                    base64_decode($image)
-                );
-
-                $valideted['photo'] = 'photos/'.$imageName;
-
-            }
-
-            $valideted['user_id'] = auth()->id();
-            $valideted['entite_id'] = auth()->user()->entite_id;
-
-            Personne::create($valideted);
-
-            return redirect()->route('personnes.index')->with('success', 'Personne créée avec succès.');
-
-        } catch (\Exception $e) {
-            
-            dd($e); 
-            return back()->withErrors(['error' => $e->getMessage()])->withInput();
+            return back()
+                ->withInput()
+                ->with('error', '⚠️ Cette personne existe déjà dans le système.');
         }
+
+        // PHOTO
+        if ($request->photo_base64) {
+
+            $image = $request->photo_base64;
+
+            preg_match("/data:image\/(.*?);base64/", $image, $extension);
+
+            $image = preg_replace('/^data:image\/\w+;base64,/', '', $image);
+
+            $image = str_replace(' ', '+', $image);
+
+            $imageName = time().'.'.($extension[1] ?? 'png');
+
+            Storage::disk('public')->put(
+                'photos/'.$imageName,
+                base64_decode($image)
+            );
+
+            $valideted['photo'] = 'photos/'.$imageName;
+        }
+
+        $valideted['user_id'] = auth()->id();
+        $valideted['entite_id'] = auth()->user()->entite_id;
+
+        Personne::create($valideted);
+
+        return redirect()
+            ->route('personnes.index')
+            ->with('success', 'Personne créée avec succès.');
+
+    } catch (\Exception $e) {
+
+        return back()
+            ->withInput()
+            ->with('error', 'Erreur: ' . $e->getMessage());
     }
+
+        }
+    
 
     public function edit(Personne $personne)
     {
