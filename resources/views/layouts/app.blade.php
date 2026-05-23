@@ -79,16 +79,71 @@
                     </div>
                 </header>
             @endisset
-            @if(session('error'))
-    <div class="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
-        {{ session('error') }}
-    </div>
-@endif
+           
 
             <!-- Content Slot -->
             <div class="p-6">
                 {{ $slot }}
             </div>
+            @if(session('error'))
+
+<div id="errorModal"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+    <div class="w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-red-500 px-6 py-4">
+            <h2 class="text-white font-bold text-lg">
+                ⚠️ Attention
+            </h2>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 text-center">
+
+            <p class="text-gray-700 text-lg font-medium">
+                {{ session('error') }}
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-center gap-3 p-4 border-t">
+
+            <button onclick="closeErrorModal()"
+                    class="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+@endif
+<script>
+setTimeout(() => {
+
+    const modal = document.getElementById('errorModal');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+
+}, 5000);
+</script>
+<script>
+function closeErrorModal() {
+
+    const modal = document.getElementById('errorModal');
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
         </main>
     </div>
 
