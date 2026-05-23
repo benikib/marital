@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Fiche de la personne') }}
+                {{ __('Fiche de l\'identification') }}
             </h2>
             <div class="space-x-2">
                 <a href="{{ route('personnes.edit', $personne) }}" 

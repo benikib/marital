@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Personnes</h2>
-            <a href="{{ route('personnes.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700">Nouvelle personne</a>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Identification</h2>
+            <a href="{{ route('personnes.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700">Nouvelle Identification</a>
         </div>
     </x-slot>
 
