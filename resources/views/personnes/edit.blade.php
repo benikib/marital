@@ -11,10 +11,6 @@
                         @csrf
                         @method('PUT')
                         @include('personnes._form')
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>Mettre à jour</x-primary-button>
-                            <a href="{{ route('personnes.index') }}" class="text-gray-600 hover:text-gray-900">Retour</a>
-                        </div>
                     </form>
                 </div>
             </div>
